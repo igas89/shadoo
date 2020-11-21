@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "target": "es2017",
+      "allowSyntheticDefaultImports": false,
+      "baseUrl": "src",
+      "paths": {
+        "api": ["./src/frontend/api"],
+        "store": ["./src/frontend/store"],
+        "actions": ["./src/frontend/store/actions"],
+        "reducers": ["./src/frontend/store/reducers"],
+        "pages": ["./src/frontend/pages"],
+        "Helpers": ["./src/frontend/Helpers"],
+        "hooks": ["./src/frontend/hooks"],
+      }
+    },
+    "exclude": ["node_modules", "dist"]
+  }

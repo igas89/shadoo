@@ -1,0 +1,40 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "esModuleInterop": true,
+        // "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "module": "CommonJS",
+        "target": "ES5",
+        "jsx": "preserve",
+        "allowJs": true,
+        "strict": true,
+        "strictNullChecks": true,
+        // "declaration": true,
+        "typeRoots": [
+            "node_modules/@types",
+            "src/typings.d.ts"
+        ],
+        "paths": {
+            "api": ["frontend/api"],
+            "store": ["frontend/store"],
+            "actions": ["frontend/store/actions"],
+            "actions/*": ["frontend/store/actions/*"],
+            "reducers": ["frontend/store/reducers"],
+            "reducers/*": ["frontend/store/reducers/*"],
+            "Helpers/*": ["frontend/Helpers/*"],
+            "hooks/*": ["frontend/hooks/*"],
+            "components/*": ["frontend/components/*"],
+            "pages/*": ["frontend/pages/*"],
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "skipLibCheck": true,                     /* Skip type checking of declaration files. */
+    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+
+}
