@@ -1,15 +1,17 @@
-import express from 'express';
+import express, { Application } from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import crsf from 'csurf';
-import httpHeaders from '../middlewares/httpHeaders';
 
-export type NextHandleFunction = (req: express.Request, res: express.Response, next: express.NextFunction) => void;
+import httpHeadersMiddleware from '../middlewares/httpHeadersMiddleware';
+import routeHandlerMiddleWare from '../middlewares/routeHandlerMiddleWare';
 
-class ServerApi {
-    private app: express.Application;
+import { HandlersList, NextHandleFunction } from '../interfaces';
+
+class ApplicationApi {
+    private app: Application;
 
     constructor() {
         this.app = express();
@@ -18,7 +20,7 @@ class ServerApi {
 
     private initialize = () => {
         this.app
-            .use(httpHeaders())
+            .use(httpHeadersMiddleware())
             .use(cookieParser('secret') as NextHandleFunction)
             // .use(session({
             //     secret: 'sssssh! That\'s the secret',
@@ -36,11 +38,7 @@ class ServerApi {
                 extended: true,
             }))
             .use(helmet() as NextHandleFunction)
-            .use(crsf({ cookie: { key: 'X-CSRF-TOKEN', } }))
-    }
-
-    get App(): express.Application {
-        return this.app;
+        // .use(crsf({ cookie: { key: 'X-CSRF-TOKEN', } }))
     }
 
     public setStatic = (dist: string): this => {
@@ -48,11 +46,24 @@ class ServerApi {
         return this;
     }
 
-    public start = (port: number = 3000): void => {
-        this.app.listen(port, () => {
-            console.log(`Server started on port http://localhost:${port}/`);
+    public setRoutes = (handlersList: HandlersList): this => {
+        Object.keys(handlersList).forEach((version) => {
+            const handlers = handlersList[version];
+            this.app.use(`/${version}`, routeHandlerMiddleWare({ handlers, version }));
         });
+
+        return this;
+    }
+
+    public startServer = (port: number, cb: (port: number) => void): void => {
+        this.app.listen(port, () => {
+            cb(port);
+        });
+    }
+
+    get App(): Application {
+        return this.app;
     }
 }
 
-export default new ServerApi();
+export default new ApplicationApi();
