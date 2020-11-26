@@ -82,42 +82,6 @@ module.exports = (env, { mode = 'development' }) => {
                         'file-loader',
                     ],
                 },
-                // {
-                //     test: /\.jsx?$/,
-                //     exclude: /node_modules/,
-                //     use: [
-                //         //   {loader: 'cache-loader'},
-                //         //   {
-                //         //     loader: 'thread-loader',
-                //         //     options: {
-                //         //       workers: require('os').cpus().length - 1,
-                //         //       poolTImeout: Infinity
-                //         //     }
-                //         //   },
-                //         { loader: "babel-loader", }
-                //     ],
-                // },
-                // {
-                //     test: /\.tsx?$/,
-                //     //loader: "ts-loader",
-                //     use: [
-                //         // { loader: 'cache-loader' },
-                //         // {
-                //         //     loader: 'thread-loader',
-                //         //     options: {
-                //         //         workers: require('os').cpus().length - 1,
-                //         //         poolTImeout: Infinity
-                //         //     }
-                //         // },
-                //         {
-                //             loader: 'ts-loader',
-                //             options: {
-                //                 transpileOnly: true,
-                //             },
-                //         }
-                //     ],
-                //     exclude: /node_modules/,
-                // },
             ],
         },
         output: {
@@ -125,18 +89,6 @@ module.exports = (env, { mode = 'development' }) => {
             filename: '[name].[chunkhash:22].js',
             chunkFilename: '[name].[chunkhash:22].js'
         },
-        // optimization: {
-        //     splitChunks: {
-        //         cacheGroups: {
-        //             commons: {
-        //                 test: /node_modules/,
-        //                 name: 'vendor',
-        //                 chunks: 'initial'
-        //             }
-        //         }
-        //     }
-        // },
-
         plugins: [
             new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
@@ -144,7 +96,6 @@ module.exports = (env, { mode = 'development' }) => {
                 filename: 'index.html',
                 inject: true,
                 hash: true,
-                // excludeChunks: ['backoffice']
             }),
             new ForkTsCheckerWebpackPlugin(),
             new MiniCssExtractPlugin({
@@ -175,6 +126,5 @@ module.exports = (env, { mode = 'development' }) => {
         ],
     };
 
-    // console.log('index:', JSON.stringify(config));
     return config;
 };
