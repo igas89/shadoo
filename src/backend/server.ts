@@ -1,9 +1,11 @@
 import path from 'path';
 import Application from './app';
-import { getHandlersList } from './helpers/cfg';
+import { getHandlersList, Cfg } from './helpers/cfg';
 
-const SERVER_PORT = 3000;
-const dist = path.join(__dirname, '/../../dist/');
+const { SERVER_PORT, OUTPUT_DIR } = Cfg('application');
+const dist = path.join(__dirname, `/../../${OUTPUT_DIR}/`);
+
+
 
 Application
     .setStatic(dist)

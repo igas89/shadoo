@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import { color } from './common';
 
 import { HandlersList } from '../interfaces';
@@ -19,13 +20,15 @@ export const getHandlersList = (): Required<HandlersList> => Object.keys(handler
 
 export const getHandlersVersion = (): (keyof HandlersList)[] => Object.keys(handlersList);
 
-export const Cfg = <T>(fileName: string): T => {
-    const path = `${__dirname}/../config/${fileName}.js`;
+export const Cfg = (fileName: string): any => {
+    const pathFile = path.resolve(__dirname, `../config/${fileName}.ts`);
 
-    if (!fs.existsSync(path)) {
-        throw (`\n ${color.red}--->> ${color.yellow}Не найден файл конфига ${path}${color.white}`);
+    if (!fs.existsSync(pathFile)) {
+        throw (`\n ${color.red}--->> ${color.yellow}Не найден файл конфига ${pathFile}${color.white}`);
     }
 
-    console.log(`\n ${color.green}--->> Загружен файл конфига ${fileName}.js${color.white}`);
-    return require(path).default;
+    // console.log(`\n ${color.green}--->> Загружен файл конфига ${fileName}.ts${color.white}`);
+
+    const { ...config } = require(pathFile);
+    return config;
 }
