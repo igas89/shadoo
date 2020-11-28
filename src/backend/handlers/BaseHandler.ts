@@ -26,15 +26,16 @@ export default abstract class BaseHandler {
             .json(params);
     }
 
-    protected sendError(data = {}) {
+    protected sendError(params: Record<string, any>) {
         this.response
             .status(405)
             .send({
                 error: {
                     code: 500,
                     message: 'Сервис временно не доступен',
+                    ...params,
+                    data: params?.data || [],
                 },
-                ...data
             });
     }
 }
