@@ -17,12 +17,13 @@ const store = createStoreWithMiddleware(rootReducer,
 );
 
 export type RootState = ReturnType<typeof rootReducer>
-export type Action = { type: string };
 export interface UseActionHandlers<TState> {
     onRequest?: (state: TState) => void | boolean;
     onDone?: (state: TState) => void | boolean;
     onError?: (state: TState) => void | boolean;
 }
+
+export type Action = { type: string };
 export const actionDispatch = (type: Action) => store.dispatch(type);
 
 export default store;

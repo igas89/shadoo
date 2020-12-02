@@ -1,13 +1,23 @@
+// font
 $fontColor: #333333;
-$fontColorWhite: #9da5b4;
-$disabledColor: #9EA4AC;
+$fontColorWhite: #ced4da;
+$fontFamily: "Open Sans", "Trebuchet MS", Helvetica, Helvetica Neue, Arial, sans-serif;
+$fontFamilyHeader: "Montserrat", "Trebuchet MS", Helvetica, "Helvetica Neue", Arial, sans-serif;
+
+// border
 $borderColor: #181a1f;
 $borderColorWhite: #24292e80;
-$bodyColor: #24292e;
-$bodyColorWhite: #31363f;
+
+// body
+$bodyColor: #191919;
+$bodyColorWhite: #262b2e;
+
+// button
 $btnColor: #2589DE;
 $btnColorHover: #0056b3;
 $linkColor: #3B95E2;
+
+$disabledColor: #9EA4AC;
 $shadowColor: #d1d1d1;
 $transition: 0.3s ease-in-out;
 $errorColor: #ba3f3f;
