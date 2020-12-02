@@ -5,6 +5,7 @@
         "sourceMap": true,
         "noImplicitAny": true,
         "esModuleInterop": true,
+        "downlevelIteration": true,
         // "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "module": "CommonJS",
@@ -32,8 +33,13 @@
         }
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "dist",
+        "cache",
     ],
+    "ts-node": {
+        "transpileOnly": false
+    },
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
 

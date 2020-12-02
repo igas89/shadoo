@@ -102,25 +102,18 @@ module.exports = (env, { mode = 'development' }) => {
                 filename: "[name].css",
                 // allChunks: true,
             }),
-            new CopyPlugin({
-                patterns: [{
-                    context: path.join(__dirname, '/src/frontend/assets/images'),
-                    from: '**/*',
-                    to: path.join(__dirname, '/dist/img/'),
-                }],
-            }),
+            // new CopyPlugin({
+            //     patterns: [{
+            //         context: path.join(__dirname, '/src/frontend/assets/images'),
+            //         from: '**/*',
+            //         to: path.join(__dirname, '/dist/img/'),
+            //     }],
+            // }),
             new CopyPlugin({
                 patterns: [{
                     context: path.join(__dirname, '/src/frontend/assets/icons'),
                     from: '**/*',
                     to: path.join(__dirname, '/dist/icons/'),
-                }],
-            }),
-            new CopyPlugin({
-                patterns: [{
-                    context: path.join(__dirname, '/src/frontend/files'),
-                    from: '**/*',
-                    to: path.join(__dirname, '/dist/files/'),
                 }],
             }),
         ],
