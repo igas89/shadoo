@@ -17,43 +17,16 @@ export const handlersList: HandlersList = {
             api: 'categories',
             endpoint: '/categories/:id(\\d+)?/',
             method: 'post',
-            // method: 'get',
         },
         {
             api: 'posts',
             endpoint: '/posts',
-            // method: 'post',
-            method: 'get',
+            method: ['get', 'post', 'put', 'delete'],
         },
         {
             api: 'theme',
             endpoint: '/theme',
-            // method: 'post',
             method: 'get',
         },
     ],
-    // 'v2': [
-    //     {
-    //         api: 'userHandler',
-    //         endpoint: '/user',
-    //         method: 'all',
-    //     },
-    //     {
-    //         api: 'auth',
-    //         endpoint: '/authorizationHandler',
-    //         method: 'all',
-    //     },
-    // ],
-    // 'v3': [
-    //     {
-    //         api: 'userHandler',
-    //         endpoint: '/user',
-    //         method: 'all',
-    //     },
-    //     {
-    //         api: 'auth',
-    //         endpoint: '/authorizationHandler',
-    //         method: 'all',
-    //     },
-    // ],
 };

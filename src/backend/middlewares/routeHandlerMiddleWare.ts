@@ -48,18 +48,26 @@ class routeLogger {
     }
 }
 
+const methodsToString = (methods: HandlersListData['method']) => {
+    if (typeof methods === 'string') {
+        return methods.toUpperCase();
+    }
+
+    return methods.map(method => method.toUpperCase()).join(', ');
+}
+
 export default function routeHandlerMiddleWare({ version, handlers }: RouteHandlerMiddleWareProps): Router {
     const router = express.Router();
     const logger = new routeLogger();
     const handlersLength = handlers.length - 1;
-    
+
     logger.createLogger(`Загружаем api обработчика: ${version}`);
 
     handlers.forEach(({ api, endpoint, method }, index) => {
         const url = `/${version}${endpoint}`;
         const pathHandle = path.resolve(__dirname, `../handlers/${version}/${api}`);
         const isCloseLog = handlersLength === index;
-        const messageMethod = `${color.white} - [ ${color.green}${method.toUpperCase()}${color.white} ]`;
+        const messageMethod = `${color.white} - [ ${color.green}${methodsToString(method)}${color.white} ]`;
 
         const loadedHandler = import(pathHandle)
             .then(({ default: handler }) => {
@@ -75,32 +83,38 @@ export default function routeHandlerMiddleWare({ version, handlers }: RouteHandl
                 return { error };
             })
 
+        if (!Array.isArray(method)) {
+            method = [method];
+        }
+
         if (!(endpoint instanceof RegExp) && !/^\/[a-zA-Z\/]+/.test(endpoint)) {
             endpoint = `/${endpoint}`;
         }
 
-        router[method](endpoint, (request, response, next) => {
-            loadedHandler
-                .then((handler) => {
-                    if (handler.error) {
-                        return Promise.reject(handler.error);
-                    }
+        method.forEach((item) => {
+            router[item](endpoint, (request, response, next) => {
+                loadedHandler
+                    .then((handler) => {
+                        if (handler.error) {
+                            return Promise.reject(handler.error);
+                        }
 
-                    new handler(request, response, next).done(getRequestData(request));
-                })
-                .catch((error) => {
-                    // console.error("\n --->> loadHandlers Error:", error);
+                        new handler(request, response, next).done(getRequestData(request));
+                    })
+                    .catch((error) => {
+                        // console.error("\n --->> loadHandlers Error:", error);
 
-                    response.status(500);
-                    response.send({
-                        error: {
-                            code: 500,
-                            message: `Cannot find module ${url}`,
-                            data: error
-                        },
+                        response.status(500);
+                        response.send({
+                            error: {
+                                code: 500,
+                                message: `Cannot find module ${url}`,
+                                data: error
+                            },
+                        });
                     });
-                });
-        });
+            });
+        })
     });
 
     return router;
