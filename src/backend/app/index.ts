@@ -10,16 +10,16 @@ import routeHandlerMiddleWare from '../middlewares/routeHandlerMiddleWare';
 
 import { HandlersList, NextHandleFunction } from '../interfaces';
 
-class ApplicationApi {
-    private app: Application;
+class ApplicationServer {
+    private _app: Application;
 
     constructor() {
-        this.app = express();
+        this._app = express();
         this.initialize();
     }
 
-    private initialize = () => {
-        this.app
+    private initialize(): void {
+        this._app
             .use(httpHeadersMiddleware())
             .use(cookieParser('secret') as NextHandleFunction)
             // .use(session({
@@ -41,29 +41,29 @@ class ApplicationApi {
         // .use(crsf({ cookie: { key: 'X-CSRF-TOKEN', } }))
     }
 
-    public setStatic = (dist: string): this => {
-        this.app.use(express.static(dist));
+    public setStatic(dist: string): this {
+        this._app.use(express.static(dist));
         return this;
     }
 
-    public setRoutes = (handlersList: HandlersList): this => {
+    public setRoutes(handlersList: HandlersList): this {
         Object.keys(handlersList).forEach((version) => {
             const handlers = handlersList[version];
-            this.app.use(`/${version}`, routeHandlerMiddleWare({ handlers, version }));
+            this._app.use(`/${version}`, routeHandlerMiddleWare({ handlers, version }));
         });
 
         return this;
     }
 
-    public startServer = (port: number, cb: (port: number) => void): void => {
-        this.app.listen(port, () => {
+    public startServer(port: number, cb: (port: number) => void): void {
+        this._app.listen(port, () => {
             cb(port);
         });
     }
 
-    get App(): Application {
-        return this.app;
+    get app(): Application {
+        return this._app;
     }
 }
 
-export default new ApplicationApi();
+export default new ApplicationServer();

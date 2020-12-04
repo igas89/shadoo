@@ -14,4 +14,6 @@ export interface GetRequestData {
     body: {};
     query: {};
 }
-export const getRequestData = (request: Partial<GetRequestData>) => request?.body ?? request.query;
+export const getRequestData = (request: GetRequestData): Record<string, unknown> => {
+    return Object.keys(request.body).length ? request.body : request.query || {};
+};

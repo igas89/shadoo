@@ -1,12 +1,16 @@
 
 import { Request, Response, NextFunction } from 'express';
 
+
+interface expressRequest extends Request {
+    method: string;
+}
 export default abstract class BaseHandler {
-    protected request: Request;
+    protected request: expressRequest;
     protected response: Response;
     protected next: NextFunction;
 
-    constructor(request: Request, response: Response, next: NextFunction) {
+    constructor(request: expressRequest, response: Response, next: NextFunction) {
         this.request = request;
         this.response = response;
         this.next = next;

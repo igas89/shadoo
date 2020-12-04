@@ -7,7 +7,7 @@ export type NextHandleFunction = (req: express.Request, res: express.Response, n
 export interface HandlersListData {
     api: string,
     endpoint: string | RegExp;
-    method: ExpressMethod;
+    method: ExpressMethod | ExpressMethod[];
 }
 
 export interface HandlersList {
