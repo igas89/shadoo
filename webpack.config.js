@@ -36,7 +36,7 @@ module.exports = (env, { mode = 'development' }) => {
                 store: path.resolve(__dirname, 'src/frontend/store/'),
                 actions: path.resolve(__dirname, 'src/frontend/store/actions/'),
                 reducers: path.resolve(__dirname, 'src/frontend/store/reducers/'),
-                Helpers: path.resolve(__dirname, 'src/frontend/Helpers/'),
+                helpers: path.resolve(__dirname, 'src/frontend/helpers/'),
                 hooks: path.resolve(__dirname, 'src/frontend/hooks/'),
                 components: path.resolve(__dirname, 'src/frontend/components/'),
                 pages: path.resolve(__dirname, 'src/frontend/pages/'),

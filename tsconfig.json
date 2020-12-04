@@ -26,7 +26,7 @@
             "actions/*": ["frontend/store/actions/*"],
             "reducers": ["frontend/store/reducers"],
             "reducers/*": ["frontend/store/reducers/*"],
-            "Helpers/*": ["frontend/Helpers/*"],
+            "helpers/*": ["frontend/helpers/*"],
             "hooks/*": ["frontend/hooks/*"],
             "components/*": ["frontend/components/*"],
             "pages/*": ["frontend/pages/*"],

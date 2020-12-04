@@ -9,7 +9,7 @@
         "actions": ["./src/frontend/store/actions"],
         "reducers": ["./src/frontend/store/reducers"],
         "pages": ["./src/frontend/pages"],
-        "Helpers": ["./src/frontend/Helpers"],
+        "helpers": ["./src/frontend/helpers"],
         "hooks": ["./src/frontend/hooks"],
       }
     },
