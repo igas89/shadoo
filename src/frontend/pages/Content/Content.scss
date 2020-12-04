@@ -1,0 +1,8 @@
+@import '~styles/mixins.scss';
+
+.content {
+    margin: 0 auto;
+    width: 1080px;
+    padding: 10px 15px;
+    background: $contentColor;
+}

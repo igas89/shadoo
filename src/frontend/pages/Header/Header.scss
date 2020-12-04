@@ -1,6 +1,6 @@
 @import '~styles/mixins.scss';
 
-.header__container {
+.header {
     display: flex;
     background-color: #0f1112;
     border-bottom: 1px solid $borderColor;
@@ -10,7 +10,7 @@
 .header__wrap {
     @include flex-row();
     align-items: center;
-    max-width: 980px;
+    max-width: 1150px;
     width: 100%;
     margin: 0 auto;
 }
@@ -18,7 +18,13 @@
 .header__logo {
     animation: Header-logo-spin infinite 20s linear;
     height: 65px;
-    pointer-events: none;
+    // pointer-events: none;
+    transition: filter $transition;
+    cursor: pointer;
+
+    &:hover {
+        filter: invert(0) sepia(1) brightness(1.4);
+    }
 }
 
 @keyframes Header-logo-spin {
@@ -39,13 +45,22 @@
     color: #61dafb;
     text-shadow: 1px 1px 2px $borderColor, 0 0px 3px $disabledColor;
     transition: color $transition, text-shadow $transition;
+    margin-left: -10px;
     cursor: pointer;
 
     &:hover {
+        &>span:last-of-type {
+            opacity: 1;
+        }
+    }
+
+    &>span:hover {
         color: $fontColorWhite;
     }
 
     &>span {
+        transition: opacity $transition;
+
         &:not(:last-of-type) {
             font-style: italic;
         }
@@ -57,7 +72,7 @@
             font-size: 14px;
             font-weight: 400;
             margin-left: 10px;
-
+            opacity: 0.8;
         }
     }
 }

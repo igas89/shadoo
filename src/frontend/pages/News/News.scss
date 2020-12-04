@@ -1,0 +1,88 @@
+@import '~styles/mixins.scss';
+
+.news__item {
+    margin: 15px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.news__title {
+    color: #ced4da;
+}
+
+.news__description {
+    line-height: 1.7;
+    font-size: 1em;
+    margin: 10px 0px 15px;
+    word-break: break-word;
+}
+
+.news__by {
+    @include flex-row();
+    margin-bottom: 10px;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.news-author {
+    @include flex-row();
+    align-items: center;
+    color: $btnColor;
+    margin-right: 6px;
+}
+
+.news__date {
+    color: $fontColorGray;
+}
+
+.news-image {
+    display: flex;
+    justify-content: center;
+    background-color: $bodyColor;
+    border-radius: 4px;
+    transition: box-shadow $transition;
+    box-shadow: 0px 0px 5px 0px #5a5d6a, 0px 0px 6px 0px #5a5a5a4d;
+}
+
+.news-image__item {
+    height: 100%;
+    cursor: pointer;
+    transition: transform $transition, border-radius $transition, box-shadow $transition;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px 0px #5a5d6a, 0px 0px 6px 0px #5a5a5a4d;
+    transform: scale(1.05);
+}
+
+.news-author__image {
+    height: 20px;
+    width: 20px;
+    margin-right: 6px;
+}
+
+.news-loaded {
+    display: flex;
+    justify-content: center;
+}
+
+.news-loaded__btn {
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: bold;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 2px;
+    padding: 0 15px;
+    transition: color $transition;
+    
+    &:hover {
+        color: $fontColorWhite;
+    }
+
+    &,
+    &:focus {
+        border: none;
+        outline: none;
+    }
+}

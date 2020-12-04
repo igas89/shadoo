@@ -5,20 +5,21 @@ import { Provider } from 'react-redux';
 import store from 'store';
 
 import Header from 'pages/Header';
-import Main from 'pages/Main';
-import './styles/application.scss';
+import Content from 'pages/Content';
+
+import 'styles/application.scss';
 
 const App: FC = () => {
     return (
         <Provider store={store}>
             <Router>
                 <Header />
-                <Main />
+                <Content />
             </Router>
         </Provider>
     );
 };
 
-document.addEventListener("DOMContentLoaded", function (event) {
-    ReactDOM.render(<App />, document.querySelector('.app__container'));
+document.addEventListener("DOMContentLoaded", (event: Event) => {
+    ReactDOM.render(<App />, document.querySelector('.app'));
 });

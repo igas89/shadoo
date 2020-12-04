@@ -1,0 +1,1 @@
+export * as newsActions from './newsActions';
