@@ -1,0 +1,35 @@
+@import '~styles/mixins.scss';
+
+.scroll-top {
+    position: fixed;
+    bottom: 50px;
+    transform: translateX(-180%);
+    transition: opacity $transition;
+}
+
+.scroll-top_hidden {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.scroll-top__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    outline: none;
+    border: none;
+    color: $fontColorWhite;
+    font-size: 18px;
+    padding: 10px;
+    background: url('/icons/arrow_up.svg') no-repeat center/contain;
+    box-shadow: $shadow;
+    transition: filter $transition;
+
+    &:hover {
+        filter: invert(0) sepia(0) brightness(2) saturate(0);
+    }
+}
