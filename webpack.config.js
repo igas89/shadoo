@@ -77,10 +77,11 @@ module.exports = (env, { mode = 'development' }) => {
                     ],
                 },
                 {
-                    test: /\.(png|svg|jpg|gif)$/,
-                    use: [
-                        'file-loader',
-                    ],
+                    test: /\.(png|jpe?g|gif|svg)$/i,
+                    loader: 'file-loader',
+                    options: {
+                        name: '[path][name].[ext]',
+                    },
                 },
             ],
         },
