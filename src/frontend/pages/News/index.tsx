@@ -1,15 +1,10 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { dateISOtoString } from 'helpers/Dates';
+
+import { humanizeDateISO } from 'helpers/Dates';
 import { NewsData } from 'reducers/newsReducer';
 import { useNews } from 'actions/newsActions/hooks';
 import './News.scss';
-
-const NotFound = () => (
-    <div>
-        По вашему запросу, ничего не найдено
-    </div>
-);
 
 interface NewsState {
     start: number;
@@ -64,34 +59,40 @@ const News = memo(() => {
     }, [newsState.start, newsState.end]);
 
     useEffect(() => {
-        getPosts();
-    }, []);
+        if (newsState.isLoading === null) {
+            getPosts();
+        }
+    }, [newsState.isLoading]);
 
     return (
         <div className='news'>
-            {newsState.lists.map((item) => (
-                <div key={item.id} className='news__item'>
-                    <div className='news__by'>
-                        <span className='news-author'>
-                            <img className='news-author__image' src={item.avatar} />
-                            {item.author}
-                        </span>
-                        <span className='news__date'>{dateISOtoString(item.date)}</span>
-                    </div>
-                    <h2 className='news__title'>
-                        <Link to={item.url}>{item.title}</Link>
-                    </h2>
-                    <div className='news__description'>{item.description}</div>
+            {newsState.lists.map((item) => {
+                const url = `/post/${item.url}`;
 
-                    <div className='news-image'>
-                        <Link to={item.url}>
-                            <img className='news-image__item' src={item.image} />
-                        </Link>
-                    </div>
-                </div>
-            ))}
+                return (
+                    <div key={item.id} className='news__item'>
+                        <div className='news__by'>
+                            <span className='news-author'>
+                                <img className='news-author__image' src={item.avatar} />
+                                {item.author}
+                            </span>
+                            <span className='news__date'>{humanizeDateISO(item.date)}</span>
+                        </div>
+                        <h2 className='news__title'>
+                            <Link to={url}>{item.title}</Link>
+                        </h2>
+                        <div className='news__description'>{item.description}</div>
 
-            {newsState.counts && newsState.lists.length < newsState.counts && (
+                        <div className='news-image'>
+                            <Link to={url}>
+                                <img className='news-image__item' src={item.descriptionImage} />
+                            </Link>
+                        </div>
+                    </div>
+                )
+            })}
+
+            {newsState.counts > 0 && newsState.lists.length < newsState.counts && (
                 <div className='news-loaded'>
                     <button className='news-loaded__btn' onClick={getPosts}>Показать еще</button>
                 </div>

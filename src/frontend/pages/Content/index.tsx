@@ -1,6 +1,10 @@
 import React, { memo } from 'react';
+
 import News from 'pages/News';
+import Post from 'pages/Post';
+
 import WithRoute from 'components/WithRoute';
+import ScrollTopButton from 'components/ScrollTopButton';
 import './Content.scss';
 
 const NotFound = () => (
@@ -21,12 +25,17 @@ const Content = memo(() => {
                             children: <News />,
                         },
                         {
+                            path: '/post',
+                            children: <Post />,
+                        },
+                        {
                             path: '*',
                             children: <NotFound />
                         },
                     ]}
                 />
             </div>
+            <ScrollTopButton />
         </div>
     )
 });

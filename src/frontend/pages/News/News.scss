@@ -1,8 +1,10 @@
 @import '~styles/mixins.scss';
 
+$imageSize: 330px;
+
 .news__item {
     margin: 15px 0;
-    padding-bottom: 15px;
+    padding-bottom: 25px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -21,7 +23,7 @@
     @include flex-row();
     margin-bottom: 10px;
     align-items: center;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 500;
 }
 
@@ -40,17 +42,18 @@
     display: flex;
     justify-content: center;
     background-color: $bodyColor;
+    height: $imageSize;
     border-radius: 4px;
     transition: box-shadow $transition;
-    box-shadow: 0px 0px 5px 0px #5a5d6a, 0px 0px 6px 0px #5a5a5a4d;
+    box-shadow: $shadow;
 }
 
 .news-image__item {
-    height: 100%;
+    height: $imageSize;
     cursor: pointer;
     transition: transform $transition, border-radius $transition, box-shadow $transition;
     border-radius: 4px;
-    box-shadow: 0px 0px 5px 0px #5a5d6a, 0px 0px 6px 0px #5a5a5a4d;
+    box-shadow: $shadow;
     transform: scale(1.05);
 }
 

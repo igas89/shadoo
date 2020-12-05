@@ -3,12 +3,8 @@ import {
     NEWS_REQUEST,
     NEWS_SUCCESS,
     NEWS_FAILURE,
+    NewsRequestProps,
 } from 'actions/newsActions';
-
-export interface NewsRequest {
-    start: number;
-    end: number;
-}
 
 export interface NewsData {
     data: {
@@ -17,6 +13,7 @@ export interface NewsData {
         content: string;
         date: string;
         description: string
+        descriptionImage: string
         id: number;
         image: string;
         page: number;
@@ -27,7 +24,7 @@ export interface NewsData {
     pages: number;
 };
 
-export type NewsState = InitialState<NewsRequest | null | undefined, Partial<NewsData>>;
+export type NewsState = InitialState<NewsRequestProps | null | undefined, Partial<NewsData>>;
 
 const NEWS_INITIAL_STATE: NewsState = {
     action: null,
@@ -38,7 +35,7 @@ const NEWS_INITIAL_STATE: NewsState = {
 
 export const newsReducer = (
     state = NEWS_INITIAL_STATE,
-    action: ActionTypes<NewsRequest>
+    action: ActionTypes<NewsRequestProps>
 ): NewsState => {
     switch (action.type) {
         case NEWS_REQUEST: {

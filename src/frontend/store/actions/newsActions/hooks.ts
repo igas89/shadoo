@@ -7,19 +7,19 @@ import {
     NEWS_SUCCESS,
     NEWS_FAILURE,
     getNewsType,
-    FetchNewsProps,
+    NewsRequestProps,
 } from './index';
 
 import { NewsState } from 'reducers/newsReducer';
 export interface UseNews {
-    fecthNews: (props: FetchNewsProps) => void;
+    fecthNews: (props: NewsRequestProps) => void;
     newsState: NewsState;
 }
 
 export const useNews = <T extends UseActionHandlers<NewsState>>(handlers?: T): UseNews => {
     const state = useSelector<RootState, NewsState>(({ newsState }) => newsState);
 
-    const fecthNews = useCallback((props: FetchNewsProps) => {
+    const fecthNews = useCallback((props: NewsRequestProps) => {
         actionDispatch(getNewsType(props));
     }, []);
 
