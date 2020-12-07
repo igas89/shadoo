@@ -14,14 +14,14 @@ export const DEFAULT_HANDLER_MOTHOD: ExpressMethod = 'all';
 export const handlersList: HandlersList = {
     'v1': [
         {
-            api: 'categories',
-            endpoint: '/categories/:id(\\d+)?/',
-            method: 'post',
-        },
-        {
             api: 'news',
             endpoint: '/news',
             method: ['get', 'post', 'put', 'delete'],
+        },
+        {
+            api: 'post',
+            endpoint: '/post',
+            method: 'get',
         },
     ],
 };

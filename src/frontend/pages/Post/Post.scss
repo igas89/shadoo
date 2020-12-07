@@ -1,0 +1,157 @@
+@import '~styles/mixins.scss';
+
+.post {
+    padding: 10px 10px 15px;
+}
+
+.post__item {}
+
+.post__title {
+    color: $fontColorWhite;
+}
+
+.post-by {
+    @include flex-row();
+    margin: 15px 0;
+    padding: 10px 0px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: none;
+    border-right: none;
+}
+
+.post-by__avatar {
+    margin-right: 10px;
+    border-radius: 8px;
+}
+
+.post-by__info {
+    font-size: 15px;
+    color: $fontColorGray;
+}
+
+.post-by__author {}
+
+.post-by__date {}
+
+.post-image {
+    width: 100%;
+    margin-bottom: 15px;
+    box-shadow: $shadow;
+    border-radius: 4px;
+}
+
+.post__content {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
+    word-wrap: break-word;
+    font-size: 1.05em;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    font-family: "Open Sans", "Trebuchet MS", Helvetica, Helvetica Neue, Arial, sans-serif;
+}
+
+
+// 
+section.body p {
+    line-height: 1.6;
+    margin: 0 0 20px;
+}
+
+section.body strong {
+    color: #e4e6e7;
+}
+
+section.body ul {
+    margin-left: 2em;
+    margin-bottom: 1em;
+}
+
+section.body li {
+    display: list-item;
+    margin: 10px 0;
+}
+
+.gallery.styleBlog li {
+    text-align: center;
+    margin: 0 0 16px;
+    list-style: none;
+}
+
+.gallery img {
+    max-width: 100%;
+}
+
+.gallery.embed {
+    margin: 16px 0;
+}
+
+.gallery.embed ul {
+    margin: 0;
+}
+
+.gallery.styleThumbs li {
+    width: 75px;
+    height: 75px;
+    margin: 0 3px 7px;
+    float: left;
+    position: relative;
+    list-style: none;
+}
+
+section.body blockquote {
+    color: #aeb3b7;
+    border-left: 3px solid #3d8ac1;
+}
+
+blockquote {
+    margin: 0 0 8px 0;
+    padding: 4px 0 4px 8px;
+}
+
+section.body blockquote p {
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.videoPlayer.embed {
+    display: flex;
+    justify-content: center;
+    background-color: $bodyColor;
+    border-radius: 6px;
+    margin-bottom: 15px;
+
+    & iframe {
+        height: 450px;
+        width: 700px;
+    }
+}
+
+.fullwidth {
+    margin-top: 10px !important;
+
+    & img {
+        height: auto;
+        width: 100%;
+    }
+}
+
+.entryFeature .gallery {
+    display: flex;
+    justify-content: center;
+}
+
+.entryFeature .gallery.styleThumbs li {
+    margin: 0 6px 13px;
+}
+
+.gallery.styleThumbs li {
+    width: 75px;
+    height: 75px;
+    margin: 0 3px 7px;
+    float: left;
+    position: relative;
+    list-style: none;
+}
