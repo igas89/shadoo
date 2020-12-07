@@ -11,12 +11,6 @@ type StorageWriteToCache = string | {
         message: string;
     }
 }
-
-interface StorageReadFromCacheProps {
-    start: number;
-    end: number;
-}
-
 interface StorageReadFromCache {
     data: unknown[];
     counts: number;
@@ -37,8 +31,22 @@ class Storage {
         console.error(` --->> [Storage ERROR] ${method} - ${message}`);
     }
 
-    readFromCache({ start, end }: StorageReadFromCacheProps): Promise<StorageReadFromCache> {
+    readFromCache(): Promise<StorageReadFromCache> {
         return new Promise((resolve, reject) => {
+            if (!fs.existsSync(this._filePath)) {
+                const errorMessage = `Не найден файл кеша`;
+                this._errorLog({
+                    message: errorMessage,
+                    method: 'readFromCache',
+                });
+                
+                reject({
+                    code: 404,
+                    message: errorMessage,
+                });
+                return;
+            }
+
             fs.readFile(this._filePath, 'utf8', (error, rawData) => {
                 if (error) {
                     this._errorLog({
@@ -52,11 +60,11 @@ class Storage {
                 try {
                     const data: unknown[] = JSON.parse(rawData);
                     const counts = data.length;
-                    start = start === 0 ? 0 : start - 1;
+                    
                     resolve({
                         counts,
+                        data,
                         pages: counts / 20,
-                        data: data.slice(start, end),
                     });
                 } catch (error) {
                     this._errorLog({

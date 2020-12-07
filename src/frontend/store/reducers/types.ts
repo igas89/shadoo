@@ -1,9 +1,9 @@
 export type actionStateTypes = string | undefined | null;
 
-export interface ActionTypes<T> {
+export interface ActionTypes<T, U> {
     type: string;
-    response?: {};
     payload?: T;
+    response?: U;
     error?: string;
 }
 

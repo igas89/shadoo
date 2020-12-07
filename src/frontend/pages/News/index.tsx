@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { humanizeDateISO } from 'helpers/Dates';
 import { NewsData } from 'reducers/newsReducer';
 import { useNews } from 'actions/newsActions/hooks';
+import useTitle from 'hooks/useTitle';
 import './News.scss';
 
 interface NewsState {
@@ -15,6 +16,7 @@ interface NewsState {
 }
 
 const News = memo(() => {
+    const { setTitle } = useTitle();
     const [newsState, setState] = useState<NewsState>({
         start: 1,
         end: 20,
@@ -64,10 +66,14 @@ const News = memo(() => {
         }
     }, [newsState.isLoading]);
 
+    useEffect(() => {
+        setTitle('Все новости - Shadoo');
+    }, []);
+
     return (
         <div className='news'>
             {newsState.lists.map((item) => {
-                const url = `/post/${item.url}`;
+                const url = `/post/${item.id}/${item.url}`;
 
                 return (
                     <div key={item.id} className='news__item'>

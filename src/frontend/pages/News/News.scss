@@ -9,7 +9,7 @@ $imageSize: 330px;
 }
 
 .news__title {
-    color: #ced4da;
+    color: $fontColorWhite;
 }
 
 .news__description {
@@ -61,6 +61,7 @@ $imageSize: 330px;
     height: 20px;
     width: 20px;
     margin-right: 6px;
+    border-radius: 4px;
 }
 
 .news-loaded {

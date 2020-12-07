@@ -8,6 +8,7 @@ body {
 }
 
 p {
+    display: inline-block;
     margin: 0;
 }
 
@@ -32,6 +33,11 @@ h4 {
 
 button {
     outline: none;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
 }
 
 .font__italic {

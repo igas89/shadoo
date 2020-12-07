@@ -17,7 +17,7 @@ export default class NewsHandler extends BaseHandler {
         let undefinedParams = this._isParamsUndefined(params);
 
         // console.log(this.request.method)
-        
+
         if (undefinedParams.length) {
             this.sendError({
                 code: 503,
@@ -26,13 +26,26 @@ export default class NewsHandler extends BaseHandler {
             return;
         }
 
-        Storage.readFromCache({ start: Number(params.start), end: Number(params.end) })
+        Storage.readFromCache()
             .then((response) => {
+                const start = Number(params.start) === 0 ? 0 : Number(params.start) - 1;
+                const end = Number(params.end);
+
+                response.data = response.data.slice(start, end).map((item: any) => ({
+                    id: item.id,
+                    url: item.url,
+                    avatar: item.avatar,
+                    author: item.author,
+                    date: item.date,
+                    title: item.title,
+                    description: item.description,
+                    descriptionImage: item.descriptionImage,
+                }));
                 this.sendJson(response);
             })
             .catch(error => {
                 this.sendError({
-                    code: 503,
+                    code: error.code || 503,
                     message: error.message,
                 });
             })
