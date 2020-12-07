@@ -50,7 +50,7 @@
     text-shadow: 1px 1px 2px $borderColor, 0 0px 3px $disabledColor;
     transition: color $transition, text-shadow $transition;
     margin-left: -10px;
-    cursor: pointer;
+    cursor: default;
 
     &:hover {
         &>span:last-of-type {
