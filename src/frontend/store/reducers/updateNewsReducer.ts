@@ -1,10 +1,10 @@
 import { ActionTypes, InitialState } from './types';
 import {
-    NEWS_REQUEST,
-    NEWS_SUCCESS,
-    NEWS_FAILURE,
-    NewsRequestProps,
-} from 'actions/newsActions';
+    UPDATE_NEWS_REQUEST,
+    UPDATE_NEWS_SUCCESS,
+    UPDATE_NEWS_FAILURE,
+
+} from 'actions/updateNewsActions';
 
 export interface NewsData {
     data: {
@@ -24,43 +24,43 @@ export interface NewsData {
     pages: number;
 };
 
-export type NewsState = InitialState<NewsRequestProps | null | undefined, Partial<NewsData>>;
+export type UpdateNewsState = InitialState<null, Partial<NewsData>>;
 
-const NEWS_INITIAL_STATE: NewsState = {
+const UPDATE_NEWS_INITIAL_STATE: UpdateNewsState = {
     action: null,
     error: null,
     request_data: null,
     response_data: {},
 }
 
-export const newsReducer = (
-    state = NEWS_INITIAL_STATE,
-    action: ActionTypes<NewsRequestProps, NewsData>
-): NewsState => {
+export const updateNewsReducer = (
+    state = UPDATE_NEWS_INITIAL_STATE,
+    action: ActionTypes<null, NewsData>
+): UpdateNewsState => {
     switch (action.type) {
-        case NEWS_REQUEST: {
+        case UPDATE_NEWS_REQUEST: {
             return {
                 ...state,
                 action: action.type,
                 error: null,
-                request_data: action.payload || null,
+                request_data: null,
             }
         }
-        case NEWS_SUCCESS: {
+        case UPDATE_NEWS_SUCCESS: {
             return {
                 ...state,
                 action: action.type,
                 error: null,
-                // request_data: null,
+                request_data: null,
                 response_data: action.response || {},
             }
         }
-        case NEWS_FAILURE: {
+        case UPDATE_NEWS_FAILURE: {
             return {
                 ...state,
                 action: action.type,
                 error: action.error,
-                // request_data: null,
+                request_data: null,
                 response_data: {},
             }
         }

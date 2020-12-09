@@ -1,0 +1,64 @@
+@import '~styles/mixins.scss';
+
+.update {
+    position: absolute;
+    right: 20px;
+    // width: 230px;
+}
+
+@keyframes update-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.update__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: $fontColorGray;
+    background-color: $bodyColor;
+    padding: 10px;
+    outline: none;
+    border: none;
+    border-radius: 2px;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: $fontFamily;
+    transition: color $transition, background-color $transition, opacity $transition;
+    cursor: pointer;
+
+    &.update__btn_disabled {
+        color: $fontColorWhite;
+        cursor: default;
+    }
+
+    &.update__btn_disabled::before {
+        animation: update-logo-spin infinite 2s linear;
+    }
+
+    &:not(.update__btn_disabled):hover {
+        color: $fontColorWhite;
+    }
+
+    &::before {
+        display: block;
+        content: '';
+        background: url('/icons/refresh.svg') no-repeat center/cover;
+        $size: 24px;
+        height: $size;
+        width: $size;
+        transition: filter $transition, transform $transition;
+        margin-right: 10px;
+    }
+
+    &.update__btn_disabled::before,
+    &:not(.update__btn_disabled):hover::before {
+        filter: invert(0.2) sepia(0) brightness(2) saturate(0);
+    }
+}

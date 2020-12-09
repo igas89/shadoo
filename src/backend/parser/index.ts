@@ -66,7 +66,7 @@ interface ParserProps {
     requestLimit: number;
 }
 
-const Parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<any> => new Promise((res, rej) => {
+const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<any> => new Promise((res, rej) => {
     const requests: Promise<any>[] = [];
 
     const taskManager = new TaskManager({
@@ -159,19 +159,21 @@ const Parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<any> => ne
     taskManager.run();
 })
 
-Parser({
-    url: URL_PARSE,
-    maxPage: 10,
-    requestLimit: 10,
-}).then((requests) => {
-    Promise
-        .all<Promise<any>[]>(requests)
-        .then((response) => {
-            const data = response.reduce<any[]>((acc, item) => {
-                return acc.concat(item);
-            }, [])
-            // .sort((a, b) => a.id < b.id ? -1 : 1);
+export default parser;
 
-            storage.writeToCache(data);
-        })
-});
+// parser({
+//     url: URL_PARSE,
+//     maxPage: 10,
+//     requestLimit: 10,
+// }).then((requests) => {
+//     Promise
+//         .all<Promise<any>[]>(requests)
+//         .then((response) => {
+//             const data = response.reduce<any[]>((acc, item) => {
+//                 return acc.concat(item);
+//             }, [])
+//             // .sort((a, b) => a.id < b.id ? -1 : 1);
+
+//             storage.writeToCache(data);
+//         })
+// });
