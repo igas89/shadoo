@@ -5,7 +5,13 @@ import { Request, Response, NextFunction } from 'express';
 interface expressRequest extends Request {
     method: string;
 }
-export default abstract class BaseHandler {
+export interface SendError {
+    code: number;
+    message: string;
+    data: unknown[];
+}
+
+export default abstract class BaseHandler<P = never> {
     protected request: expressRequest;
     protected response: Response;
     protected next: NextFunction;
@@ -16,21 +22,21 @@ export default abstract class BaseHandler {
         this.next = next;
     }
 
-    abstract done(data: any): void;
+    abstract done<T extends P>(params: T): void;
 
-    protected send(params = {}) {
+    protected send(params: unknown): void {
         this.response
             .status(200)
             .send(params);
     }
 
-    protected sendJson(params = {}) {
+    protected sendJson(params: unknown): void {
         this.response
             .status(200)
             .json(params);
     }
 
-    protected sendError(params: Record<string, any>) {
+    protected sendError(params: Partial<SendError>): void {
         this.response
             .status(405)
             .send({

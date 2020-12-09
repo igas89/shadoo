@@ -1,12 +1,15 @@
 import BaseHandler from '../../BaseHandler';
 import Storage from '../../../storage';
+import { StorageResponse } from '../../../interfaces';
 
 interface PostHandlerParams {
     id: string;
 }
 
-export default class PostHandler extends BaseHandler {
-    done(params: PostHandlerParams) {
+type Data = Omit<StorageResponse, 'description' | 'descriptionImage' | 'page' | 'comments'>[];
+
+export default class PostHandler extends BaseHandler<PostHandlerParams> {
+    done<T extends PostHandlerParams>(params: T) {
         if (!params.id) {
             this.sendError({
                 code: 503,
@@ -17,10 +20,11 @@ export default class PostHandler extends BaseHandler {
 
         Storage.readFromCache()
             .then((response) => {
-                let filter = response.data.filter((item: any) => item.id === Number(params.id));
+                const filter = response.data.filter((item) => item.id === Number(params.id))
+                let data: Data = [];
 
                 if (filter.length) {
-                    filter = filter.map((item: any) => ({
+                    data = filter.map((item) => ({
                         id: item.id,
                         url: item.url,
                         avatar: item.avatar,
@@ -29,9 +33,9 @@ export default class PostHandler extends BaseHandler {
                         title: item.title,
                         content: item.content,
                         image: item.image,
-                    }))
+                    }));
                 }
-                this.sendJson({ data: filter });
+                this.sendJson({ data });
             })
             .catch(error => {
                 this.sendError({

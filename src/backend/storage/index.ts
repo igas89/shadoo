@@ -4,6 +4,7 @@ import path from 'path';
 import { Cfg } from '../helpers/cfg';
 
 const { CACHE_FILE } = Cfg('application');
+import { StorageResponse } from '../interfaces';
 
 type StorageWriteToCache = string | {
     error: {
@@ -12,16 +13,16 @@ type StorageWriteToCache = string | {
     }
 }
 interface StorageReadFromCache {
-    data: unknown[];
+    data: StorageResponse[];
     counts: number;
     pages: number;
 }
 
 class Storage {
-    private _filePath: string;
+    private filePath: string;
 
     constructor(filePath: string) {
-        this._filePath = path.resolve(__dirname, `../../../cache/${filePath}`);;
+        this.filePath = path.resolve(__dirname, `../../../cache/${filePath}`);;
     }
 
     private _errorLog({ message, method }: {
@@ -33,7 +34,7 @@ class Storage {
 
     readFromCache(): Promise<StorageReadFromCache> {
         return new Promise((resolve, reject) => {
-            if (!fs.existsSync(this._filePath)) {
+            if (!fs.existsSync(this.filePath)) {
                 const errorMessage = `Не найден файл кеша`;
                 this._errorLog({
                     message: errorMessage,
@@ -47,7 +48,7 @@ class Storage {
                 return;
             }
 
-            fs.readFile(this._filePath, 'utf8', (error, rawData) => {
+            fs.readFile(this.filePath, 'utf8', (error, rawData) => {
                 if (error) {
                     this._errorLog({
                         message: error.message,
@@ -58,9 +59,9 @@ class Storage {
                 }
 
                 try {
-                    const data: unknown[] = JSON.parse(rawData);
+                    const data: StorageResponse[] = JSON.parse(rawData);
                     const counts = data.length;
-                    
+
                     resolve({
                         counts,
                         data,
@@ -82,9 +83,9 @@ class Storage {
         return new Promise((resolve, reject) => {
             const dataLength = data.length;
 
-            console.log(`\n --->> Пишем в файл ${this._filePath}`);
+            console.log(`\n --->> Пишем в файл ${this.filePath}`);
 
-            fs.writeFile(this._filePath, JSON.stringify(data, null, 4), (error) => {
+            fs.writeFile(this.filePath, JSON.stringify(data, null, 4), (error) => {
                 if (error) {
                     this._errorLog({
                         message: error.message,

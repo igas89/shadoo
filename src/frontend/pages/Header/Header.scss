@@ -12,6 +12,7 @@
 }
 
 .header__wrap {
+    position: relative;
     @include flex-row();
     align-items: center;
     max-width: 1150px;

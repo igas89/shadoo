@@ -12,6 +12,7 @@ interface NewsState {
     end: number;
     counts: number;
     isLoading: boolean | null;
+    isLazyLoading: boolean;
     lists: NewsData['data'],
 }
 
@@ -22,12 +23,13 @@ const News = memo(() => {
         end: 20,
         counts: 0,
         isLoading: null,
+        isLazyLoading: false,
         lists: [],
     });
 
     const { fecthNews } = useNews({
         onRequest(state) {
-            if (newsState.isLoading === null) {
+            if (newsState.isLoading === null || !newsState.isLoading) {
                 setState(prevState => ({
                     ...prevState,
                     isLoading: true,
@@ -40,13 +42,15 @@ const News = memo(() => {
                     ...prevState,
                     isLoading: false,
                     counts: state.response_data.counts || 0,
-                    lists: prevState.lists.concat(state.response_data.data || []),
+                    lists: newsState.isLazyLoading
+                        ? prevState.lists.concat(state.response_data.data || [])
+                        : state.response_data.data || [],
                 }));
             }
         }
     });
 
-    const getPosts = useCallback(() => {
+    const getPosts = useCallback((isLazy: boolean = false) => {
         fecthNews({
             start: newsState.start,
             end: newsState.end,
@@ -57,8 +61,13 @@ const News = memo(() => {
             start: prevState.end + 1,
             end: prevState.end + 20,
             isLoading: true,
+            isLazyLoading: isLazy,
         }));
     }, [newsState.start, newsState.end]);
+
+    const lazyLoadPosts = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+        getPosts(true);
+    }, [getPosts]);
 
     useEffect(() => {
         if (newsState.isLoading === null) {
@@ -100,7 +109,7 @@ const News = memo(() => {
 
             {newsState.counts > 0 && newsState.lists.length < newsState.counts && (
                 <div className='news-loaded'>
-                    <button className='news-loaded__btn' onClick={getPosts}>Показать еще</button>
+                    <button className='news-loaded__btn' onClick={lazyLoadPosts}>Показать еще</button>
                 </div>
             )}
         </div>
