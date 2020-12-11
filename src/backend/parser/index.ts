@@ -8,24 +8,15 @@ import storage from '../storage';
 
 import { Cfg } from '../helpers/cfg';
 const { URL_PARSE } = Cfg('application');
+import {
+    StorageResponse,
+    StorageResponseComments,
+    StorageResponseCommentsChildren,
+} from 'types';
 
 const parseImageName = (urlImage: string): string | undefined => {
     const m = urlImage.match(/[0-9a-z\_]+\.[a-z]+$/i) || [];
     return m.length ? m[0] : undefined;
-}
-
-interface GetPost {
-    author: string;
-    avatar: string;
-    id: number;
-    url: string;
-    image?: string;
-    content?: string;
-    title: string;
-    description: string;
-    descriptionImage: string;
-    page: number;
-    comments: number;
 }
 
 async function downloadImage(urlImage: string): Promise<any> {
@@ -94,17 +85,59 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<any> => ne
                         // const pages = $('.pagination li').not('.pageNext').last().text();
                         // console.log("\n --->> Всего страниц: \n", pages);
 
-                        const getPost = (url: string, result: GetPost) => {
+                        const getPost = (url: string, result: Partial<StorageResponse>) => {
                             return axios.get(url)
                                 .then(({ data: html }) => {
                                     const $ = cheerio.load(html);
                                     const body = $.html($('.body'), {
                                         decodeEntities: false
                                     }).trim().replace(/(\r?\n|\r)/gm, '').replace(/ {1,}/g, ' ');
+
+                                    const comments: StorageResponseComments[] = [];
+
+                                    $('.commentParentWrapper').each((idx, item) => {
+                                        const $entryComment = $(item).find('> .entryComment');
+                                        const avatar = $entryComment.find('img.userAvatar').attr('src') as string;
+                                        const author = $entryComment.find('.commentAuthor').text();
+                                        const date = $entryComment.find('.relativeDate').attr('datetime') as string;
+                                        const content = $entryComment.find('.commentContent').text().trim();
+                                        const commentsChildrenEl = $(item).find('.commentsChildren ul.commentsList .commentItemWrapper');
+
+                                        const children: StorageResponseCommentsChildren[] = [];
+
+                                        if (commentsChildrenEl.length) {
+                                            commentsChildrenEl.each((id, item) => {
+                                                const $child = $(item);
+                                                const childAvatar = $child.find('img.userAvatar').attr('src') as string;
+                                                const childCommentAuthor = $child.find('.commentAuthor').text();
+                                                const childRelativeDate = $child.find('.relativeDate').attr('datetime') as string;
+                                                const childCommentContent = ($child.find('.commentContent').text() as string).split(',');
+                                                const recipient = (childCommentContent.shift() as string).trim();
+
+                                                children.push({
+                                                    avatar: childAvatar,
+                                                    author: childCommentAuthor,
+                                                    date: childRelativeDate,
+                                                    content: childCommentContent.join().trim(),
+                                                    recipient,
+                                                })
+                                            })
+                                        }
+
+                                        comments.push({
+                                            avatar,
+                                            author,
+                                            date,
+                                            content,
+                                            children,
+                                        });
+                                    });
+
                                     const media = $.html($('.media')).trim();
                                     const image = $('.entryImageContainer img').attr('src') as string;
-                                    result.content = body+media;
+                                    result.content = body + media;
                                     result.image = image;
+                                    result.comments = comments;
                                     return result;
                                 })
                         }
@@ -114,15 +147,15 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<any> => ne
                             const avatar = author.find('img').attr('src') as string;
                             const title = $(elem).find('.entryTitle > a');
                             const url = title.attr('href') as string;
-                            const date = $(elem).find('.entryDate').attr('datetime')
+                            const date = $(elem).find('.entryDate').attr('datetime') || ''
                             const description = $(elem).find('.entryContent').text().trim().replace(/(\r)/gm, '').replace(/ {1,}/g, ' ');
                             const image = $(elem).find('.entryImage img').attr('src') as string;
-                            const comments = Number($(elem).find('.entryComments').text());
+                            const commentsCount = Number($(elem).find('.entryComments').text());
                             const id = Number(url.replace(/.*\/\d{4}\/\d{2}\/\d{2}\/(\d+)\/.*/, '$1'));
 
                             // console.log('url:', url);
                             // const postId = idx + 1;
-                            const result = {
+                            const result: Partial<StorageResponse> = {
                                 id,
                                 // id: page > 1 ? postId + page * 20 - 20 : postId,
                                 page,
@@ -133,7 +166,7 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<any> => ne
                                 description,
                                 descriptionImage: image,
                                 avatar,
-                                comments,
+                                commentsCount,
                                 url: url.replace(/(^https?:\/\/.+\/\d{4}\/\d{2})\/\d{2}\/\d+\//, ''),
                                 // image: `uploads/${parseImageName(image)}`,
                             };
