@@ -6,20 +6,23 @@ import {
     NewsRequestProps,
 } from 'actions/newsActions';
 
+import { StorageResponse } from 'types';
 export interface NewsData {
-    data: {
-        author: string;
-        avatar: string;
-        content: string;
-        date: string;
-        description: string
-        descriptionImage: string
-        id: number;
-        image: string;
-        page: number;
-        title: string;
-        url: string;
-    }[];
+    // data: {
+    //     author: string;
+    //     avatar: string;
+    //     content: string;
+    //     date: string;
+    //     description: string
+    //     descriptionImage: string
+    //     id: number;
+    //     comments: number;
+    //     image: string;
+    //     page: number;
+    //     title: string;
+    //     url: string;
+    // }[];
+    data: StorageResponse[];
     counts: number;
     pages: number;
 };

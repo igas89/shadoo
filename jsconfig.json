@@ -4,6 +4,7 @@
       "allowSyntheticDefaultImports": false,
       "baseUrl": "src",
       "paths": {
+        "types": ["./src/types"],
         "api": ["./src/frontend/api"],
         "store": ["./src/frontend/store"],
         "actions": ["./src/frontend/store/actions"],

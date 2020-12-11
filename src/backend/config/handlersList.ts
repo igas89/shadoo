@@ -25,7 +25,7 @@ export const handlersList: HandlersList = {
         },
         {
             api: 'updateNews',
-            endpoint: 'update/news',
+            endpoint: 'update',
             method: 'post',
         },
     ],

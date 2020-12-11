@@ -4,10 +4,12 @@ import path from 'path';
 import { Cfg } from '../helpers/cfg';
 
 const { CACHE_FILE } = Cfg('application');
-import { StorageResponse } from '../interfaces';
+import { StorageResponse } from '../../types';
 
-type StorageWriteToCache = string | {
-    error: {
+interface StorageWriteToCache {
+    status?: string;
+    message?: string;
+    error?: {
         code: string | number;
         message: string;
     }
@@ -40,7 +42,7 @@ class Storage {
                     message: errorMessage,
                     method: 'readFromCache',
                 });
-                
+
                 reject({
                     code: 404,
                     message: errorMessage,
@@ -101,8 +103,13 @@ class Storage {
                     return;
                 }
 
-                console.log(` --->> Записано в кеш: ${dataLength} постов\n`);
-                resolve('ok');
+                const message = `Записано в кеш: ${dataLength} постов`;
+                console.log(` --->> ${message}\n`);
+                
+                resolve({
+                    status: 'ok',
+                    message,
+                });
             })
         })
     }

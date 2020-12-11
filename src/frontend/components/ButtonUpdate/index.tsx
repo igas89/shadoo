@@ -52,7 +52,7 @@ const ButtonUpdate: FC = memo(() => {
         <div className='update' onClick={onUpdateData}>
             <button className={`update__btn ${isUpdate ? 'update__btn_disabled' : ''}`}>
                 {isUpdate
-                    ? 'Обновляются новости'
+                    ? 'Обновление новостей'
                     : 'Обновить новости'
                 }
             </button>

@@ -1,7 +1,7 @@
 import BaseHandler from '../../BaseHandler';
 import Storage from '../../../storage';
 
-import { StorageResponse } from '../../../interfaces';
+import { StorageResponse } from 'types';
 interface NewsHandlerDone {
     start: string;
     end: string;
@@ -39,6 +39,7 @@ export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
                     avatar: item.avatar,
                     author: item.author,
                     date: item.date,
+                    commentsCount: item.commentsCount,
                     comments: item.comments,
                     title: item.title,
                     description: item.description,

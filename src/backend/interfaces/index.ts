@@ -16,19 +16,3 @@ export interface HandlersList {
 export interface RouteList {
     [key: string]: express.Router;
 }
-
-
-export interface StorageResponse {
-    id: number;
-    page: number;
-    date: string;
-    author: string;
-    title: string;
-    content: string;
-    description: string;
-    descriptionImage: string;
-    avatar: string;
-    comments: number;
-    url: string;
-    image: string;
-}

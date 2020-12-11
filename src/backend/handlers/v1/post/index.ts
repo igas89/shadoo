@@ -1,12 +1,12 @@
 import BaseHandler from '../../BaseHandler';
 import Storage from '../../../storage';
-import { StorageResponse } from '../../../interfaces';
+import { StorageResponse } from 'types';
 
 interface PostHandlerParams {
     id: string;
 }
 
-type Data = Omit<StorageResponse, 'description' | 'descriptionImage' | 'page' | 'comments'>[];
+type Data = Omit<StorageResponse, 'description' | 'descriptionImage' | 'page' | 'comments'| 'commentsCount'>[];
 
 export default class PostHandler extends BaseHandler<PostHandlerParams> {
     done<T extends PostHandlerParams>(params: T) {

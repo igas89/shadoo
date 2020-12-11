@@ -32,6 +32,7 @@ module.exports = (env, { mode = 'development' }) => {
                 icons: path.resolve(__dirname, 'src/frontend/assets/icons/'),
                 styles: path.resolve(__dirname, 'src/frontend/styles/'),
                 files: path.resolve(__dirname, 'src/frontend/files/'),
+                types: path.resolve(__dirname, 'src/types'),
                 api: path.resolve(__dirname, 'src/frontend/api/'),
                 store: path.resolve(__dirname, 'src/frontend/store/'),
                 actions: path.resolve(__dirname, 'src/frontend/store/actions/'),

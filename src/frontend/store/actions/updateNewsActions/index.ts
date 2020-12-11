@@ -12,7 +12,7 @@ export type ActionPost = ActionSaga<never>;
 export const updateNewsSaga = function* (action: ActionPost) {
     try {
         const result = yield call(Api, {
-            endpoint: '/v1/update/news',
+            endpoint: '/v1/update',
             method: 'post',
             params: action.payload,
         });
