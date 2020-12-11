@@ -92,6 +92,10 @@ const News = memo(() => {
                                 {item.author}
                             </span>
                             <span className='news__date'>{humanizeDateISO(item.date)}</span>
+                            <span className='news__chat'>
+                                {item.commentsCount}
+                                {item.commentsCount > 0 ? <span className='news__chat_red'>++</span> : null}
+                            </span>
                         </div>
                         <h2 className='news__title'>
                             <Link to={url}>{item.title}</Link>

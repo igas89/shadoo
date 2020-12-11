@@ -79,7 +79,7 @@ $imageSize: 330px;
     border-radius: 2px;
     padding: 0 15px;
     transition: color $transition;
-    
+
     &:hover {
         color: $fontColorWhite;
     }
@@ -88,5 +88,26 @@ $imageSize: 330px;
     &:focus {
         border: none;
         outline: none;
+    }
+}
+
+.news__chat {
+    display: flex;
+    align-items: flex-end;
+    margin-left: auto;
+
+    &::before {
+        display: inline-block;
+        content: '';
+        background: url('/icons/chat.svg') no-repeat center/cover;
+        $size: 18px;
+        height: $size;
+        width: $size;
+        margin-right: 5px;
+    }
+
+    &_red {
+        margin-left: 3px;
+        color: #bd3939;
     }
 }
