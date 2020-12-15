@@ -17,3 +17,8 @@ export const CACHE_FILE = 'posts.json';
 export const OUTPUT_DIR = 'dist';
 
 export const URL_PARSE = 'https://shazoo.ru/news';
+
+export const TOKEN = {
+    secret: 'SECRET_TOKEN',
+    expires: '1h',
+};

@@ -14,6 +14,11 @@ export const DEFAULT_HANDLER_MOTHOD: ExpressMethod = 'all';
 export const handlersList: HandlersList = {
     'v1': [
         {
+            api: 'auth',
+            endpoint: '/auth',
+            method: 'post',
+        },
+        {
             api: 'news',
             endpoint: '/news',
             method: ['get', 'post', 'put', 'delete'],

@@ -1,6 +1,9 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+
+import useFabricHandlers from 'hooks/useFabricHandlers';
 import { actionDispatch, RootState, UseActionHandlers } from 'store';
+import { NewsState } from 'reducers/newsReducer';
 
 import {
     NEWS_REQUEST,
@@ -10,35 +13,23 @@ import {
     NewsRequestProps,
 } from './index';
 
-import { NewsState } from 'reducers/newsReducer';
 export interface UseNews {
-    fecthNews: (props: NewsRequestProps) => void;
+    fetchNews: (props: NewsRequestProps) => void;
     newsState: NewsState;
 }
 
+const ACTIONS = [NEWS_REQUEST, NEWS_SUCCESS, NEWS_FAILURE];
+
 export const useNews = <T extends UseActionHandlers<NewsState>>(handlers?: T): UseNews => {
     const state = useSelector<RootState, NewsState>(({ newsState }) => newsState);
-
-    const fecthNews = useCallback((props: NewsRequestProps) => {
+    const fetchNews = useCallback((props: NewsRequestProps) => {
         actionDispatch(getNewsType(props));
     }, []);
 
-    useEffect(() => {
-        if (state.action === NEWS_REQUEST && handlers?.onRequest && typeof handlers.onRequest === 'function') {
-            handlers.onRequest(state);
-        }
-
-        if (state.action === NEWS_SUCCESS && handlers?.onDone && typeof handlers.onDone === 'function') {
-            handlers.onDone(state);
-        }
-
-        if (state.action === NEWS_FAILURE && handlers?.onError && typeof handlers.onError === 'function') {
-            handlers.onError(state);
-        }
-    }, [state, handlers]);
+    useFabricHandlers<NewsState>(ACTIONS, state, handlers);
 
     return {
-        fecthNews,
+        fetchNews,
         newsState: state,
     }
 }

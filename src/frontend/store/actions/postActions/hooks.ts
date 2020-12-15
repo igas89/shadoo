@@ -1,6 +1,9 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+
+import { PostState } from 'reducers/postReducer';
 import { actionDispatch, RootState, UseActionHandlers } from 'store';
+import useFabricHandlers from 'hooks/useFabricHandlers';
 
 import {
     POST_REQUEST,
@@ -10,36 +13,24 @@ import {
     PostRequestProps,
 } from './index';
 
-import { PostState } from 'reducers/postReducer';
+const ACTIONS = [POST_REQUEST, POST_SUCCESS, POST_FAILURE];
 
 export interface UsePost {
-    fecthPost: (props: PostRequestProps) => void;
+    fetchPost: (props: PostRequestProps) => void;
     postState: PostState;
 }
 
 export const usePost = <T extends UseActionHandlers<PostState>>(handlers?: T): UsePost => {
     const state = useSelector<RootState, PostState>(({ postState }) => postState);
 
-    const fecthPost = useCallback((props: PostRequestProps) => {
+    const fetchPost = useCallback((props: PostRequestProps) => {
         actionDispatch(getPostType(props));
     }, []);
 
-    useEffect(() => {
-        if (state.action === POST_REQUEST && handlers?.onRequest && typeof handlers.onRequest === 'function') {
-            handlers.onRequest(state);
-        }
-
-        if (state.action === POST_SUCCESS && handlers?.onDone && typeof handlers.onDone === 'function') {
-            handlers.onDone(state);
-        }
-
-        if (state.action === POST_FAILURE && handlers?.onError && typeof handlers.onError === 'function') {
-            handlers.onError(state);
-        }
-    }, [state, handlers]);
-
+    useFabricHandlers<PostState>(ACTIONS, state, handlers);
+   
     return {
-        fecthPost,
+        fetchPost,
         postState: state,
     }
 }

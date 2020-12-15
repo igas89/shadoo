@@ -1,25 +1,19 @@
-import React, { FC, useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter as Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from 'store';
+import { put, take } from 'redux-saga/effects';
 
-import Header from 'pages/Header';
-import Content from 'pages/Content';
+import App from 'components/App';
 
-import 'styles/application.scss';
+import { SagaRun } from 'store';
+import { getAuthType, AUTH_SUCCESS } from 'actions/authActions';
+import { getAppContainer, delay } from 'helpers/Promise';
 
-const App: FC = () => {
-    return (
-        <Provider store={store}>
-            <Router>
-                <Header />
-                <Content />
-            </Router>
-        </Provider>
-    );
-};
+const application = function* () {
+    const container = yield getAppContainer;
+    yield put(getAuthType());
+    yield take(AUTH_SUCCESS);
 
-document.addEventListener("DOMContentLoaded", (event: Event) => {
-    ReactDOM.render(<App />, document.querySelector('.app'));
-});
+    ReactDOM.render(<App />, container);
+}
+
+SagaRun(application);

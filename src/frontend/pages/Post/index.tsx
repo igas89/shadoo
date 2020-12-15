@@ -21,7 +21,7 @@ const Post: FC = memo(() => {
         data: null,
     });
 
-    const { fecthPost } = usePost({
+    const { fetchPost } = usePost({
         onDone(state) {
             if (!postState.isLoading) {
                 return;
@@ -43,7 +43,7 @@ const Post: FC = memo(() => {
     useEffect(() => {
         const id = pathname.replace(/^\/post\/(\d+).*/, '$1');
 
-        fecthPost({ id });
+        fetchPost({ id });
         setPostState(prevState => ({
             ...prevState,
             isLoading: true,

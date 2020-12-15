@@ -27,7 +27,7 @@ const News = memo(() => {
         lists: [],
     });
 
-    const { fecthNews } = useNews({
+    const { fetchNews } = useNews({
         onRequest(state) {
             if (newsState.isLoading === null || !newsState.isLoading) {
                 setState(prevState => ({
@@ -51,7 +51,7 @@ const News = memo(() => {
     });
 
     const getPosts = useCallback((isLazy: boolean = false) => {
-        fecthNews({
+        fetchNews({
             start: newsState.start,
             end: newsState.end,
         });

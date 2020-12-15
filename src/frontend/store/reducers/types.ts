@@ -7,7 +7,7 @@ export interface ActionTypes<T, U> {
     error?: string;
 }
 
-export interface InitialState<T, U> {
+export interface InitialState<T = unknown, U = unknown> {
     action: actionStateTypes;
     error: actionStateTypes;
     request_data: T;

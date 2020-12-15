@@ -26,6 +26,7 @@ export interface UseActionHandlers<TState> {
 export type Action = { type: string };
 export const actionDispatch = (type: Action) => store.dispatch(type);
 
+export const SagaRun = sagaMiddleware.run;
 export default store;
 
 sagaMiddleware.run(rootSaga);
