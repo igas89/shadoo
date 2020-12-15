@@ -1,6 +1,6 @@
 import BaseHandler from '../../BaseHandler';
 import Storage from '../../../storage';
-import { StorageResponse } from 'types';
+import { StorageResponse } from 'types/storage';
 
 interface PostHandlerParams {
     id: string;

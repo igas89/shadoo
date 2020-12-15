@@ -7,7 +7,7 @@ import { useUpdateNews } from 'actions/updateNewsActions/hooks';
 const ButtonUpdate: FC = memo(() => {
     const [isUpdate, setUpdate] = useState<boolean | null>(null);
     const [isLoading, setLoading] = useState<boolean | null>(null);
-    const { fecthNews, newsState } = useNews({
+    const { fetchNews, newsState } = useNews({
         onDone(state) {
             if (!isUpdate || isUpdate && !isLoading) {
                 return
@@ -25,17 +25,18 @@ const ButtonUpdate: FC = memo(() => {
             }
 
             setLoading(true);
-            fecthNews({
+            fetchNews({
                 start: 1,
                 end: newsState.request_data?.end || 20,
             });
         },
         onError(state) {
-            if (!isLoading) {
-                return;
+            if (!isUpdate || isLoading) {
+                return
             }
 
             setLoading(false);
+            setUpdate(false);
         }
     });
 

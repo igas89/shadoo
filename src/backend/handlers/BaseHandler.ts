@@ -39,7 +39,7 @@ export default abstract class BaseHandler<P = never> {
     protected sendError(params: Partial<SendError>): void {
         this.response
             .status(405)
-            .send({
+            .json({
                 error: {
                     code: 500,
                     message: 'Сервис временно не доступен',

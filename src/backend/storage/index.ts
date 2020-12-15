@@ -4,7 +4,7 @@ import path from 'path';
 import { Cfg } from '../helpers/cfg';
 
 const { CACHE_FILE } = Cfg('application');
-import { StorageResponse } from '../../types';
+import { StorageResponse } from 'types/storage';
 
 interface StorageWriteToCache {
     status?: string;

@@ -1,7 +1,6 @@
-
 export interface StorageResponseCommentsChildren extends Omit<StorageResponseComments, 'children'> {
     recipient: string;
-};
+}
 
 export interface StorageResponseComments {
     avatar: string;
@@ -9,7 +8,7 @@ export interface StorageResponseComments {
     date: string;
     content: string;
     children: StorageResponseCommentsChildren[]
-};
+}
 
 export interface StorageResponse {
     id: number;

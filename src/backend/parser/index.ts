@@ -12,7 +12,7 @@ import {
     StorageResponse,
     StorageResponseComments,
     StorageResponseCommentsChildren,
-} from 'types';
+} from 'types/storage';
 
 const parseImageName = (urlImage: string): string | undefined => {
     const m = urlImage.match(/[0-9a-z\_]+\.[a-z]+$/i) || [];

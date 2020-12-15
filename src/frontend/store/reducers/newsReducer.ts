@@ -6,22 +6,8 @@ import {
     NewsRequestProps,
 } from 'actions/newsActions';
 
-import { StorageResponse } from 'types';
+import { StorageResponse } from 'types/storage';
 export interface NewsData {
-    // data: {
-    //     author: string;
-    //     avatar: string;
-    //     content: string;
-    //     date: string;
-    //     description: string
-    //     descriptionImage: string
-    //     id: number;
-    //     comments: number;
-    //     image: string;
-    //     page: number;
-    //     title: string;
-    //     url: string;
-    // }[];
     data: StorageResponse[];
     counts: number;
     pages: number;
@@ -54,7 +40,6 @@ export const newsReducer = (
                 ...state,
                 action: action.type,
                 error: null,
-                // request_data: null,
                 response_data: action.response || {},
             }
         }
@@ -63,7 +48,6 @@ export const newsReducer = (
                 ...state,
                 action: action.type,
                 error: action.error,
-                // request_data: null,
                 response_data: {},
             }
         }

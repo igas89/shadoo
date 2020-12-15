@@ -20,7 +20,7 @@
             "src/typings.d.ts"
         ],
         "paths": {
-            "types": ["types"],
+            "types/*": ["types/*"],
             "api": ["frontend/api"],
             "store": ["frontend/store"],
             "actions": ["frontend/store/actions"],
