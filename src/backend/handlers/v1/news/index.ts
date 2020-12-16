@@ -1,6 +1,7 @@
 import BaseHandler from '../../BaseHandler';
 import Storage from '../../../storage';
 
+import { NewsDataResponse } from 'types/handlers';
 import { StorageResponse } from 'types/storage';
 interface NewsHandlerDone {
     start: string;
@@ -33,7 +34,7 @@ export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
             .then((response) => {
                 const start = Number(params.start) === 0 ? 0 : Number(params.start) - 1;
                 const end = Number(params.end);
-                const data: Data = response.data.slice(start, end).map((item) => ({
+                const data = response.data.slice(start, end).map<NewsDataResponse>((item) => ({
                     id: item.id,
                     url: item.url,
                     avatar: item.avatar,

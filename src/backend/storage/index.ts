@@ -62,7 +62,7 @@ class Storage {
 
                 try {
                     const data: StorageResponse[] = JSON.parse(rawData);
-                    const counts = data.length;
+                    const counts: number = data.length;
 
                     resolve({
                         counts,

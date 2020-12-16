@@ -6,9 +6,9 @@ import {
     NewsRequestProps,
 } from 'actions/newsActions';
 
-import { StorageResponse } from 'types/storage';
+import { NewsDataResponse } from 'types/handlers';
 export interface NewsData {
-    data: StorageResponse[];
+    data: NewsDataResponse[];
     counts: number;
     pages: number;
 };
