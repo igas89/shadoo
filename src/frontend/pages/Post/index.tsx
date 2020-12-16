@@ -6,6 +6,9 @@ import { humanizeDateISO } from 'helpers/Dates';
 import { usePost } from 'actions/postActions/hooks';
 import { PostData } from 'reducers/postReducer';
 
+import PostComments, { PostCommentsProps } from './components/PostComments';
+import PostEmpty from './components/PostEmpty';
+
 import './Post.scss';
 
 interface State {
@@ -21,6 +24,11 @@ const Post: FC = memo(() => {
         data: null,
     });
 
+    const [postComments, setPostComments] = useState<PostCommentsProps>({
+        count: null,
+        data: null,
+    });
+
     const { fetchPost } = usePost({
         onDone(state) {
             if (!postState.isLoading) {
@@ -31,6 +39,10 @@ const Post: FC = memo(() => {
 
             if (data) {
                 setTitle(data[0].title);
+                setPostComments({
+                    count: data[0].commentsCount,
+                    data: data[0].comments,
+                })
             }
 
             setPostState({
@@ -50,32 +62,38 @@ const Post: FC = memo(() => {
         }));
     }, [pathname])
 
-    return (
-        <div className='post'>
-            {postState.data && postState.data.map((post) => {
-                return (
-                    <div key={post.id} className='post__item'>
-                        <h1 className='post__title'>{post.title}</h1>
-                        <div className='post-by'>
-                            <img className='post-by__avatar' src={post.avatar} />
-                            <div className='post-by__info'>
-                                <div className='post-by__author'>{post.author}</div>
-                                <div className='post-by__date'>{humanizeDateISO(post.date)}</div>
+    return postState.data && (
+        <>
+            <div className='post'>
+                {postState.data.map((post) => {
+                    return (
+                        <div key={post.id} className='post__item'>
+                            <h1 className='post__title'>{post.title}</h1>
+                            <div className='post-by'>
+                                <img className='post-by__avatar' src={post.avatar} />
+                                <div className='post-by__info'>
+                                    <div className='post-by__author'>{post.author}</div>
+                                    <div className='post-by__date'>{humanizeDateISO(post.date)}</div>
+                                </div>
                             </div>
-                        </div>
 
-                        <img className='post-image' src={post.image} />
-                        <div className='post__content' dangerouslySetInnerHTML={{ __html: post.content }} />
-                    </div>
-                )
-            }) || (
-                    <div>
-                        По вашему запросу ничего не найдено
-                    </div>
-                )
-            }
-        </div>
-    )
+                            <img className='post-image' src={post.image} />
+                            <div className='post__content' dangerouslySetInnerHTML={{ __html: post.content }} />
+                        </div>
+                    )
+                })}
+            </div>
+            
+            <div className='post-tags'>
+                <span className='post-tags__title'>Тэги:</span>
+                <span className='post-tags__list'>
+
+                </span>
+            </div>
+
+            <PostComments count={postComments.count} data={postComments.data} />
+        </>
+    ) || <PostEmpty />
 });
 
 export default Post;

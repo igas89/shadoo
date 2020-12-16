@@ -5,18 +5,10 @@ import {
     POST_FAILURE,
     PostRequestProps,
 } from 'actions/postActions';
+import { PostDataResponse } from 'types/handlers';
 
 export interface PostData {
-    data: {
-        author: string;
-        avatar: string;
-        content: string;
-        date: string;
-        id: number;
-        image: string;
-        title: string;
-        url: string;
-    }[];
+    data: PostDataResponse[];
 };
 
 export type PostState = InitialState<PostRequestProps | null | undefined, Partial<PostData>>;

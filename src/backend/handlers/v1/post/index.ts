@@ -1,12 +1,10 @@
 import BaseHandler from '../../BaseHandler';
 import Storage from '../../../storage';
-import { StorageResponse } from 'types/storage';
+import { PostDataResponse } from 'types/handlers';
 
 interface PostHandlerParams {
     id: string;
 }
-
-type Data = Omit<StorageResponse, 'description' | 'descriptionImage' | 'page' | 'comments'| 'commentsCount'>[];
 
 export default class PostHandler extends BaseHandler<PostHandlerParams> {
     done<T extends PostHandlerParams>(params: T) {
@@ -21,17 +19,20 @@ export default class PostHandler extends BaseHandler<PostHandlerParams> {
         Storage.readFromCache()
             .then((response) => {
                 const filter = response.data.filter((item) => item.id === Number(params.id))
-                let data: Data = [];
+                let data: PostDataResponse[] = [];
 
                 if (filter.length) {
                     data = filter.map((item) => ({
                         id: item.id,
                         url: item.url,
+                        page: item.page,
                         avatar: item.avatar,
                         author: item.author,
                         date: item.date,
                         title: item.title,
                         content: item.content,
+                        comments: item.comments,
+                        commentsCount: item.commentsCount,
                         image: item.image,
                     }));
                 }
