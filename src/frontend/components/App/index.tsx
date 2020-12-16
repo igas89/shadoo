@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { HashRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import Header from 'pages/Header';
+import Header from 'components/Header';
 import Content from 'pages/Content';
 import store from 'store';
 
