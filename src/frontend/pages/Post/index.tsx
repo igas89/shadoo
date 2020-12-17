@@ -62,38 +62,40 @@ const Post: FC = memo(() => {
         }));
     }, [pathname])
 
-    return postState.data && (
-        <>
-            <div className='post'>
-                {postState.data.map((post) => {
-                    return (
-                        <div key={post.id} className='post__item'>
-                            <h1 className='post__title'>{post.title}</h1>
-                            <div className='post-by'>
-                                <img className='post-by__avatar' src={post.avatar} />
-                                <div className='post-by__info'>
-                                    <div className='post-by__author'>{post.author}</div>
-                                    <div className='post-by__date'>{humanizeDateISO(post.date)}</div>
-                                </div>
+    if (!postState.data) {
+        return <PostEmpty />;
+    }
+
+    return (<>
+        <div className='post'>
+            {postState.data.map((post) => {
+                return (
+                    <div key={post.id} className='post__item'>
+                        <h1 className='post__title'>{post.title}</h1>
+                        <div className='post-by'>
+                            <img className='post-by__avatar' src={post.avatar} />
+                            <div className='post-by__info'>
+                                <div className='post-by__author'>{post.author}</div>
+                                <div className='post-by__date'>{humanizeDateISO(post.date)}</div>
                             </div>
-
-                            <img className='post-image' src={post.image} />
-                            <div className='post__content' dangerouslySetInnerHTML={{ __html: post.content }} />
                         </div>
-                    )
-                })}
-            </div>
-            
-            <div className='post-tags'>
-                <span className='post-tags__title'>Тэги:</span>
-                <span className='post-tags__list'>
 
-                </span>
-            </div>
+                        <img className='post-image' src={post.image} />
+                        <div className='post__content' dangerouslySetInnerHTML={{ __html: post.content }} />
+                    </div>
+                )
+            })}
+        </div>
 
-            <PostComments count={postComments.count} data={postComments.data} />
-        </>
-    ) || <PostEmpty />
+        <div className='post-tags'>
+            <span className='post-tags__title'>Тэги:</span>
+            <span className='post-tags__list'>
+
+            </span>
+        </div>
+
+        <PostComments count={postComments.count} data={postComments.data} />
+    </>)
 });
 
 export default Post;

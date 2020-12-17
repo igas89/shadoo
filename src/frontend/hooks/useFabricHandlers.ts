@@ -10,15 +10,15 @@ const useFabricHandlers = <S extends InitialState>(
     useEffect(() => {
         const [REQUEST, SUCCESS, FAILURE] = actions;
 
-        if (REQUEST === state.action && handlers?.onRequest && typeof handlers.onRequest === 'function') {
+        if (REQUEST === state.action && handlers?.onRequest) {
             handlers.onRequest(state);
         }
 
-        if (SUCCESS === state.action && handlers?.onDone && typeof handlers.onDone === 'function') {
+        if (SUCCESS === state.action && handlers?.onDone) {
             handlers.onDone(state);
         }
 
-        if (FAILURE === state.action && handlers?.onError && typeof handlers.onError === 'function') {
+        if (FAILURE === state.action && handlers?.onError) {
             handlers.onError(state);
         }
     }, [state, handlers]);
