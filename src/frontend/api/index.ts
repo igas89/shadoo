@@ -1,13 +1,12 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-export interface ApiParams {
+export interface ApiParams extends AxiosRequestConfig {
     endpoint: string;
-    headers?: {};
-    [K: string]: any;
+    token?: string
 }
 
 export default async function Api(args: ApiParams): Promise<unknown> {
-    const { data, endpoint, headers, types, token, method, params, ...rest } = args;
+    const { data, endpoint, headers, token, method, params, ...rest } = args;
 
     const config: AxiosRequestConfig = {
         url: endpoint,
