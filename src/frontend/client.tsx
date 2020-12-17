@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { put, take } from 'redux-saga/effects';
 
-import App from 'components/App';
+import App from './App';
 
 import { SagaRun } from 'store';
 import { getAuthType, AUTH_SUCCESS } from 'actions/authActions';

@@ -6,7 +6,7 @@ import Header from 'components/Header';
 import Content from 'pages/Content';
 import store from 'store';
 
-import './App.scss';
+import 'styles/application.scss';
 
 const App: FC = () => {
     return (
