@@ -1,8 +1,8 @@
 
 
-export const delay = <R = unknown>(timeout: number, callback?: (id: number) => R): Promise<R> => new Promise(resolve => {
+export const delay = <R = unknown>(timeout: number, callback?: (id: number) => R): Promise<R | undefined> => new Promise(resolve => {
     const id: number = setTimeout(() => {
-        resolve(callback instanceof Function ? callback(id) : undefined);
+        resolve(callback ? callback(id) : undefined);
     }, timeout)
 });
 

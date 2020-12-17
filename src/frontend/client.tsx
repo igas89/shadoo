@@ -6,7 +6,7 @@ import App from './App';
 
 import { SagaRun } from 'store';
 import { getAuthType, AUTH_SUCCESS } from 'actions/authActions';
-import { getAppContainer, delay } from 'helpers/Promise';
+import { getAppContainer } from 'helpers/Promise';
 
 const application = function* () {
     const container = yield getAppContainer;
