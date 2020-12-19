@@ -26,14 +26,12 @@ class routeLogger {
             message: '',
             endLog() {
                 console.groupEnd();
-            }
-        }
+            },
+        };
     }
 
     writeLog({ message, isError = false, isCloseLog = false }: WriteLog): void {
-        const prefix = isError
-            ? `${color.red} --->${color.yellow}`
-            : `${color.green} --->${color.white}`;
+        const prefix = isError ? `${color.red} --->${color.yellow}` : `${color.green} --->${color.white}`;
 
         if (typeof this.state.initialLog === 'function' && !this.state.message) {
             this.state.initialLog();
@@ -53,8 +51,8 @@ const methodsToString = (methods: HandlersListData['method']) => {
         return methods.toUpperCase();
     }
 
-    return methods.map(method => method.toUpperCase()).join(', ');
-}
+    return methods.map((method) => method.toUpperCase()).join(', ');
+};
 
 export default function routeHandlerMiddleWare({ version, handlers }: RouteHandlerMiddleWareProps): Router {
     const router = express.Router();
@@ -64,7 +62,7 @@ export default function routeHandlerMiddleWare({ version, handlers }: RouteHandl
     logger.createLogger(`Загружаем api обработчика: ${version}`);
 
     handlers.forEach(({ api, endpoint, method }, index) => {
-        const url = `/${version}${endpoint}`;
+        const url = `/${version}/${endpoint}`;
         const pathHandle = path.resolve(__dirname, `../handlers/${version}/${api}`);
         const isCloseLog = handlersLength === index;
         const messageMethod = `${color.white} - [ ${color.green}${methodsToString(method)}${color.white} ]`;
@@ -72,16 +70,16 @@ export default function routeHandlerMiddleWare({ version, handlers }: RouteHandl
         const loadedHandler = import(pathHandle)
             .then(({ default: handler }) => {
                 const message = `Загружен обработчик: ${pathHandle}${messageMethod}`;
-                logger.writeLog({ message, isCloseLog })
+                logger.writeLog({ message, isCloseLog });
 
                 return handler;
             })
-            .catch(error => {
+            .catch((error) => {
                 const message = `Не найден модуль обработчика: ${pathHandle}${messageMethod}`;
                 logger.writeLog({ message, isError: true, isCloseLog });
 
                 return { error };
-            })
+            });
 
         if (!Array.isArray(method)) {
             method = [method];
@@ -102,20 +100,18 @@ export default function routeHandlerMiddleWare({ version, handlers }: RouteHandl
                         new handler(request, response, next).done(getRequestData(request));
                     })
                     .catch((error) => {
-                        // console.error("\n --->> loadHandlers Error:", error);
-
                         response.status(500);
-                        response.send({
+                        response.json({
                             error: {
                                 code: 500,
                                 message: `Cannot find module ${url}`,
-                                data: error
+                                data: error,
                             },
                         });
                     });
             });
-        })
+        });
     });
 
     return router;
-};
+}

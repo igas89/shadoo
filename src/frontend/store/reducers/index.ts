@@ -8,4 +8,4 @@ export default {
     newsState: newsReducer,
     postState: postReducer,
     updateNewsState: updateNewsReducer,
-}
+};

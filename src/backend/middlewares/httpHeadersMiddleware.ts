@@ -19,14 +19,11 @@ const httpHeadersMiddleware: HttpHeadersMiddleware = (options) => {
         Object.keys(headers).forEach((key) => {
             const accessControl = headers[key];
 
-            res.setHeader(key, typeof accessControl === 'function'
-                ? accessControl(req, res, next)
-                : accessControl
-            );
+            res.setHeader(key, typeof accessControl === 'function' ? accessControl(req, res, next) : accessControl);
         });
 
         next();
-    }
+    };
 };
 
 export default httpHeadersMiddleware;

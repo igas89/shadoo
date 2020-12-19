@@ -1,4 +1,3 @@
-
 export interface TaskManagerProps {
     requestLimit: number;
     endQueue?(): void;
@@ -25,11 +24,11 @@ export default class TaskManager {
         console.log(`[TaskManager]: в очереди ${this.size()} запросов`);
 
         this._queue.forEach(({ task, taskId }, index, arr) => {
-            if ((index + 1) <= this._requestLimit) {
+            if (index + 1 <= this._requestLimit) {
                 arr[index].work = true;
                 task(taskId);
             }
-        })
+        });
     }
 
     public enqueue(task: TaskManagerQueue['task']) {
@@ -39,14 +38,14 @@ export default class TaskManager {
     }
 
     public dequeue(taskId: number): void {
-        const index = this._queue.findIndex(queue => queue.taskId === taskId);
+        const index = this._queue.findIndex((queue) => queue.taskId === taskId);
 
         if (index !== -1 && this._queue[index].work) {
             this._queue.splice(index, 1);
         }
 
         if (this.size()) {
-            const filterQueue = this._queue.filter(queue => !queue.work);
+            const filterQueue = this._queue.filter((queue) => !queue.work);
 
             if (!filterQueue.length) {
                 return;
@@ -58,7 +57,7 @@ export default class TaskManager {
                 return;
             }
 
-            const index = this._queue.findIndex(queue => queue.taskId === newTaskId);
+            const index = this._queue.findIndex((queue) => queue.taskId === newTaskId);
             this._queue[index].work = true;
             task(newTaskId);
         }

@@ -22,10 +22,12 @@ class ApplicationServer {
             .use(httpHeadersMiddleware())
             .use(cookieParser('secret') as NextHandleFunction)
             .use(bodyParser.json())
-            .use(bodyParser.urlencoded({
-                extended: true,
-            }))
-            .use(helmet() as NextHandleFunction)
+            .use(
+                bodyParser.urlencoded({
+                    extended: true,
+                }),
+            )
+            .use(helmet() as NextHandleFunction);
     }
 
     public setStatic(dist: string): this {

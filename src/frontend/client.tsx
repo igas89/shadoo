@@ -14,6 +14,6 @@ const application = function* () {
     yield take(AUTH_SUCCESS);
 
     ReactDOM.render(<App />, container);
-}
+};
 
 SagaRun(application);

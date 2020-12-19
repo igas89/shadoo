@@ -1,5 +1,5 @@
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
-import { animateScroll as scroll } from 'react-scroll'
+import { animateScroll as scroll } from 'react-scroll';
 
 import './ScrollTopButton.scss';
 
@@ -23,7 +23,7 @@ const ScrollTopButton: FC = memo(() => {
 
         if (!isScrolling) {
             setHidden(isHidden);
-        }      
+        }
     }, [isScrolling]);
 
     useEffect(() => {
@@ -39,6 +39,6 @@ const ScrollTopButton: FC = memo(() => {
             <button className='scroll-top__btn' onClick={scrollToTop} />
         </div>
     );
-})
+});
 
 export default ScrollTopButton;

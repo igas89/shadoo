@@ -5,12 +5,7 @@ import { AuthState } from 'reducers/authReducer';
 import { actionDispatch, RootState, UseActionHandlers } from 'store';
 import useFabricHandlers from 'hooks/useFabricHandlers';
 
-import {
-    AUTH_REQUEST,
-    AUTH_SUCCESS,
-    AUTH_FAILURE,
-    getAuthType,
-} from './index';
+import { AUTH_REQUEST, AUTH_SUCCESS, AUTH_FAILURE, getAuthType } from './index';
 
 const ACTIONS = [AUTH_REQUEST, AUTH_SUCCESS, AUTH_FAILURE];
 
@@ -30,5 +25,5 @@ export const useAuth = <T extends UseActionHandlers<AuthState>>(handlers?: T): U
     return {
         fetchAuthToken,
         authState: state,
-    }
-}
+    };
+};

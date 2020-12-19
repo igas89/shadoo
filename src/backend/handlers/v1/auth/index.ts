@@ -5,9 +5,13 @@ import { TOKEN } from '../../../config/application';
 
 export default class AuthHandler extends BaseHandler {
     done() {
-        const token = jwt.sign({
-            _id: uuid(),
-        }, TOKEN.secret, { expiresIn: TOKEN.expires });
+        const token = jwt.sign(
+            {
+                _id: uuid(),
+            },
+            TOKEN.secret,
+            { expiresIn: TOKEN.expires },
+        );
 
         this.sendJson({
             data: {
@@ -16,4 +20,3 @@ export default class AuthHandler extends BaseHandler {
         });
     }
 }
-

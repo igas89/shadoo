@@ -7,11 +7,7 @@ import WithRoute from 'components/WithRoute';
 import ScrollTopButton from 'components/ScrollTopButton';
 import './Content.scss';
 
-const NotFound = () => (
-    <div>
-        По вашему запросу, ничего не найдено
-    </div>
-);
+const NotFound = () => <div>По вашему запросу, ничего не найдено</div>;
 
 const Content = memo(() => {
     return (
@@ -30,14 +26,14 @@ const Content = memo(() => {
                         },
                         {
                             path: '*',
-                            children: <NotFound />
+                            children: <NotFound />,
                         },
                     ]}
                 />
             </div>
             <ScrollTopButton />
         </div>
-    )
+    );
 });
 
 export default Content;

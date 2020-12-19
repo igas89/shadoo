@@ -12,7 +12,7 @@ interface StorageWriteToCache {
     error?: {
         code: string | number;
         message: string;
-    }
+    };
 }
 interface StorageReadFromCache {
     data: StorageResponse[];
@@ -24,13 +24,10 @@ class Storage {
     private filePath: string;
 
     constructor(filePath: string) {
-        this.filePath = path.resolve(__dirname, `../../../cache/${filePath}`);;
+        this.filePath = path.resolve(__dirname, `../../../cache/${filePath}`);
     }
 
-    private _errorLog({ message, method }: {
-        message: string;
-        method: string
-    }): void {
+    private _errorLog({ message, method }: { message: string; method: string }): void {
         console.error(` --->> [Storage ERROR] ${method} - ${message}`);
     }
 
@@ -78,7 +75,7 @@ class Storage {
                     return;
                 }
             });
-        })
+        });
     }
 
     writeToCache(data: unknown[]): Promise<StorageWriteToCache> {
@@ -98,20 +95,20 @@ class Storage {
                         error: {
                             code: error.code,
                             message: error.message,
-                        }
-                    })
+                        },
+                    });
                     return;
                 }
 
                 const message = `Записано в кеш: ${dataLength} постов`;
                 console.log(` --->> ${message}\n`);
-                
+
                 resolve({
                     status: 'ok',
                     message,
                 });
-            })
-        })
+            });
+        });
     }
 }
 

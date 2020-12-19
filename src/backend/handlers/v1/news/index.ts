@@ -12,10 +12,13 @@ type Data = Omit<StorageResponse, 'content' | 'page' | 'image'>[];
 export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
     private _requiredParams = ['start', 'end'];
 
-    private _createErrorMessage = (param: Partial<NewsHandlerDone>[]): string => `Не передан обязательный параметр ${param.join(', ')}`;
+    private _createErrorMessage = (param: Partial<NewsHandlerDone>[]): string =>
+        `Не передан обязательный параметр ${param.join(', ')}`;
     private _isParamsUndefined = (params: NewsHandlerDone): Partial<NewsHandlerDone>[] => {
-        return this._requiredParams.filter(key => Object.keys(params).indexOf(key) === -1) as Partial<NewsHandlerDone>[];
-    }
+        return this._requiredParams.filter(
+            (key) => Object.keys(params).indexOf(key) === -1,
+        ) as Partial<NewsHandlerDone>[];
+    };
 
     done<T extends NewsHandlerDone>(params: T) {
         let undefinedParams = this._isParamsUndefined(params);
@@ -24,6 +27,7 @@ export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
 
         if (undefinedParams.length) {
             this.sendError({
+                status: 503,
                 code: 503,
                 message: this._createErrorMessage(undefinedParams),
             });
@@ -52,13 +56,12 @@ export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
                     data,
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.sendError({
-                    code: error.code || 503,
+                    status: error.code,
+                    code: error.code,
                     message: error.message,
                 });
-            })
-
+            });
     }
 }
-

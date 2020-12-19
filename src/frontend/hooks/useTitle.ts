@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 export interface UseTitle {
     setTitle(title: string): void;
-    getTitle(): string
+    getTitle(): string;
 }
 
 const useTitle = (): UseTitle => {
@@ -14,11 +14,10 @@ const useTitle = (): UseTitle => {
         return document.title;
     }, [document.title]);
 
-
     return {
         setTitle,
         getTitle,
-    }
-}
+    };
+};
 
 export default useTitle;

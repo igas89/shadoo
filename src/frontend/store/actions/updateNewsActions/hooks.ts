@@ -5,12 +5,7 @@ import { UpdateNewsState } from 'reducers/updateNewsReducer';
 import { actionDispatch, RootState, UseActionHandlers } from 'store';
 import useFabricHandlers from 'hooks/useFabricHandlers';
 
-import {
-    UPDATE_NEWS_REQUEST,
-    UPDATE_NEWS_SUCCESS,
-    UPDATE_NEWS_FAILURE,
-    getUpdateNewsType,
-} from './index';
+import { UPDATE_NEWS_REQUEST, UPDATE_NEWS_SUCCESS, UPDATE_NEWS_FAILURE, getUpdateNewsType } from './index';
 
 const ACTIONS = [UPDATE_NEWS_REQUEST, UPDATE_NEWS_SUCCESS, UPDATE_NEWS_FAILURE];
 
@@ -26,9 +21,9 @@ export const useUpdateNews = <T extends UseActionHandlers<UpdateNewsState>>(hand
     }, []);
 
     useFabricHandlers<UpdateNewsState>(ACTIONS, state, handlers);
-    
+
     return {
         updateNews,
         updateNewsState: state,
-    }
-}
+    };
+};

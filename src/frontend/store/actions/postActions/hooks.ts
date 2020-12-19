@@ -5,13 +5,7 @@ import { PostState } from 'reducers/postReducer';
 import { actionDispatch, RootState, UseActionHandlers } from 'store';
 import useFabricHandlers from 'hooks/useFabricHandlers';
 
-import {
-    POST_REQUEST,
-    POST_SUCCESS,
-    POST_FAILURE,
-    getPostType,
-    PostRequestProps,
-} from './index';
+import { POST_REQUEST, POST_SUCCESS, POST_FAILURE, getPostType, PostRequestProps } from './index';
 
 const ACTIONS = [POST_REQUEST, POST_SUCCESS, POST_FAILURE];
 
@@ -28,9 +22,9 @@ export const usePost = <T extends UseActionHandlers<PostState>>(handlers?: T): U
     }, []);
 
     useFabricHandlers<PostState>(ACTIONS, state, handlers);
-   
+
     return {
         fetchPost,
         postState: state,
-    }
-}
+    };
+};

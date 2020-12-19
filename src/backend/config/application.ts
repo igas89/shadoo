@@ -11,7 +11,7 @@ export const SERVER_PORT = 3000;
 export const CACHE_FILE = 'posts.json';
 
 /**
- * Папка бандлов 
+ * Папка бандлов
  * @type {string}
  */
 export const OUTPUT_DIR = 'dist';
