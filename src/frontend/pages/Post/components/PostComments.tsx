@@ -17,18 +17,18 @@ const PostComments: FC<PostCommentsProps> = ({ count, data }) => {
                     {data.map((comment, key) => {
                         return (
                             <PostCommentsItem key={key} data={comment}>
-                                {comment.children && comment.children.length > 0 &&
+                                {comment.children &&
+                                    comment.children.length > 0 &&
                                     comment.children.map((childrenComment, cKey) => {
-                                        return <PostCommentsItem key={cKey} data={childrenComment} />
-                                    })
-                                }
+                                        return <PostCommentsItem key={cKey} data={childrenComment} />;
+                                    })}
                             </PostCommentsItem>
-                        )
+                        );
                     })}
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
 export default PostComments;

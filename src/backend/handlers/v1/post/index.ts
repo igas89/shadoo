@@ -10,6 +10,7 @@ export default class PostHandler extends BaseHandler<PostHandlerParams> {
     done<T extends PostHandlerParams>(params: T) {
         if (!params.id) {
             this.sendError({
+                status: 503,
                 code: 503,
                 message: 'Не передан обязательный параметр id',
             });
@@ -18,7 +19,7 @@ export default class PostHandler extends BaseHandler<PostHandlerParams> {
 
         Storage.readFromCache()
             .then((response) => {
-                const filter = response.data.filter((item) => item.id === Number(params.id))
+                const filter = response.data.filter((item) => item.id === Number(params.id));
                 let data: PostDataResponse[] = [];
 
                 if (filter.length) {
@@ -30,6 +31,7 @@ export default class PostHandler extends BaseHandler<PostHandlerParams> {
                         author: item.author,
                         date: item.date,
                         title: item.title,
+                        tags: item.tags,
                         content: item.content,
                         comments: item.comments,
                         commentsCount: item.commentsCount,
@@ -38,13 +40,12 @@ export default class PostHandler extends BaseHandler<PostHandlerParams> {
                 }
                 this.sendJson({ data });
             })
-            .catch(error => {
+            .catch((error) => {
                 this.sendError({
-                    code: error.code || 503,
+                    status: error.code,
+                    code: error.code,
                     message: error.message,
                 });
-            })
-
+            });
     }
 }
-

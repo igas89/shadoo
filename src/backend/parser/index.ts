@@ -10,6 +10,7 @@ import { Cfg } from '../helpers/cfg';
 const { URL_PARSE } = Cfg('application');
 import {
     StorageResponse,
+    StorageResponseTags,
     StorageResponseComments,
     StorageResponseCommentsChildren,
 } from 'types/storage';
@@ -17,7 +18,7 @@ import {
 const parseImageName = (urlImage: string): string | undefined => {
     const m = urlImage.match(/[0-9a-z\_]+\.[a-z]+$/i) || [];
     return m.length ? m[0] : undefined;
-}
+};
 
 async function downloadImage(urlImage: string): Promise<any> {
     const dirUpload = path.resolve(__dirname, '../../../upload');
@@ -48,7 +49,7 @@ async function downloadImage(urlImage: string): Promise<any> {
     return new Promise((resolve, reject) => {
         writer.on('finish', resolve);
         writer.on('error', reject);
-    })
+    });
 }
 
 interface ParserProps {
@@ -57,140 +58,169 @@ interface ParserProps {
     requestLimit: number;
 }
 
-const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<any> => new Promise((res, rej) => {
-    const requests: Promise<any>[] = [];
+const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<any> =>
+    new Promise((res, rej) => {
+        const requests: Promise<any>[] = [];
 
-    const taskManager = new TaskManager({
-        requestLimit: requestLimit,
-        endQueue: () => {
-            res(requests)
-        }
-    });
+        const taskManager = new TaskManager({
+            requestLimit: requestLimit,
+            endQueue: () => {
+                res(requests);
+            },
+        });
 
-    for (let page = 1; page <= maxPage; page++) {
-        taskManager.enqueue((taskId) => {
-            const urlReq = `${url}?page=${page}`;
-            const messageLog = ` --->> Читаем: ${urlReq}`;
-            console.log(messageLog);
-            // process.stdout.write(`${messageLog}\r`);
+        for (let page = 1; page <= maxPage; page++) {
+            taskManager.enqueue((taskId) => {
+                const urlReq = `${url}?page=${page}`;
+                const messageLog = ` --->> Читаем: ${urlReq}`;
+                console.log(messageLog);
+                // process.stdout.write(`${messageLog}\r`);
 
-            requests.push(axios.get(urlReq)
-                .then(response => {
-                    return new Promise((resolve, reject) => {
-                        const requestsPost: Promise<any>[] = [];
-                        const $ = cheerio.load(response.data, {
-                            decodeEntities: false,
-                        });
+                requests.push(
+                    axios
+                        .get(urlReq)
+                        .then((response) => {
+                            return new Promise((resolve, reject) => {
+                                const requestsPost: Promise<any>[] = [];
+                                const $ = cheerio.load(response.data, {
+                                    decodeEntities: false,
+                                });
 
-                        // const pages = $('.pagination li').not('.pageNext').last().text();
-                        // console.log("\n --->> Всего страниц: \n", pages);
+                                // const pages = $('.pagination li').not('.pageNext').last().text();
+                                // console.log("\n --->> Всего страниц: \n", pages);
 
-                        const getPost = (url: string, result: Partial<StorageResponse>) => {
-                            return axios.get(url)
-                                .then(({ data: html }) => {
-                                    const $ = cheerio.load(html);
-                                    const body = $.html($('.body'), {
-                                        decodeEntities: false
-                                    }).trim().replace(/(\r?\n|\r)/gm, '').replace(/ {1,}/g, ' ');
+                                const getPost = (url: string, result: Partial<StorageResponse>) => {
+                                    return axios.get(url).then(({ data: html }) => {
+                                        const $ = cheerio.load(html);
+                                        const body = $.html($('.body'), {
+                                            decodeEntities: false,
+                                        })
+                                            .trim()
+                                            .replace(/(\r?\n|\r)/gm, '')
+                                            .replace(/ {1,}/g, ' ');
+                                        const $tagElements = $('.tags.entryMeta').find('a');
 
-                                    const comments: StorageResponseComments[] = [];
+                                        const tags: StorageResponseTags[] = [];
+                                        const comments: StorageResponseComments[] = [];
 
-                                    $('.commentParentWrapper').each((idx, item) => {
-                                        const $entryComment = $(item).find('> .entryComment');
-                                        const avatar = $entryComment.find('img.userAvatar').attr('src') as string;
-                                        const author = $entryComment.find('.commentAuthor').text();
-                                        const date = $entryComment.find('.relativeDate').attr('datetime') as string;
-                                        const content = $entryComment.find('.commentContent').text().trim();
-                                        const commentsChildrenEl = $(item).find('.commentsChildren ul.commentsList .commentItemWrapper');
-
-                                        const children: StorageResponseCommentsChildren[] = [];
-
-                                        if (commentsChildrenEl.length) {
-                                            commentsChildrenEl.each((id, item) => {
-                                                const $child = $(item);
-                                                const childAvatar = $child.find('img.userAvatar').attr('src') as string;
-                                                const childCommentAuthor = $child.find('.commentAuthor').text();
-                                                const childRelativeDate = $child.find('.relativeDate').attr('datetime') as string;
-                                                const childCommentContent = ($child.find('.commentContent').text() as string).split(',');
-                                                const recipient = (childCommentContent.shift() as string).trim();
-
-                                                children.push({
-                                                    avatar: childAvatar,
-                                                    author: childCommentAuthor,
-                                                    date: childRelativeDate,
-                                                    content: childCommentContent.join().trim(),
-                                                    recipient,
-                                                })
-                                            })
+                                        if ($tagElements.length) {
+                                            $tagElements.each((_idx, item) => {
+                                                tags.push({
+                                                    url: $(item).attr('href') as string,
+                                                    title: $(item).text(),
+                                                });
+                                            });
                                         }
 
-                                        comments.push({
-                                            avatar,
-                                            author,
-                                            date,
-                                            content,
-                                            children,
+                                        $('.commentParentWrapper').each((idx, item) => {
+                                            const $entryComment = $(item).find('> .entryComment');
+                                            const avatar = $entryComment.find('img.userAvatar').attr('src') as string;
+                                            const author = $entryComment.find('.commentAuthor').text();
+                                            const date = $entryComment.find('.relativeDate').attr('datetime') as string;
+                                            const content = $entryComment.find('.commentContent').text().trim();
+                                            const $commentsChildrenEl = $(item).find(
+                                                '.commentsChildren ul.commentsList .commentItemWrapper',
+                                            );
+                                            const children: StorageResponseCommentsChildren[] = [];
+
+                                            if ($commentsChildrenEl.length) {
+                                                $commentsChildrenEl.each((id, item) => {
+                                                    const $child = $(item);
+                                                    const childAvatar = $child
+                                                        .find('img.userAvatar')
+                                                        .attr('src') as string;
+                                                    const childCommentAuthor = $child.find('.commentAuthor').text();
+                                                    const childRelativeDate = $child
+                                                        .find('.relativeDate')
+                                                        .attr('datetime') as string;
+                                                    const childCommentContent = ($child
+                                                        .find('.commentContent')
+                                                        .text() as string).split(',');
+                                                    const recipient = (childCommentContent.shift() as string).trim();
+
+                                                    children.push({
+                                                        avatar: childAvatar,
+                                                        author: childCommentAuthor,
+                                                        date: childRelativeDate,
+                                                        content: childCommentContent.join().trim(),
+                                                        recipient,
+                                                    });
+                                                });
+                                            }
+
+                                            comments.push({
+                                                avatar,
+                                                author,
+                                                date,
+                                                content,
+                                                children,
+                                            });
                                         });
+
+                                        const media = $.html($('.media')).trim();
+                                        const image = $('.entryImageContainer img').attr('src') as string;
+                                        result.content = body + media;
+                                        result.image = image;
+                                        result.tags = tags;
+                                        result.comments = comments;
+                                        return result;
                                     });
+                                };
 
-                                    const media = $.html($('.media')).trim();
-                                    const image = $('.entryImageContainer img').attr('src') as string;
-                                    result.content = body + media;
-                                    result.image = image;
-                                    result.comments = comments;
-                                    return result;
-                                })
-                        }
+                                $('.entryList > .entry').each((idx, elem) => {
+                                    const author = $(elem).find('.entryAuthor');
+                                    const avatar = author.find('img').attr('src') as string;
+                                    const title = $(elem).find('.entryTitle > a');
+                                    const url = title.attr('href') as string;
+                                    const date = $(elem).find('.entryDate').attr('datetime') || '';
+                                    const description = $(elem)
+                                        .find('.entryContent')
+                                        .text()
+                                        .trim()
+                                        .replace(/(\r)/gm, '')
+                                        .replace(/ {1,}/g, ' ');
+                                    const image = $(elem).find('.entryImage img').attr('src') as string;
+                                    const commentsCount = Number($(elem).find('.entryComments').text());
+                                    const id = Number(url.replace(/.*\/\d{4}\/\d{2}\/\d{2}\/(\d+)\/.*/, '$1'));
 
-                        $('.entryList > .entry').each((idx, elem) => {
-                            const author = $(elem).find('.entryAuthor');
-                            const avatar = author.find('img').attr('src') as string;
-                            const title = $(elem).find('.entryTitle > a');
-                            const url = title.attr('href') as string;
-                            const date = $(elem).find('.entryDate').attr('datetime') || ''
-                            const description = $(elem).find('.entryContent').text().trim().replace(/(\r)/gm, '').replace(/ {1,}/g, ' ');
-                            const image = $(elem).find('.entryImage img').attr('src') as string;
-                            const commentsCount = Number($(elem).find('.entryComments').text());
-                            const id = Number(url.replace(/.*\/\d{4}\/\d{2}\/\d{2}\/(\d+)\/.*/, '$1'));
+                                    const result: Partial<StorageResponse> = {
+                                        id,
+                                        page,
+                                        date,
+                                        author: author
+                                            .text()
+                                            .replace(/[\n\s]/, '')
+                                            .trim(),
+                                        title: title.text(),
+                                        content: '',
+                                        description,
+                                        descriptionImage: image,
+                                        avatar,
+                                        commentsCount,
+                                        url: url.replace(/(^https?:\/\/.+\/\d{4}\/\d{2})\/\d{2}\/\d+\//, ''),
+                                        // image: `uploads/${parseImageName(image)}`,
+                                    };
 
-                            // console.log('url:', url);
-                            // const postId = idx + 1;
-                            const result: Partial<StorageResponse> = {
-                                id,
-                                // id: page > 1 ? postId + page * 20 - 20 : postId,
-                                page,
-                                date,
-                                author: author.text().replace(/[\n\s]/, '').trim(),
-                                title: title.text(),
-                                content: '',
-                                description,
-                                descriptionImage: image,
-                                avatar,
-                                commentsCount,
-                                url: url.replace(/(^https?:\/\/.+\/\d{4}\/\d{2})\/\d{2}\/\d+\//, ''),
-                                // image: `uploads/${parseImageName(image)}`,
-                            };
+                                    // downloadImage(image);
+                                    requestsPost.push(getPost(url, result));
+                                });
 
-                            // downloadImage(image);
-                            requestsPost.push(getPost(url, result))
-                        });
-
-                        Promise.all(requestsPost).then(posts => {
-                            taskManager.dequeue(taskId);
-                            resolve(posts)
+                                Promise.all(requestsPost).then((posts) => {
+                                    taskManager.dequeue(taskId);
+                                    resolve(posts);
+                                });
+                            });
                         })
-                    });
-                })
-                .catch(error => {
-                    console.log("\n --->> axios error: ", error);
-                    Promise.reject(error);
-                })
-            )
-        });
-    }
+                        .catch((error) => {
+                            console.log('\n --->> axios error: ', error);
+                            Promise.reject(error);
+                        }),
+                );
+            });
+        }
 
-    taskManager.run();
-})
+        taskManager.run();
+    });
 
 export default parser;
 

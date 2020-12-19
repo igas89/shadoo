@@ -7,7 +7,12 @@ export interface StorageResponseComments {
     author: string;
     date: string;
     content: string;
-    children: StorageResponseCommentsChildren[]
+    children: StorageResponseCommentsChildren[];
+}
+
+export interface StorageResponseTags {
+    url: string;
+    title: string;
 }
 
 export interface StorageResponse {
@@ -20,6 +25,7 @@ export interface StorageResponse {
     description: string;
     descriptionImage: string;
     avatar: string;
+    tags: StorageResponseTags[];
     comments: StorageResponseComments[];
     commentsCount: number;
     url: string;

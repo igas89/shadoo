@@ -29,11 +29,9 @@ const PostCommentsItem: FC<PostCommentsItemProps> = ({ data, children }) => {
                     <span className='post-comments__text'>{data.content}</span>
                 </div>
             </div>
-            {children && (
-                <div className='post-comments__children'>{children}</div>
-            )}
+            {children && <div className='post-comments__children'>{children}</div>}
         </>
-    )
-}
+    );
+};
 
 export default PostCommentsItem;
