@@ -1,8 +1,8 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
 
 export interface ApiParams extends AxiosRequestConfig {
     endpoint: string;
-    token?: string
+    token?: string;
 }
 
 export default async function Api(args: ApiParams): Promise<unknown> {
@@ -19,18 +19,18 @@ export default async function Api(args: ApiParams): Promise<unknown> {
             ...(token ? { 'x-access-token': token } : {}),
             ...(headers ?? {}),
         },
-    }
-    const instance: AxiosInstance = axios.create(config)
+    };
+    const instance: AxiosInstance = axios.create(config);
 
     instance.interceptors.request.use(
-        config => {
+        (config) => {
             // console.log('interceptors request:', config);
             return config;
         },
-        error => {
+        (error) => {
             // console.error('interceptors request [error]:', error);
             return Promise.reject(error);
-        }
+        },
     );
 
     instance.interceptors.response.use(
@@ -38,12 +38,21 @@ export default async function Api(args: ApiParams): Promise<unknown> {
             // console.log('interceptors response:', response);
             return response;
         },
-        (error) => {
+        (error: AxiosError) => {
             // console.error('interceptors response [error]:', error);
-            return Promise.reject(error);
+
+            // Ловим подготовленые ошибки из бэка
+            if (error.response?.data.error) {
+                return Promise.reject(error.response.data.error);
+            }
+
+            return Promise.reject({
+                code: 404,
+                message: `Ошибка в ответе ${endpoint}`,
+            });
         },
-    )
+    );
 
     const response = await instance(config);
     return response.data;
-}; 
+}
