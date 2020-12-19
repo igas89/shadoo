@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import './ButtonUpdate.scss';
 
 import { useNews } from 'actions/newsActions/hooks';
@@ -9,19 +9,19 @@ const ButtonUpdate: FC = memo(() => {
     const [isLoading, setLoading] = useState<boolean | null>(null);
     const { fetchNews, newsState } = useNews({
         onDone(state) {
-            if (!isUpdate || isUpdate && !isLoading) {
-                return
+            if (!isUpdate || (isUpdate && !isLoading)) {
+                return;
             }
 
             setLoading(false);
             setUpdate(false);
-        }
+        },
     });
 
     const { updateNews } = useUpdateNews({
         onDone(state) {
             if (!isUpdate || isLoading) {
-                return
+                return;
             }
 
             setLoading(true);
@@ -32,33 +32,33 @@ const ButtonUpdate: FC = memo(() => {
         },
         onError(state) {
             if (!isUpdate || isLoading) {
-                return
+                return;
             }
 
             setLoading(false);
             setUpdate(false);
-        }
+        },
     });
 
-    const onUpdateData = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-        if (isLoading || isUpdate) {
-            return;
-        }
+    const onUpdateData = useCallback(
+        (event: React.MouseEvent<HTMLDivElement>) => {
+            if (isLoading || isUpdate) {
+                return;
+            }
 
-        setUpdate(true);
-        updateNews();
-    }, [isLoading, isUpdate]);
+            setUpdate(true);
+            updateNews();
+        },
+        [isLoading, isUpdate, updateNews],
+    );
 
     return (
         <div className='update' onClick={onUpdateData}>
             <button className={`update__btn ${isUpdate ? 'update__btn_disabled' : ''}`}>
-                {isUpdate
-                    ? 'Обновление новостей'
-                    : 'Обновить новости'
-                }
+                {isUpdate ? 'Обновление новостей' : 'Обновить новости'}
             </button>
         </div>
-    )
-})
+    );
+});
 
 export default ButtonUpdate;

@@ -5,23 +5,29 @@ import { UseActionHandlers } from 'store';
 const useFabricHandlers = <S extends InitialState>(
     actions: string[],
     state: S,
-    handlers?: UseActionHandlers<S>
+    handlers?: UseActionHandlers<S>,
 ): void => {
     useEffect(() => {
         const [REQUEST, SUCCESS, FAILURE] = actions;
 
-        if (REQUEST === state.action && handlers?.onRequest) {
-            handlers.onRequest(state);
+        if (!handlers) {
+            return;
         }
 
-        if (SUCCESS === state.action && handlers?.onDone) {
-            handlers.onDone(state);
+        const { onRequest, onDone, onError } = handlers;
+
+        if (REQUEST === state.action && onRequest) {
+            onRequest(state);
         }
 
-        if (FAILURE === state.action && handlers?.onError) {
-            handlers.onError(state);
+        if (SUCCESS === state.action && onDone) {
+            onDone(state);
         }
-    }, [state, handlers]);
-}
+
+        if (FAILURE === state.action && onError) {
+            onError(state);
+        }
+    }, [actions, state, handlers]);
+};
 
 export default useFabricHandlers;

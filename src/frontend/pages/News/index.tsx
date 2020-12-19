@@ -12,8 +12,10 @@ interface NewsState {
     end: number;
     counts: number;
     isLoading: boolean | null;
+    isError: boolean | null;
+    erroMessage: string | null;
     isLazyLoading: boolean;
-    lists: NewsData['data'],
+    lists: NewsData['data'];
 }
 
 const News = memo(() => {
@@ -23,6 +25,8 @@ const News = memo(() => {
         end: 20,
         counts: 0,
         isLoading: null,
+        erroMessage: null,
+        isError: null,
         isLazyLoading: false,
         lists: [],
     });
@@ -30,7 +34,7 @@ const News = memo(() => {
     const { fetchNews } = useNews({
         onRequest(state) {
             if (newsState.isLoading === null || !newsState.isLoading) {
-                setState(prevState => ({
+                setState((prevState) => ({
                     ...prevState,
                     isLoading: true,
                 }));
@@ -38,7 +42,7 @@ const News = memo(() => {
         },
         onDone(state) {
             if (newsState.isLoading) {
-                setState(prevState => ({
+                setState((prevState) => ({
                     ...prevState,
                     isLoading: false,
                     counts: state.response_data.counts || 0,
@@ -47,27 +51,43 @@ const News = memo(() => {
                         : state.response_data.data || [],
                 }));
             }
-        }
+        },
+        onError(state) {
+            if (newsState.isLoading) {
+                setState((prevState) => ({
+                    ...prevState,
+                    isLoading: false,
+                    isError: true,
+                    erroMessage: state.error.message,
+                }));
+            }
+        },
     });
 
-    const getPosts = useCallback((isLazy: boolean = false) => {
-        fetchNews({
-            start: newsState.start,
-            end: newsState.end,
-        });
+    const getPosts = useCallback(
+        (isLazy: boolean = false) => {
+            fetchNews({
+                start: newsState.start,
+                end: newsState.end,
+            });
 
-        setState(prevState => ({
-            ...prevState,
-            start: prevState.end + 1,
-            end: prevState.end + 20,
-            isLoading: true,
-            isLazyLoading: isLazy,
-        }));
-    }, [newsState.start, newsState.end]);
+            setState((prevState) => ({
+                ...prevState,
+                start: prevState.end + 1,
+                end: prevState.end + 20,
+                isLoading: true,
+                isLazyLoading: isLazy,
+            }));
+        },
+        [newsState.start, newsState.end],
+    );
 
-    const lazyLoadPosts = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-        getPosts(true);
-    }, [getPosts]);
+    const lazyLoadPosts = useCallback(
+        (event: React.MouseEvent<HTMLButtonElement>) => {
+            getPosts(true);
+        },
+        [getPosts],
+    );
 
     useEffect(() => {
         if (newsState.isLoading === null) {
@@ -108,16 +128,18 @@ const News = memo(() => {
                             </Link>
                         </div>
                     </div>
-                )
+                );
             })}
 
             {newsState.counts > 0 && newsState.lists.length < newsState.counts && (
                 <div className='news-loaded'>
-                    <button className='news-loaded__btn' onClick={lazyLoadPosts}>Показать еще</button>
+                    <button className='news-loaded__btn' onClick={lazyLoadPosts}>
+                        Показать еще
+                    </button>
                 </div>
             )}
         </div>
-    )
+    );
 });
 
 export default News;
