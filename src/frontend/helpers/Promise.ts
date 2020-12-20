@@ -7,7 +7,7 @@ export const delay = <R = unknown>(timeout: number, callback?: (id: number) => R
 
 export const isPromise = <T>(promise: Promise<T>): boolean => promise instanceof Promise;
 
-/* Выполнение прописов (и не только) из генератора */
+/* Выполнение промисов (и не только) из генератора */
 export const executePromise = <T, TReturn extends Promise<T> = Promise<T>>(
     gen: () => Generator<TReturn, T, T>,
 ): Promise<T> =>

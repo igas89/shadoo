@@ -8,12 +8,11 @@ const useFabricHandlers = <S extends InitialState>(
     handlers?: UseActionHandlers<S>,
 ): void => {
     useEffect(() => {
-        const [REQUEST, SUCCESS, FAILURE] = actions;
-
         if (!handlers) {
             return;
         }
 
+        const [REQUEST, SUCCESS, FAILURE] = actions;
         const { onRequest, onDone, onError } = handlers;
 
         if (REQUEST === state.action && onRequest) {

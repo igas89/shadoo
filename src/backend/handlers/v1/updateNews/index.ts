@@ -2,7 +2,6 @@ import BaseHandler from '../../BaseHandler';
 import storage from '../../../storage';
 import { StorageResponse } from 'types/storage';
 
-
 import { Cfg } from '../../../helpers/cfg';
 const { URL_PARSE } = Cfg('application');
 
