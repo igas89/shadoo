@@ -23,23 +23,13 @@ export default async function Api(args: ApiParams): Promise<unknown> {
     const instance: AxiosInstance = axios.create(config);
 
     instance.interceptors.request.use(
-        (config) => {
-            // console.log('interceptors request:', config);
-            return config;
-        },
-        (error) => {
-            // console.error('interceptors request [error]:', error);
-            return Promise.reject(error);
-        },
+        (config) => config,
+        (error) => Promise.reject(error),
     );
 
     instance.interceptors.response.use(
-        (response) => {
-            // console.log('interceptors response:', response);
-            return response;
-        },
+        (response) => response,
         (error: AxiosError) => {
-            // console.error('interceptors response [error]:', error);
 
             // Ловим подготовленые ошибки из бэка
             if (error.response?.data.error) {

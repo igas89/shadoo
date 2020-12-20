@@ -18,6 +18,14 @@
   },
   "plugins": ["@typescript-eslint", "prettier", "react"],
   "rules": {
+    "func-names": "off",
+    "global-require": "off",
+    "no-shadow": "off",
+    "no-plusplus": "off",
+    "react/no-array-index-key": "off",
+    "react/no-danger": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-shadow": "off",
     "@typescript-eslint/explicit-function-return-type": ["warn", { "allowExpressions": true }],
     "@typescript-eslint/camelcase": "off",
     "no-param-reassign": ["error", { "props": false }],
@@ -54,13 +62,14 @@
         "devDependencies": ["src/setupTests.ts", "**/*.test.tsx", "**/*.test.ts"]
       }
     ],
+    "import/no-dynamic-require": "off",
     "import/prefer-default-export": "off",
     "import/no-unresolved": "off",
     "import/extensions": "off",
     "react/prop-types": "off",
     "no-underscore-dangle": "off",
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "prefer-promise-reject-errors": "off"
   },
   "settings": {
     "import/resolver": {

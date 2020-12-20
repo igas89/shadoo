@@ -1,5 +1,5 @@
-import { ActionTypes, InitialState } from './types';
 import { UPDATE_NEWS_REQUEST, UPDATE_NEWS_SUCCESS, UPDATE_NEWS_FAILURE } from 'actions/updateNewsActions';
+import { ActionTypes, InitialState } from './types';
 
 export interface UpdateNewsData {
     status: string;

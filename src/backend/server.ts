@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import path from 'path';
 import Application from './app';
-import { getHandlersList, Cfg } from './helpers/cfg';
+import { getHandlersList } from './helpers/cfg';
+import { SERVER_PORT, OUTPUT_DIR } from './config/application';
 
-const { SERVER_PORT, OUTPUT_DIR } = Cfg('application');
 const dist = path.join(__dirname, `/../../${OUTPUT_DIR}/`);
 
 Application.setStatic(dist)
@@ -19,6 +20,6 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, p) => {
     console.log('\n --->> Unhandled Rejection at: Promise\n', {
         p,
-        reason: reason,
+        reason,
     });
 });

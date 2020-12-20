@@ -13,12 +13,11 @@ export interface PostCommentsItemProps {
     children?: React.ReactNode;
 }
 
-const PostCommentsItem: FC<PostCommentsItemProps> = ({ data, children }) => {
-    return (
+const PostCommentsItem: FC<PostCommentsItemProps> = ({ data, children }) => (
         <>
             <div className='post-comments__item'>
                 <div className='post-comments__info'>
-                    <img className='post-comments__avatar' src={data.avatar || '/img/avatar.jpg'} />
+                    <img className='post-comments__avatar' src={data.avatar || '/img/avatar.jpg'} alt='avatar'/>
                     <div className='post-comments__by'>
                         <span className='post-comments__author'>{data.author}</span>
                         <span className='post-comments__date'>{humanizeDateISO(data.date)}</span>
@@ -32,6 +31,5 @@ const PostCommentsItem: FC<PostCommentsItemProps> = ({ data, children }) => {
             {children && <div className='post-comments__children'>{children}</div>}
         </>
     );
-};
 
 export default PostCommentsItem;

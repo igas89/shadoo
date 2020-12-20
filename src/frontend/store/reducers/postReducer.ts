@@ -1,6 +1,6 @@
-import { ActionTypes, InitialState } from './types';
 import { POST_REQUEST, POST_SUCCESS, POST_FAILURE, PostRequestProps } from 'actions/postActions';
 import { PostDataResponse } from 'types/handlers';
+import { ActionTypes, InitialState } from './types';
 
 export interface PostData {
     data: PostDataResponse[];

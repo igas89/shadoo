@@ -1,16 +1,12 @@
 import { NextHandleFunction } from '../interfaces';
 import configHttpHeaders from '../config/httpHeaders';
 
-export interface httpHeadersMiddlewareProps<T = any> {
-    [key: string]: T;
+export interface HttpHeadersMiddlewareProps {
+    [key: string]: unknown;
 }
 
-export interface HttpHeadersMiddleware {
-    (options?: httpHeadersMiddlewareProps): NextHandleFunction;
-}
-
-const httpHeadersMiddleware: HttpHeadersMiddleware = (options) => {
-    const headers: httpHeadersMiddlewareProps<any> = {
+const httpHeadersMiddleware = (options?: HttpHeadersMiddlewareProps): NextHandleFunction => {
+    const headers: HttpHeadersMiddlewareProps = {
         ...configHttpHeaders,
         ...(options ?? {}),
     };

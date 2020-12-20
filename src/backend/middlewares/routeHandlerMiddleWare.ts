@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import path from 'path';
 import express, { Router } from 'express';
 
@@ -15,8 +16,13 @@ interface WriteLog {
     isError?: boolean;
 }
 
-class routeLogger {
-    private state: Record<string, any> = {};
+interface RouteLoggerState {
+    initialLog?(): void;
+    endLog?(): void;
+    message?: string;
+}
+class RouteLogger {
+    private state: RouteLoggerState = {};
 
     createLogger(message: string): void {
         this.state = {
@@ -40,13 +46,13 @@ class routeLogger {
         this.state.message = message;
         console.log(`${prefix} ${this.state.message}${color.white}`);
 
-        if (isCloseLog) {
+        if (isCloseLog && this.state.endLog) {
             this.state.endLog();
         }
     }
 }
 
-const methodsToString = (methods: HandlersListData['method']) => {
+const methodsToString = (methods: HandlersListData['method']): string => {
     if (typeof methods === 'string') {
         return methods.toUpperCase();
     }
@@ -56,7 +62,7 @@ const methodsToString = (methods: HandlersListData['method']) => {
 
 export default function routeHandlerMiddleWare({ version, handlers }: RouteHandlerMiddleWareProps): Router {
     const router = express.Router();
-    const logger = new routeLogger();
+    const logger = new RouteLogger();
     const handlersLength = handlers.length - 1;
 
     logger.createLogger(`Загружаем api обработчика: ${version}`);
@@ -75,29 +81,34 @@ export default function routeHandlerMiddleWare({ version, handlers }: RouteHandl
                 return handler;
             })
             .catch((error) => {
-                const message = `Не найден модуль обработчика: ${pathHandle}${messageMethod}`;
+                const message = `Ошибка загрузки обработчика: ${pathHandle}${messageMethod}`;
                 logger.writeLog({ message, isError: true, isCloseLog });
+                console.error(error);
 
-                return { error };
+                // eslint-disable-next-line @typescript-eslint/no-throw-literal
+                // return Promise.reject({ error });
             });
 
         if (!Array.isArray(method)) {
+            // eslint-disable-next-line no-param-reassign
             method = [method];
         }
 
-        if (!(endpoint instanceof RegExp) && !/^\/[a-zA-Z\/]+/.test(endpoint)) {
+        if (!(endpoint instanceof RegExp) && !/^\/[a-zA-Z/]+/.test(endpoint)) {
+            // eslint-disable-next-line no-param-reassign
             endpoint = `/${endpoint}`;
         }
 
         method.forEach((item) => {
             router[item](endpoint, (request, response, next) => {
                 loadedHandler
-                    .then((handler) => {
-                        if (handler.error) {
-                            return Promise.reject(handler.error);
+                    .then((Handler): void => {
+                        if (Handler.error) {
+                            Promise.reject(Handler.error);
+                            return;
                         }
 
-                        new handler(request, response, next).done(getRequestData(request));
+                        new Handler(request, response, next).done(getRequestData(request));
                     })
                     .catch((error) => {
                         response.status(500);

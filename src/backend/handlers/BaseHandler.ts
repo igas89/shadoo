@@ -1,9 +1,5 @@
-import { error } from 'console';
 import { Request, Response, NextFunction } from 'express';
 
-interface expressRequest extends Request {
-    method: string;
-}
 export interface SendError {
     status: number;
     code: number;
@@ -12,11 +8,13 @@ export interface SendError {
 }
 
 export default abstract class BaseHandler<P = never> {
-    protected request: expressRequest;
+    protected request: Request;
+
     protected response: Response;
+
     protected next: NextFunction;
 
-    constructor(request: expressRequest, response: Response, next: NextFunction) {
+    constructor(request: Request, response: Response, next: NextFunction) {
         this.request = request;
         this.response = response;
         this.next = next;

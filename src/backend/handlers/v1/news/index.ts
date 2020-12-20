@@ -1,29 +1,26 @@
+import { NewsDataResponse } from 'types/handlers';
 import BaseHandler from '../../BaseHandler';
 import Storage from '../../../storage';
 
-import { NewsDataResponse } from 'types/handlers';
-import { StorageResponse } from 'types/storage';
 interface NewsHandlerDone {
     start: string;
     end: string;
 }
 
-type Data = Omit<StorageResponse, 'content' | 'page' | 'image'>[];
 export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
     private _requiredParams = ['start', 'end'];
 
     private _createErrorMessage = (param: Partial<NewsHandlerDone>[]): string =>
         `Не передан обязательный параметр ${param.join(', ')}`;
-    private _isParamsUndefined = (params: NewsHandlerDone): Partial<NewsHandlerDone>[] => {
-        return this._requiredParams.filter(
-            (key) => Object.keys(params).indexOf(key) === -1,
-        ) as Partial<NewsHandlerDone>[];
-    };
 
-    done<T extends NewsHandlerDone>(params: T) {
-        let undefinedParams = this._isParamsUndefined(params);
+    private _isParamsUndefined = (
+        params: NewsHandlerDone,
+    ): Partial<NewsHandlerDone>[] => this._requiredParams.filter(
+        (key) => Object.keys(params).indexOf(key) === -1,
+    ) as Partial<NewsHandlerDone>[];
 
-        // console.log(this.request.method)
+    done<T extends NewsHandlerDone>(params: T): void {
+        const undefinedParams = this._isParamsUndefined(params);
 
         if (undefinedParams.length) {
             this.sendError({

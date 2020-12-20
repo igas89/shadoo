@@ -66,7 +66,7 @@ const Post: FC = memo(() => {
             ...prevState,
             isLoading: true,
         }));
-    }, [pathname]);
+    }, [fetchPost, pathname]);
 
     if (!postState.data) {
         return <PostEmpty />;
@@ -75,23 +75,21 @@ const Post: FC = memo(() => {
     return (
         <>
             <div className='post'>
-                {postState.data.map((post) => {
-                    return (
+                {postState.data.map((post) => (
                         <div key={post.id} className='post__item'>
                             <h1 className='post__title'>{post.title}</h1>
                             <div className='post-by'>
-                                <img className='post-by__avatar' src={post.avatar} />
+                                <img className='post-by__avatar' src={post.avatar} alt='avatar' />
                                 <div className='post-by__info'>
                                     <div className='post-by__author'>{post.author}</div>
                                     <div className='post-by__date'>{humanizeDateISO(post.date)}</div>
                                 </div>
                             </div>
 
-                            <img className='post-image' src={post.image} />
+                            <img className='post-image' src={post.image} alt='postImage'/>
                             <div className='post__content' dangerouslySetInnerHTML={{ __html: post.content }} />
                         </div>
-                    );
-                })}
+                    ))}
             </div>
             <PostTags data={postTags.data} />
             <PostComments count={postComments.count} data={postComments.data} />

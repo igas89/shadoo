@@ -5,8 +5,7 @@ export interface PostTagsProps {
     data: StorageResponseTags[] | null;
 }
 
-const PostTags: FC<PostTagsProps> = memo(({ data }) => {
-    return (
+const PostTags: FC<PostTagsProps> = memo(({ data }) => (
         <div className='post-tags'>
             <span className='post-tags__title'>Тэги:</span>
             <span className='post-tags__list'>
@@ -20,7 +19,6 @@ const PostTags: FC<PostTagsProps> = memo(({ data }) => {
                         .reduce((prev, curr) => [prev, ', ', curr])}
             </span>
         </div>
-    );
-});
+    ));
 
 export default PostTags;

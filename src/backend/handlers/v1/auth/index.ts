@@ -4,7 +4,7 @@ import BaseHandler from '../../BaseHandler';
 import { TOKEN } from '../../../config/application';
 
 export default class AuthHandler extends BaseHandler {
-    done() {
+    done(): void {
         const token = jwt.sign(
             {
                 _id: uuid(),

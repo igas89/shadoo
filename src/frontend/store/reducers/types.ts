@@ -1,6 +1,6 @@
-export type actionStateTypes = string | undefined | null;
+export type ActionStateTypes = string | undefined | null;
 
-export type actionStateError = {
+export type ActionStateError = {
     code: number | null;
     message: string | null;
     data?: unknown[];
@@ -10,12 +10,12 @@ export interface ActionTypes<T, U> {
     type: string;
     payload?: T;
     response?: U;
-    error?: actionStateError;
+    error?: ActionStateError;
 }
 
-export interface InitialState<T = unknown, U = object> {
-    action: actionStateTypes;
-    error: actionStateError;
+export interface InitialState<T = unknown, U = unknown> {
+    action: ActionStateTypes;
+    error: ActionStateError;
     request_data: T;
     response_data: U;
 }

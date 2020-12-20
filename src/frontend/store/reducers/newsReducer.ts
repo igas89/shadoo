@@ -1,7 +1,8 @@
-import { ActionTypes, InitialState } from './types';
 import { NEWS_REQUEST, NEWS_SUCCESS, NEWS_FAILURE, NewsRequestProps } from 'actions/newsActions';
 
 import { NewsDataResponse } from 'types/handlers';
+import { ActionTypes, InitialState } from './types';
+
 export interface NewsData {
     data: NewsDataResponse[];
     counts: number;

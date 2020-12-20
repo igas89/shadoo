@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 
 export interface UseTitle {
     setTitle(title: string): void;
@@ -10,9 +10,7 @@ const useTitle = (): UseTitle => {
         document.title = title;
     }, []);
 
-    const getTitle = useCallback((): string => {
-        return document.title;
-    }, [document.title]);
+    const getTitle = useCallback((): string => document.title, []);
 
     return {
         setTitle,

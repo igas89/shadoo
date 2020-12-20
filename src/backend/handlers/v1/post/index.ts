@@ -1,13 +1,13 @@
+import { PostDataResponse } from 'types/handlers';
 import BaseHandler from '../../BaseHandler';
 import Storage from '../../../storage';
-import { PostDataResponse } from 'types/handlers';
 
 interface PostHandlerParams {
     id: string;
 }
 
 export default class PostHandler extends BaseHandler<PostHandlerParams> {
-    done<T extends PostHandlerParams>(params: T) {
+    done<T extends PostHandlerParams>(params: T): void {
         if (!params.id) {
             this.sendError({
                 status: 503,

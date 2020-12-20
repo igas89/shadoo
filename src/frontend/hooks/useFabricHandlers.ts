@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { InitialState } from 'reducers/types';
 import { UseActionHandlers } from 'store';
 

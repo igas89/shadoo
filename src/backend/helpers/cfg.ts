@@ -18,15 +18,19 @@ export const getHandlersList = (): Required<HandlersList> =>
 
 export const getHandlersVersion = (): (keyof HandlersList)[] => Object.keys(handlersList);
 
-export const Cfg = (fileName: string): any => {
-    const pathFile = path.resolve(__dirname, `../config/${fileName}.ts`);
+/* TODO: доработать типы */
+export const Cfg = (fileName: string): Record<string, unknown> => {
+    const pathFile: string = path.resolve(__dirname, `../config/${fileName}.ts`);
 
     if (!fs.existsSync(pathFile)) {
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw `\n ${color.red}--->> ${color.yellow}Не найден файл конфига ${pathFile}${color.white}`;
     }
 
     // console.log(`\n ${color.green}--->> Загружен файл конфига ${fileName}.ts${color.white}`);
 
     const { ...config } = require(pathFile);
+
+    console.log('config:', config);
     return config;
 };

@@ -8,27 +8,23 @@ export interface PostCommentsProps {
     data: StorageResponseComments[] | null;
 }
 
-const PostComments: FC<PostCommentsProps> = ({ count, data }) => {
-    return (
-        <div className='post-comments'>
-            <div className='post-comments__count'>{count} Комментарий</div>
-            {data && (
-                <div className='post-comments__list'>
-                    {data.map((comment, key) => {
-                        return (
-                            <PostCommentsItem key={key} data={comment}>
-                                {comment.children &&
-                                    comment.children.length > 0 &&
-                                    comment.children.map((childrenComment, cKey) => {
-                                        return <PostCommentsItem key={cKey} data={childrenComment} />;
-                                    })}
-                            </PostCommentsItem>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
-    );
-};
+const PostComments: FC<PostCommentsProps> = ({ count, data }) => (
+    <div className='post-comments'>
+        <div className='post-comments__count'>{count} Комментарий</div>
+        {data && (
+            <div className='post-comments__list'>
+                {data.map((comment, key) => (
+                    <PostCommentsItem key={key} data={comment}>
+                        {comment.children &&
+                            comment.children.length > 0 &&
+                            comment.children.map((childrenComment, cKey) => (
+                                <PostCommentsItem key={cKey} data={childrenComment} />
+                            ))}
+                    </PostCommentsItem>
+                ))}
+            </div>
+        )}
+    </div>
+);
 
 export default PostComments;

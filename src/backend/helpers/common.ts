@@ -8,12 +8,12 @@ export const color = {
     сyan: '\x1b[36m',
 };
 
-export const sleep = (timeout: number = 0): Promise<any> => new Promise((res, rej) => setTimeout(res, timeout));
+export const sleep = (timeout = 0): Promise<undefined> => new Promise((res) => window.setTimeout(res, timeout));
 
 export interface GetRequestData {
-    body: {};
-    query: {};
+    body: Record<string, unknown>;
+    query: Record<string, unknown>;
 }
-export const getRequestData = (request: GetRequestData): Record<string, unknown> => {
-    return Object.keys(request.body).length ? request.body : request.query || {};
-};
+export const getRequestData = (
+    request: GetRequestData,
+): Partial<GetRequestData> => Object.keys(request.body).length ? request.body : request.query || {};

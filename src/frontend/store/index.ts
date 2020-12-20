@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import logger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
-import rootSaga from '../sagas';
 import allReducers from 'reducers';
+import rootSaga from '../sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 const createStoreWithMiddleware = applyMiddleware(sagaMiddleware /* logger */)(createStore);
@@ -10,6 +10,7 @@ const createStoreWithMiddleware = applyMiddleware(sagaMiddleware /* logger */)(c
 const rootReducer = combineReducers(allReducers);
 const store = createStoreWithMiddleware(
     rootReducer,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
@@ -21,7 +22,7 @@ export interface UseActionHandlers<TState> {
 }
 
 export type Action = { type: string };
-export const actionDispatch = (type: Action) => store.dispatch(type);
+export const actionDispatch = (type: Action): Action => store.dispatch(type);
 
 export const SagaRun = sagaMiddleware.run;
 export default store;

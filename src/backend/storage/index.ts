@@ -1,10 +1,10 @@
+/* eslint-disable no-console */
+/* eslint-disable class-methods-use-this */
 import fs from 'fs';
 import path from 'path';
 
-import { Cfg } from '../helpers/cfg';
-
-const { CACHE_FILE } = Cfg('application');
 import { StorageResponse } from 'types/storage';
+import { CACHE_FILE } from '../config/application';
 
 interface StorageWriteToCache {
     status?: string;
@@ -34,7 +34,7 @@ class Storage {
     readFromCache(): Promise<StorageReadFromCache> {
         return new Promise((resolve, reject) => {
             if (!fs.existsSync(this.filePath)) {
-                const errorMessage = `Не найден файл кеша`;
+                const errorMessage = 'Не найден файл кеша';
                 this._errorLog({
                     message: errorMessage,
                     method: 'readFromCache',
@@ -72,7 +72,7 @@ class Storage {
                         method: 'readFromCache',
                     });
                     reject(error);
-                    return;
+
                 }
             });
         });

@@ -1,5 +1,5 @@
-import { ActionTypes, InitialState } from './types';
 import { AUTH_REQUEST, AUTH_SUCCESS, AUTH_FAILURE } from 'actions/authActions';
+import { ActionTypes, InitialState } from './types';
 
 export interface AuthData {
     data: {

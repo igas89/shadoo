@@ -11,7 +11,7 @@ const ScrollTopButton: FC = memo(() => {
         setHidden(true);
         setScrolling(true);
         scroll.scrollToTop();
-    }, [scroll]);
+    }, []);
 
     const handleScroll = useCallback(() => {
         const position = window.pageYOffset;
@@ -32,11 +32,11 @@ const ScrollTopButton: FC = memo(() => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [isScrolling]);
+    }, [handleScroll, isScrolling]);
 
     return (
         <div className={`scroll-top ${hidden ? 'scroll-top_hidden' : ''}`}>
-            <button className='scroll-top__btn' onClick={scrollToTop} />
+            <button type='button' className='scroll-top__btn' onClick={scrollToTop} aria-label='scrollTop'/>
         </div>
     );
 });

@@ -6,5 +6,10 @@ import { watchFetchPostSaga } from 'actions/postActions';
 import { watchUpdateNewsSaga } from 'actions/updateNewsActions';
 
 export default function* rootSaga() {
-    yield all([watchFetchAuthSaga(), watchFetchNewsSaga(), watchFetchPostSaga(), watchUpdateNewsSaga()]);
+    yield all([
+        watchFetchAuthSaga(),
+        watchFetchNewsSaga(),
+        watchFetchPostSaga(),
+        watchUpdateNewsSaga(),
+    ]);
 }

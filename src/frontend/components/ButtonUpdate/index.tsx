@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, { FC, memo, useCallback, useState } from 'react';
 import './ButtonUpdate.scss';
 
 import { useNews } from 'actions/newsActions/hooks';
@@ -8,7 +8,7 @@ const ButtonUpdate: FC = memo(() => {
     const [isUpdate, setUpdate] = useState<boolean | null>(null);
     const [isLoading, setLoading] = useState<boolean | null>(null);
     const { fetchNews, newsState } = useNews({
-        onDone(state) {
+        onDone() {
             if (!isUpdate || (isUpdate && !isLoading)) {
                 return;
             }
@@ -19,7 +19,7 @@ const ButtonUpdate: FC = memo(() => {
     });
 
     const { updateNews } = useUpdateNews({
-        onDone(state) {
+        onDone() {
             if (!isUpdate || isLoading) {
                 return;
             }
@@ -30,7 +30,7 @@ const ButtonUpdate: FC = memo(() => {
                 end: newsState.request_data?.end || 20,
             });
         },
-        onError(state) {
+        onError() {
             if (!isUpdate || isLoading) {
                 return;
             }
@@ -41,7 +41,7 @@ const ButtonUpdate: FC = memo(() => {
     });
 
     const onUpdateData = useCallback(
-        (event: React.MouseEvent<HTMLDivElement>) => {
+        () => {
             if (isLoading || isUpdate) {
                 return;
             }
@@ -53,8 +53,8 @@ const ButtonUpdate: FC = memo(() => {
     );
 
     return (
-        <div className='update' onClick={onUpdateData}>
-            <button className={`update__btn ${isUpdate ? 'update__btn_disabled' : ''}`}>
+        <div className='update' >
+            <button type='button' className={`update__btn ${isUpdate ? 'update__btn_disabled' : ''}`} onClick={onUpdateData}>
                 {isUpdate ? 'Обновление новостей' : 'Обновить новости'}
             </button>
         </div>

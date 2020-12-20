@@ -36,7 +36,7 @@ export const executePromise = <T, TReturn extends Promise<T> = Promise<T>>(
 
 export const getAppContainer = executePromise<HTMLDivElement>(function* () {
     const container = yield new Promise<HTMLDivElement>((resolve) => {
-        document.addEventListener('DOMContentLoaded', (event: Event) => {
+        document.addEventListener('DOMContentLoaded', () => {
             resolve(document.querySelector('.app') as HTMLDivElement);
         });
     });

@@ -8,15 +8,13 @@ import store from 'store';
 
 import 'styles/application.scss';
 
-const App: FC = () => {
-    return (
-        <Provider store={store}>
-            <Router>
-                <Header />
-                <Content />
-            </Router>
-        </Provider>
-    );
-};
+const App: FC = () => (
+    <Provider store={store}>
+        <Router>
+            <Header />
+            <Content />
+        </Router>
+    </Provider>
+);
 
 export default App;

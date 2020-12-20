@@ -11,16 +11,20 @@ export interface TaskManagerQueue {
 
 export default class TaskManager {
     private _queue: TaskManagerQueue[] = [];
+
     private _endQueue: TaskManagerProps['endQueue'];
-    private _taskId: number = 1;
-    private _requestLimit: number = 0;
+
+    private _taskId = 1;
+
+    private _requestLimit = 0;
 
     constructor(props: TaskManagerProps) {
         this._requestLimit = props.requestLimit;
         this._endQueue = props.endQueue;
     }
 
-    public run() {
+    public run(): void {
+        // eslint-disable-next-line no-console
         console.log(`[TaskManager]: в очереди ${this.size()} запросов`);
 
         this._queue.forEach(({ task, taskId }, index, arr) => {
@@ -31,7 +35,7 @@ export default class TaskManager {
         });
     }
 
-    public enqueue(task: TaskManagerQueue['task']) {
+    public enqueue(task: TaskManagerQueue['task']): void {
         const taskId = this._taskId;
         this._queue.push({ taskId, task, work: false });
         this._taskId++;
