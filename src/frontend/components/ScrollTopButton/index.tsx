@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
+import React, { FC, memo, useCallback, useEffect, useState, useRef } from 'react';
 import { animateScroll as scroll } from 'react-scroll';
 
 import './ScrollTopButton.scss';
@@ -6,6 +6,7 @@ import './ScrollTopButton.scss';
 const ScrollTopButton: FC = memo(() => {
     const [hidden, setHidden] = useState(true);
     const [isScrolling, setScrolling] = useState(false);
+    const scrollRef = useRef<number | null>(null);
 
     const scrollToTop = useCallback(() => {
         setHidden(true);
@@ -14,17 +15,23 @@ const ScrollTopButton: FC = memo(() => {
     }, []);
 
     const handleScroll = useCallback(() => {
-        const position = window.pageYOffset;
-        const isHidden = position <= 1500;
-
-        if (position === 0) {
-            setScrolling(false);
+        if (scrollRef.current) {
+            clearTimeout(scrollRef.current);
         }
 
-        if (!isScrolling) {
-            setHidden(isHidden);
-        }
-    }, [isScrolling]);
+        scrollRef.current = window.setTimeout(() => {
+            const position = window.pageYOffset;
+            const isHidden = position <= 1500;
+
+            if (position === 0) {
+                setScrolling(false);
+            }
+
+            if (!isScrolling) {
+                setHidden(isHidden);
+            }
+        }, 100);
+    }, [isScrolling, scrollRef]);
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -32,11 +39,11 @@ const ScrollTopButton: FC = memo(() => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [handleScroll, isScrolling]);
+    }, [handleScroll]);
 
     return (
         <div className={`scroll-top ${hidden ? 'scroll-top_hidden' : ''}`}>
-            <button type='button' className='scroll-top__btn' onClick={scrollToTop} aria-label='scrollTop'/>
+            <button type='button' className='scroll-top__btn' onClick={scrollToTop} aria-label='scrollTop' />
         </div>
     );
 });
