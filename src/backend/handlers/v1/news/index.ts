@@ -1,6 +1,8 @@
-import { NewsDataResponse } from 'types/handlers';
+// import { NewsDataResponse } from 'types/handlers';
 import BaseHandler from '../../BaseHandler';
-import Storage from '../../../storage';
+// import Storage from '../../../storage';
+
+import PostModels from '../../../models/post.models';
 
 interface NewsHandlerDone {
     start: string;
@@ -31,34 +33,48 @@ export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
             return;
         }
 
-        Storage.readFromCache()
-            .then((response) => {
-                const start = Number(params.start) === 0 ? 0 : Number(params.start) - 1;
-                const end = Number(params.end);
-                const data = response.data.slice(start, end).map<NewsDataResponse>((item) => ({
-                    id: item.id,
-                    url: item.url,
-                    avatar: item.avatar,
-                    author: item.author,
-                    date: item.date,
-                    commentsCount: item.commentsCount,
-                    comments: item.comments,
-                    title: item.title,
-                    description: item.description,
-                    descriptionImage: item.descriptionImage,
-                }));
+        PostModels.getNews(params.start, params.end)
+            .then(async (data) => {
+                const pages = await PostModels.getPagesCount();
+                const counts = await PostModels.getPostsCount();
 
-                this.sendJson({
-                    ...response,
-                    data,
-                });
-            })
-            .catch((error) => {
+                this.sendJson({ counts, data, pages });
+            }).catch(err => {
                 this.sendError({
-                    status: error.code,
-                    code: error.code,
-                    message: error.message,
+                    status: 503,
+                    code: 503,
+                    message: err,
                 });
             });
+
+        // Storage.readFromCache()
+        //     .then((response) => {
+        //         const start = Number(params.start) === 0 ? 0 : Number(params.start) - 1;
+        //         const end = Number(params.end);
+        //         const data = response.data.slice(start, end).map<NewsDataResponse>((item) => ({
+        //             id: item.id,
+        //             url: item.url,
+        //             avatar: item.avatar,
+        //             author: item.author,
+        //             date: item.date,
+        //             commentsCount: item.commentsCount,
+        //             comments: item.comments,
+        //             title: item.title,
+        //             description: item.description,
+        //             descriptionImage: item.descriptionImage,
+        //         }));
+
+        //         this.sendJson({
+        //             ...response,
+        //             data,
+        //         });
+        //     })
+        //     .catch((error) => {
+        //         this.sendError({
+        //             status: error.code,
+        //             code: error.code,
+        //             message: error.message,
+        //         });
+        //     });
     }
 }

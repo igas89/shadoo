@@ -10,9 +10,8 @@ import {
     StorageResponseComments,
     StorageResponseCommentsChildren,
 } from 'types/storage';
+import { dateISOtoTime } from '../../utils/Dates';
 import TaskManager from '../taskManager';
-import storage from '../storage';
-import { URL_PARSE } from '../config/application';
 
 const parseImageName = (urlImage: string): string | undefined => {
     const m = urlImage.match(/[0-9a-z_]+\.[a-z]+$/i) || [];
@@ -121,6 +120,7 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                                         const author = $entryComment.find('.commentAuthor').text();
                                         const date = $entryComment.find('.relativeDate').attr('datetime') as string;
                                         const content = $entryComment.find('.commentContent').text().trim();
+                                        const commentId = $entryComment.attr('data-id') as string;
                                         const $commentsChildrenEl = $(item).find(
                                             '.commentsChildren ul.commentsList .commentItemWrapper',
                                         );
@@ -129,6 +129,7 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                                         if ($commentsChildrenEl.length) {
                                             $commentsChildrenEl.each((id, item) => {
                                                 const $child = $(item);
+                                                const childId = $child.find('li.entryComment').attr('data-id') as string;
                                                 const childAvatar = $child
                                                     .find('img.userAvatar')
                                                     .attr('src') as string;
@@ -142,9 +143,10 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                                                 const recipient = (childCommentContent.shift() as string).trim();
 
                                                 children.push({
+                                                    id: Number(childId),
                                                     avatar: childAvatar,
                                                     author: childCommentAuthor,
-                                                    date: childRelativeDate,
+                                                    date: dateISOtoTime(childRelativeDate),
                                                     content: childCommentContent.join().trim(),
                                                     recipient,
                                                 });
@@ -152,9 +154,10 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                                         }
 
                                         comments.push({
+                                            id: commentId,
                                             avatar,
                                             author,
-                                            date,
+                                            date: dateISOtoTime(date),
                                             content,
                                             children,
                                         });
@@ -188,7 +191,7 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                                 const result: Partial<StorageResponse> = {
                                     id,
                                     page,
-                                    date,
+                                    date: dateISOtoTime(date),
                                     author: author
                                         .text()
                                         .replace(/[\n\s]/, '')
