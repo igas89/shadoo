@@ -2,7 +2,7 @@ import React, { FC, memo, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import useTitle from 'hooks/useTitle';
-import { humanizeDateISO } from 'helpers/Dates';
+import { humanizeDateISO } from 'utils/Dates';
 import { usePost } from 'actions/postActions/hooks';
 import { PostData } from 'reducers/postReducer';
 
@@ -76,20 +76,20 @@ const Post: FC = memo(() => {
         <>
             <div className='post'>
                 {postState.data.map((post) => (
-                        <div key={post.id} className='post__item'>
-                            <h1 className='post__title'>{post.title}</h1>
-                            <div className='post-by'>
-                                <img className='post-by__avatar' src={post.avatar} alt='avatar' />
-                                <div className='post-by__info'>
-                                    <div className='post-by__author'>{post.author}</div>
-                                    <div className='post-by__date'>{humanizeDateISO(post.date)}</div>
-                                </div>
+                    <div key={post.id} className='post__item'>
+                        <h1 className='post__title'>{post.title}</h1>
+                        <div className='post-by'>
+                            <img className='post-by__avatar' src={post.avatar} alt='avatar' />
+                            <div className='post-by__info'>
+                                <div className='post-by__author'>{post.author}</div>
+                                <div className='post-by__date'>{humanizeDateISO(post.date)}</div>
                             </div>
-
-                            <img className='post-image' src={post.image} alt='postImage'/>
-                            <div className='post__content' dangerouslySetInnerHTML={{ __html: post.content }} />
                         </div>
-                    ))}
+
+                        <img className='post-image' src={post.image} alt='postImage' />
+                        <div className='post__content' dangerouslySetInnerHTML={{ __html: post.content }} />
+                    </div>
+                ))}
             </div>
             <PostTags data={postTags.data} />
             <PostComments count={postComments.count} data={postComments.data} />

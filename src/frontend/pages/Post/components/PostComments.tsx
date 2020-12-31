@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import { pluralize } from 'utils/String';
 import { StorageResponseComments } from 'types/storage';
 import PostCommentsItem from './PostCommentsItem';
 
@@ -10,7 +11,7 @@ export interface PostCommentsProps {
 
 const PostComments: FC<PostCommentsProps> = ({ count, data }) => (
     <div className='post-comments'>
-        <div className='post-comments__count'>{count} Комментарий</div>
+        <div className='post-comments__count'>{count} {pluralize(count as number, 'Комментари', ['й', 'я', 'ев'])}</div>
         {data && (
             <div className='post-comments__list'>
                 {data.map((comment, key) => (

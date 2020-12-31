@@ -5,7 +5,7 @@ export const color = {
     green: '\x1b[32m',
     blue: '\x1b[34m',
     magenta: '\x1b[35m',
-    сyan: '\x1b[36m',
+    cyan: '\x1b[36m',
 };
 
 export const sleep = (timeout = 0): Promise<undefined> => new Promise((res) => window.setTimeout(res, timeout));

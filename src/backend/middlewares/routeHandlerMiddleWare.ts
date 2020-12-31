@@ -27,7 +27,7 @@ class RouteLogger {
     createLogger(message: string): void {
         this.state = {
             initialLog() {
-                console.group(`\n * [ ${color.сyan}${message}${color.white} ] *`);
+                console.group(`\n * [ ${color.cyan}${message}${color.white} ] *`);
             },
             message: '',
             endLog() {

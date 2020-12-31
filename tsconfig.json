@@ -21,6 +21,7 @@
         ],
         "paths": {
             "types/*": ["types/*"],
+            "utils/*": ["utils/*"],
             "api": ["frontend/api"],
             "store": ["frontend/store"],
             "actions": ["frontend/store/actions"],

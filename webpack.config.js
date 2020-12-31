@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -33,6 +33,7 @@ module.exports = (env, { mode = 'development' }) => {
                 styles: path.resolve(__dirname, 'src/frontend/styles/'),
                 files: path.resolve(__dirname, 'src/frontend/files/'),
                 types: path.resolve(__dirname, 'src/types/'),
+                utils: path.resolve(__dirname, 'src/utils/'),
                 api: path.resolve(__dirname, 'src/frontend/api/'),
                 store: path.resolve(__dirname, 'src/frontend/store/'),
                 actions: path.resolve(__dirname, 'src/frontend/store/actions/'),
@@ -41,7 +42,7 @@ module.exports = (env, { mode = 'development' }) => {
                 hooks: path.resolve(__dirname, 'src/frontend/hooks/'),
                 components: path.resolve(__dirname, 'src/frontend/components/'),
                 pages: path.resolve(__dirname, 'src/frontend/pages/'),
-            }
+            },
         },
         module: {
             rules: [
@@ -64,7 +65,7 @@ module.exports = (env, { mode = 'development' }) => {
                             options: {
                                 // modules: true,
                                 // importLoaders: 1,
-                            }
+                            },
                         },
                         // Compiles Sass to CSS
                         {
@@ -89,7 +90,7 @@ module.exports = (env, { mode = 'development' }) => {
         output: {
             path: pathResolve('dist'),
             filename: '[name].[chunkhash:22].js',
-            chunkFilename: '[name].[chunkhash:22].js'
+            chunkFilename: '[name].[chunkhash:22].js',
         },
         plugins: [
             new CleanWebpackPlugin(),
@@ -101,7 +102,7 @@ module.exports = (env, { mode = 'development' }) => {
             }),
             new ForkTsCheckerWebpackPlugin(),
             new MiniCssExtractPlugin({
-                filename: "[name].css",
+                filename: '[name].css',
                 // allChunks: true,
             }),
             new CopyPlugin({

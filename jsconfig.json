@@ -5,6 +5,7 @@
       "baseUrl": "src",
       "paths": {
         "types": ["./src/types"],
+        "utils": ["./src/utils"],
         "api": ["./src/frontend/api"],
         "store": ["./src/frontend/store"],
         "actions": ["./src/frontend/store/actions"],

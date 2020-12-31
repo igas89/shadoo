@@ -22,6 +22,7 @@
     "global-require": "off",
     "no-shadow": "off",
     "no-plusplus": "off",
+    "no-multi-str": "off",
     "react/no-array-index-key": "off",
     "react/no-danger": "off",
     "@typescript-eslint/no-var-requires": "off",
@@ -56,12 +57,12 @@
         "patterns": ["!styled-components/macro"]
       }
     ],
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": ["src/setupTests.ts", "**/*.test.tsx", "**/*.test.ts"]
-      }
-    ],
+    // "import/no-extraneous-dependencies": [
+    //   "error",
+    //   {
+    //     "devDependencies": ["src/setupTests.ts", "**/*.test.tsx", "**/*.test.ts"]
+    //   }
+    // ],
     "import/no-dynamic-require": "off",
     "import/prefer-default-export": "off",
     "import/no-unresolved": "off",

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { humanizeDateISO } from 'helpers/Dates';
+import { humanizeDateISO } from 'utils/Dates';
 import { StorageResponseComments } from 'types/storage';
 
 interface Data extends Omit<StorageResponseComments, 'children'> {
@@ -17,7 +17,7 @@ const PostCommentsItem: FC<PostCommentsItemProps> = ({ data, children }) => (
         <>
             <div className='post-comments__item'>
                 <div className='post-comments__info'>
-                    <img className='post-comments__avatar' src={data.avatar || '/img/avatar.jpg'} alt='avatar'/>
+                    <img className='post-comments__avatar' src={data.avatar || '/img/avatar.jpg'} alt={data.author}/>
                     <div className='post-comments__by'>
                         <span className='post-comments__author'>{data.author}</span>
                         <span className='post-comments__date'>{humanizeDateISO(data.date)}</span>

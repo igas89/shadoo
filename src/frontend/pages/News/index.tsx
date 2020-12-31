@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { humanizeDateISO } from 'helpers/Dates';
+import { humanizeDateISO } from 'utils/Dates';
 import { NewsData } from 'reducers/newsReducer';
 import { useNews } from 'actions/newsActions/hooks';
 import useTitle from 'hooks/useTitle';
@@ -65,7 +65,7 @@ const News = memo(() => {
     });
 
     const getPosts = useCallback(
-        (isLazy: boolean = false) => {
+        (isLazy = false) => {
             fetchNews({
                 start: newsState.start,
                 end: newsState.end,
@@ -79,7 +79,7 @@ const News = memo(() => {
                 isLazyLoading: isLazy,
             }));
         },
-        [newsState.start, newsState.end],
+        [fetchNews, newsState.start, newsState.end],
     );
 
     const lazyLoadPosts = useCallback(
@@ -93,11 +93,11 @@ const News = memo(() => {
         if (newsState.isLoading === null) {
             getPosts();
         }
-    }, [newsState.isLoading]);
+    }, [getPosts, newsState.isLoading]);
 
     useEffect(() => {
         setTitle('Все новости - Shadoo');
-    }, []);
+    }, [setTitle]);
 
     return (
         <div className='news'>
@@ -108,7 +108,7 @@ const News = memo(() => {
                     <div key={item.id} className='news__item'>
                         <div className='news__by'>
                             <span className='news-author'>
-                                <img className='news-author__image' src={item.avatar} />
+                                <img className='news-author__image' src={item.avatar} alt={item.author} />
                                 {item.author}
                             </span>
                             <span className='news__date'>{humanizeDateISO(item.date)}</span>
@@ -124,7 +124,7 @@ const News = memo(() => {
 
                         <div className='news-image'>
                             <Link to={url}>
-                                <img className='news-image__item' src={item.descriptionImage} />
+                                <img className='news-image__item' src={item.descriptionImage} alt={item.title} />
                             </Link>
                         </div>
                     </div>
@@ -133,7 +133,7 @@ const News = memo(() => {
 
             {newsState.counts > 0 && newsState.lists.length < newsState.counts && (
                 <div className='news-loaded'>
-                    <button className='news-loaded__btn' onClick={lazyLoadPosts}>
+                    <button type='button' className='news-loaded__btn' onClick={lazyLoadPosts}>
                         Показать еще
                     </button>
                 </div>

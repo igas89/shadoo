@@ -1,6 +1,7 @@
 export const dateISOtoString = (date: string): string => date.replace(/(\d{4})-(\d{2})-(\d{2}).*/, '$3.$2.$1');
+export const dateISOtoTime = (date: string): number => new Date(date).getTime();
 
-export const humanizeDateISO = (dateISO: string): string => {
+export const humanizeDateISO = (dateISO: string | number): string => {
     const MONTHS_LIST = [
         'января',
         'февраля',
