@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 import { RunResult } from 'sqlite3';
 import { NewsDataResponse, PostDataResponse } from 'types/handlers';
-import { DbCallback, PostItems } from 'types/db';
+import { PostItems } from 'types/db';
 import Db from '../database';
 
 export type GetNews = Omit<PostItems, 'PAGE_ID' | 'CONTENT' | 'IMAGE_URL'>;
@@ -115,7 +114,7 @@ export default class PostModels {
         )");
     }
 
-    static savePost(id: number, post: SavePostProps, callback?: DbCallback): Promise<RunResult> {
+    static savePost(id: number, post: SavePostProps): Promise<RunResult> {
         return Db.run('REPLACE INTO posts (\
                 ID, \
                 POST_ID,\
@@ -157,6 +156,6 @@ export default class PostModels {
             $commentsCount: post.commentsCount,
             $url: post.url,
             $imageUrl: post.image,
-        }, callback);
+        });
     }
 }

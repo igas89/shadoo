@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 import { RunResult } from 'sqlite3';
 import { StorageResponseComments, StorageResponseCommentsChildren } from 'types/storage';
-import { CommentItems, DbCallback } from 'types/db';
+import { CommentItems } from 'types/db';
 import Db from '../database';
 
 export interface SaveCommentsProps extends StorageResponseCommentsChildren {
@@ -65,7 +64,7 @@ export default class CommentsModels {
         )");
     }
 
-    static saveComments(comment: SaveCommentsProps, callback?: DbCallback): Promise<RunResult> {
+    static saveComments(comment: SaveCommentsProps): Promise<RunResult> {
         return Db.run('REPLACE INTO comments (\
                 ID, \
                 PARENT_ID, \
@@ -92,6 +91,6 @@ export default class CommentsModels {
             $date: comment.date,
             $content: comment.content,
             $recipient: comment.recipient || null,
-        }, callback);
+        });
     }
 }

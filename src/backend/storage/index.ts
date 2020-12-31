@@ -24,7 +24,7 @@ class Storage {
     private filePath: string;
 
     constructor(filePath: string) {
-        this.filePath = path.resolve(__dirname, `../../../cache/${filePath}`);
+        this.filePath = path.join(process.cwd(), `/cache/${filePath}`);
     }
 
     private _errorLog({ message, method }: { message: string; method: string }): void {
