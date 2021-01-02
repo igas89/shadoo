@@ -14,8 +14,8 @@ const PostComments: FC<PostCommentsProps> = ({ count, data }) => (
         <div className='post-comments__count'>{count} {pluralize(count as number, 'Комментари', ['й', 'я', 'ев'])}</div>
         {data && (
             <div className='post-comments__list'>
-                {data.map((comment, key) => (
-                    <PostCommentsItem key={key} data={comment}>
+                {data.map((comment) => (
+                    <PostCommentsItem key={comment.id as string} data={comment}>
                         {comment.children &&
                             comment.children.length > 0 &&
                             comment.children.map((childrenComment, cKey) => (

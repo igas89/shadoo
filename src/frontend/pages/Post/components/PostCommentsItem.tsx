@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { humanizeDateISO } from 'utils/Dates';
+import { humanizeDate } from 'utils/Dates';
 import { StorageResponseComments } from 'types/storage';
 
 interface Data extends Omit<StorageResponseComments, 'children'> {
@@ -8,28 +8,28 @@ interface Data extends Omit<StorageResponseComments, 'children'> {
 }
 
 export interface PostCommentsItemProps {
-    key: number;
+    key: string | number;
     data: Data;
     children?: React.ReactNode;
 }
 
 const PostCommentsItem: FC<PostCommentsItemProps> = ({ data, children }) => (
-        <>
-            <div className='post-comments__item'>
-                <div className='post-comments__info'>
-                    <img className='post-comments__avatar' src={data.avatar || '/img/avatar.jpg'} alt={data.author}/>
-                    <div className='post-comments__by'>
-                        <span className='post-comments__author'>{data.author}</span>
-                        <span className='post-comments__date'>{humanizeDateISO(data.date)}</span>
-                    </div>
-                </div>
-                <div className='post-comments__content'>
-                    {data.recipient ? <span className='post-comments__author'>{data.recipient}, </span> : null}
-                    <span className='post-comments__text'>{data.content}</span>
+    <>
+        <div className='post-comments__item' id={data.id as string}>
+            <div className='post-comments__info'>
+                <img className='post-comments__avatar' src={data.avatar || '/img/avatar.jpg'} alt={data.author} />
+                <div className='post-comments__by'>
+                    <span className='post-comments__author'>{data.author}</span>
+                    <span className='post-comments__date'>{humanizeDate(data.date)}</span>
                 </div>
             </div>
-            {children && <div className='post-comments__children'>{children}</div>}
-        </>
-    );
+            <div className='post-comments__content'>
+                {data.recipient ? <span className='post-comments__author'>{data.recipient}, </span> : null}
+                <span className='post-comments__text'>{data.content}</span>
+            </div>
+        </div>
+        {children && <div className='post-comments__children'>{children}</div>}
+    </>
+);
 
 export default PostCommentsItem;

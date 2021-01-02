@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { humanizeDateISO } from 'utils/Dates';
+import { humanizeDate } from 'utils/Dates';
 import { NewsData } from 'reducers/newsReducer';
 import { useNews } from 'actions/newsActions/hooks';
 import useTitle from 'hooks/useTitle';
@@ -90,9 +90,11 @@ const News = memo(() => {
     );
 
     useEffect(() => {
-        if (newsState.isLoading === null) {
-            getPosts();
+        if (newsState.isLoading !== null) {
+            return;
         }
+
+        getPosts();
     }, [getPosts, newsState.isLoading]);
 
     useEffect(() => {
@@ -111,7 +113,7 @@ const News = memo(() => {
                                 <img className='news-author__image' src={item.avatar} alt={item.author} />
                                 {item.author}
                             </span>
-                            <span className='news__date'>{humanizeDateISO(item.date)}</span>
+                            <span className='news__date'>{humanizeDate(item.date)}</span>
                             <span className='news__chat'>
                                 {item.commentsCount}
                                 {item.commentsCount > 0 ? <span className='news__chat_red'>++</span> : null}

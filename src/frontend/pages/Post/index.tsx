@@ -2,7 +2,7 @@ import React, { FC, memo, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import useTitle from 'hooks/useTitle';
-import { humanizeDateISO } from 'utils/Dates';
+import { humanizeDate } from 'utils/Dates';
 import { usePost } from 'actions/postActions/hooks';
 import { PostData } from 'reducers/postReducer';
 
@@ -82,7 +82,7 @@ const Post: FC = memo(() => {
                             <img className='post-by__avatar' src={post.avatar} alt='avatar' />
                             <div className='post-by__info'>
                                 <div className='post-by__author'>{post.author}</div>
-                                <div className='post-by__date'>{humanizeDateISO(post.date)}</div>
+                                <div className='post-by__date'>{humanizeDate(post.date)}</div>
                             </div>
                         </div>
 
