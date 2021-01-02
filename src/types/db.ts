@@ -28,3 +28,8 @@ export interface CommentItems {
     CONTENT: string;
     RECIPIENT: string;
 }
+
+export interface LastComments extends Omit<CommentItems, 'PARENT_ID'> {
+    TITLE: string;
+    URL: string;
+}

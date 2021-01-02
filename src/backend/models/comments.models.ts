@@ -1,6 +1,10 @@
 import { RunResult } from 'sqlite3';
-import { StorageResponseComments, StorageResponseCommentsChildren } from 'types/storage';
-import { CommentItems } from 'types/db';
+import {
+    StorageResponseComments,
+    StorageResponseCommentsChildren,
+    StorageResponseLastComments,
+} from 'types/storage';
+import { CommentItems, LastComments } from 'types/db';
 import Db from '../database';
 
 export interface SaveCommentsProps extends StorageResponseCommentsChildren {
@@ -49,6 +53,33 @@ export default class CommentsModels {
                     children,
                 };
             });
+    }
+
+    static async getLastComments(limit: number | string): Promise<StorageResponseLastComments[]> {
+        const result = await Db.all<LastComments[]>('SELECT \
+                C.*, \
+                P.TITLE, \
+                P.URL \
+            FROM \
+                comments C \
+            INNER JOIN \
+                posts \
+            P ON C.POST_ID = P.POST_ID \
+            ORDER BY \
+                C.DATE \
+            DESC LIMIT ?', [limit]);
+
+        return result.map<StorageResponseLastComments>((item) => ({
+            id: item.ID,
+            author: item.AUTHOR,
+            avatar: item.AVATAR_URL,
+            date: item.DATE,
+            title: item.TITLE,
+            content: item.CONTENT,
+            recipient: item.RECIPIENT,
+            post_id: item.POST_ID,
+            url: item.URL,
+        }));
     }
 
     static createCommentsTable(): Promise<RunResult> {

@@ -29,8 +29,13 @@ export const handlersList: HandlersList = {
         },
         {
             api: 'updateNews',
-            endpoint: 'update',
+            endpoint: '/update',
             method: 'post',
+        },
+        {
+            api: 'lastComments',
+            endpoint: '/lastComments',
+            method: 'get',
         },
     ],
 };
