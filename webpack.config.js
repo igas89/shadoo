@@ -28,6 +28,7 @@ module.exports = (env, { mode = 'development' }) => {
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.scss'],
             alias: {
+                config: path.resolve(__dirname, 'src/frontend/config/'),
                 img: path.resolve(__dirname, 'src/frontend/assets/images/'),
                 icons: path.resolve(__dirname, 'src/frontend/assets/icons/'),
                 styles: path.resolve(__dirname, 'src/frontend/styles/'),

@@ -6,6 +6,7 @@
       "paths": {
         "types": ["./src/types"],
         "utils": ["./src/utils"],
+        "config": ["./src/frontend/config"],
         "api": ["./src/frontend/api"],
         "store": ["./src/frontend/store"],
         "actions": ["./src/frontend/store/actions"],

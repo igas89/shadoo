@@ -22,6 +22,7 @@
         "paths": {
             "types/*": ["types/*"],
             "utils/*": ["utils/*"],
+            "config": ["frontend/config"],
             "api": ["frontend/api"],
             "store": ["frontend/store"],
             "actions": ["frontend/store/actions"],
