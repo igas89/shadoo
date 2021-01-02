@@ -1,9 +1,18 @@
 @import '~styles/mixins.scss';
 
 .content {
+    @include flex-row();
+    position: relative;
     margin: 0 auto;
     width: 1080px;
     margin-top: 65px;
     padding: 10px 15px;
     background: $contentColor;
+
+    &__aside {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        margin-top: 15px;
+    }
 }

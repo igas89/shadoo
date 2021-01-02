@@ -11,6 +11,12 @@ export interface StorageResponseComments {
     children?: StorageResponseCommentsChildren[];
 }
 
+export interface StorageResponseLastComments extends StorageResponseCommentsChildren {
+    title: string;
+    post_id: number;
+    url: string;
+}
+
 export interface StorageResponseTags {
     url: string;
     title: string;

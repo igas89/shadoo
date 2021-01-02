@@ -2,11 +2,15 @@ import React, { FC, memo, useCallback, useState } from 'react';
 import './ButtonUpdate.scss';
 
 import { useNews } from 'actions/newsActions/hooks';
+import { useLastComments } from 'actions/lastCommentsActions/hooks';
 import { useUpdateNews } from 'actions/updateNewsActions/hooks';
+
+import { LAST_COMMENTS_WIDGET_LIMIT } from 'config';
 
 const ButtonUpdate: FC = memo(() => {
     const [isUpdate, setUpdate] = useState<boolean | null>(null);
     const [isLoading, setLoading] = useState<boolean | null>(null);
+    const { fetchLastComments } = useLastComments();
     const { fetchNews, newsState } = useNews({
         onDone() {
             if (!isUpdate || (isUpdate && !isLoading)) {
@@ -28,6 +32,9 @@ const ButtonUpdate: FC = memo(() => {
             fetchNews({
                 start: 1,
                 end: newsState.request_data?.end || 20,
+            });
+            fetchLastComments({
+                limit:LAST_COMMENTS_WIDGET_LIMIT,
             });
         },
         onError() {
