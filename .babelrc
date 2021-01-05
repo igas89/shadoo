@@ -21,7 +21,8 @@
         ["@babel/transform-runtime", {
           "helpers": false,
           "regenerator": true
-        }]
+        }],
+        ["macros"]
     ]
 }
 
