@@ -7,6 +7,8 @@
         "types": ["./src/types"],
         "utils": ["./src/utils"],
         "config": ["./src/frontend/config"],
+        "constants": ["./src/frontend/constants"],
+        "modals": ["./src/frontend/modals"],
         "api": ["./src/frontend/api"],
         "store": ["./src/frontend/store"],
         "actions": ["./src/frontend/store/actions"],

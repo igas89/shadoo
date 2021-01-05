@@ -2,11 +2,13 @@ import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import path from 'path';
 
 import httpHeadersMiddleware from '../middlewares/httpHeadersMiddleware';
 import routeHandlerMiddleWare from '../middlewares/routeHandlerMiddleWare';
 import validateTokenMiddleWare from '../middlewares/validateTokenMiddleWare';
 
+import { OUTPUT_DIR } from '../config/application';
 import { HandlersList, NextHandleFunction } from '../interfaces';
 
 class ApplicationServer {
@@ -41,6 +43,9 @@ class ApplicationServer {
             this._app.use(`/${version}`, validateTokenMiddleWare, routeHandlerMiddleWare({ handlers, version }));
         });
 
+        this._app.use('*', (req, res, next) => {
+            res.sendFile(path.resolve(OUTPUT_DIR, 'index.html'));
+        });
         return this;
     }
 

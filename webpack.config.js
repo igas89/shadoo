@@ -16,9 +16,6 @@ module.exports = (env, { mode = 'development' }) => {
         entry: {
             application: './src/frontend/client.tsx',
         },
-        // output: {
-        //     publicPath: '/',
-        // },
         devtool: isDev ? 'source-map' : '',
         devServer: {
             historyApiFallback: true,
@@ -29,6 +26,8 @@ module.exports = (env, { mode = 'development' }) => {
             extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.scss'],
             alias: {
                 config: path.resolve(__dirname, 'src/frontend/config/'),
+                constants: path.resolve(__dirname, 'src/frontend/constants/'),
+                modals: path.resolve(__dirname, 'src/frontend/modals/'),
                 img: path.resolve(__dirname, 'src/frontend/assets/images/'),
                 icons: path.resolve(__dirname, 'src/frontend/assets/icons/'),
                 styles: path.resolve(__dirname, 'src/frontend/styles/'),
@@ -90,6 +89,7 @@ module.exports = (env, { mode = 'development' }) => {
         },
         output: {
             path: pathResolve('dist'),
+            publicPath: '/',
             filename: '[name].[chunkhash:22].js',
             chunkFilename: '[name].[chunkhash:22].js',
         },
