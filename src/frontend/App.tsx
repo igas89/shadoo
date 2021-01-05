@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import Header from 'components/Header';
+import BaseModal from 'components/Modal/BaseModal';
 import Content from 'pages/Content';
 import store from 'store';
 
@@ -14,6 +15,7 @@ const App: FC = () => (
             <Header />
             <Content />
         </Router>
+        <BaseModal />
     </Provider>
 );
 

@@ -1,0 +1,106 @@
+@import '~styles/mixins.scss';
+
+.modal {
+    $main: &;
+    @include flex-block();
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+
+    &__title {
+        &+#{$main}__content {
+            padding-top: 10px;
+            border-top: 2px solid rgba(255, 255, 255, 0.08);
+        }
+
+        font-size: 22px;
+        font-weight: bold;
+        font-family: $fontFamilyHeader;
+        padding: 10px 0;
+    }
+
+    &__content {
+        font-size: 16px;
+        font-family: $fontFamily;
+    }
+
+    &__close {
+        $backgroundColor: #5a5d6a;
+        $backgroundColorHover: #7c7d80;
+        $closeSize: 15px;
+        $closePosition: 10px;
+
+        position: absolute;
+        top: $closePosition;
+        right: $closePosition;
+        height: $closeSize;
+        width: $closeSize;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+
+        @mixin pseudoSelector($rotate) {
+            display: block;
+            position: absolute;
+            top: 0px;
+            width: 2px;
+            height: 18px;
+            content: "";
+            transform: rotate($rotate);
+            transition: background-color 0.3s ease-in-out;
+            background-color: $backgroundColor;
+        }
+
+        &:hover::before,
+        &:hover::after {
+            background-color: $backgroundColorHover;
+        }
+
+        &::before {
+            @include pseudoSelector(45deg);
+        }
+
+        &::after {
+            @include pseudoSelector(-45deg);
+        }
+    }
+
+    &__body {
+        @include flex-column();
+        position: relative;
+        width: 600px;
+        background: $contentColor;
+        box-shadow: $shadow;
+        border-radius: 4px;
+        padding: 20px;
+        z-index: 1;
+        animation: showModal .3s ease-in-out;
+    }
+
+    &:first-of-type {
+        background: rgb(0 0 0 / 59%);
+    }
+
+    &__background {
+        background: transparent;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+    }
+}
+
+@keyframes showModal {
+    from {
+        transform: translate(0, -50px);
+    }
+
+    to {
+        transform: translate(0, 0);
+    }
+}
