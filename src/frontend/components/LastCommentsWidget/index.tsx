@@ -97,7 +97,7 @@ const LastCommentsWidget: FC = () => {
                                 {content}
                             </div>
                             <div className='lastCommentsWidget-item__title' >
-                                <Link to={url}>{title}</Link>
+                                <Link to={`${url}#${item.id}`}>{title}</Link>
                             </div>
 
                         </div>

@@ -9,13 +9,14 @@ interface Data extends Omit<StorageResponseComments, 'children'> {
 
 export interface PostCommentsItemProps {
     key: string | number;
+    active: boolean;
     data: Data;
     children?: React.ReactNode;
 }
 
-const PostCommentsItem: FC<PostCommentsItemProps> = ({ data, children }) => (
+const PostCommentsItem: FC<PostCommentsItemProps> = ({ active, data, children }) => (
     <>
-        <div className='post-comments__item' id={data.id as string}>
+        <div className={`post-comments__item ${active ? 'post-comments__item_active' : ''}`} id={data.id as string}>
             <div className='post-comments__info'>
                 <img className='post-comments__avatar' src={data.avatar || '/img/avatar.jpg'} alt={data.author} />
                 <div className='post-comments__by'>
