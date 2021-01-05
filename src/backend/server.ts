@@ -9,7 +9,7 @@ import { SERVER_PORT, OUTPUT_DIR } from './config/application';
 import PostModels from './models/post.models';
 import CommentsModels from './models/comments.models';
 
-const dist = path.join(__dirname, `/../../${OUTPUT_DIR}/`);
+const dist = path.resolve(process.cwd(), `${OUTPUT_DIR}`);
 
 Application.setStatic(dist)
     .setRoutes(getHandlersList())
