@@ -1,15 +1,18 @@
 import React, { FC, memo, useCallback, useState } from 'react';
-import './ButtonUpdate.scss';
 
+import { LAST_COMMENTS_WIDGET_LIMIT } from 'config';
+import useModal from 'hooks/useModal';
 import { useNews } from 'actions/newsActions/hooks';
 import { useLastComments } from 'actions/lastCommentsActions/hooks';
 import { useUpdateNews } from 'actions/updateNewsActions/hooks';
 
-import { LAST_COMMENTS_WIDGET_LIMIT } from 'config';
+import { UpdateNewsModalProps } from 'modals/components/UpdateNewsModal';
+import './ButtonUpdate.scss';
 
 const ButtonUpdate: FC = memo(() => {
     const [isUpdate, setUpdate] = useState<boolean | null>(null);
     const [isLoading, setLoading] = useState<boolean | null>(null);
+    const { showModal } = useModal();
     const { fetchLastComments } = useLastComments();
     const { fetchNews, newsState } = useNews({
         onDone() {
@@ -23,9 +26,16 @@ const ButtonUpdate: FC = memo(() => {
     });
 
     const { updateNews } = useUpdateNews({
-        onDone() {
+        onDone(state) {
             if (!isUpdate || isLoading) {
                 return;
+            }
+
+            if (state.response_data.data) {
+                showModal<UpdateNewsModalProps>(
+                    'UPDATE_NEWS_MODAL',
+                    { data: state.response_data.data },
+                );
             }
 
             setLoading(true);
@@ -34,7 +44,7 @@ const ButtonUpdate: FC = memo(() => {
                 end: newsState.request_data?.end || 20,
             });
             fetchLastComments({
-                limit:LAST_COMMENTS_WIDGET_LIMIT,
+                limit: LAST_COMMENTS_WIDGET_LIMIT,
             });
         },
         onError() {

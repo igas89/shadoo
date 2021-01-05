@@ -51,18 +51,24 @@ export default class UpdateNewsHandler extends BaseHandler {
             });
 
             Promise.all(request)
-                .then(result => {
+                .then(async (result) => {
                     const end = new Date().getTime();
                     const time = Math.floor((end - start) / 1000);
+                    const commentsCount = await CommentsModels.getCommentsCount();
+                    const pagesCount = await PostModels.getPagesCount();
+                    const postCount = await PostModels.getPostsCount();
+                    const message = `Записано в базу данных ${postCount} постов, за ${time} секунд`;
 
-                    const message = `Записано в БД: ${response.length} постов за ${time} сек`;
                     // eslint-disable-next-line no-console
                     console.log(` --->> ${message}\n`);
 
                     this.sendJson({
                         data: {
                             status: 'ok',
-                            message,
+                            commentsCount,
+                            postCount,
+                            pagesCount,
+                            time,
                         },
                     });
                 })

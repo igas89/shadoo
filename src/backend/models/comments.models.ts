@@ -4,7 +4,7 @@ import {
     StorageResponseCommentsChildren,
     StorageResponseLastComments,
 } from 'types/storage';
-import { CommentItems, LastComments } from 'types/db';
+import { CommentItems, LastComments, CommentsCount } from 'types/db';
 import Db from '../database';
 
 export interface SaveCommentsProps extends StorageResponseCommentsChildren {
@@ -80,6 +80,11 @@ export default class CommentsModels {
             post_id: item.POST_ID,
             url: item.URL,
         }));
+    }
+
+    static async getCommentsCount(): Promise<number> {
+        const { COMMENTS_COUNT } = await Db.get<CommentsCount>('SELECT COUNT(*) COMMENTS_COUNT FROM comments');
+        return COMMENTS_COUNT;
     }
 
     static createCommentsTable(): Promise<RunResult> {

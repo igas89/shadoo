@@ -18,6 +18,14 @@ export interface PostItems {
     IMAGE_URL: string;
 }
 
+export interface PageCount {
+    PAGE_COUNT: number;
+}
+
+export interface PostCount {
+    POST_COUNT: number;
+}
+
 export interface CommentItems {
     ID: number;
     PARENT_ID: number;
@@ -27,6 +35,10 @@ export interface CommentItems {
     DATE: number;
     CONTENT: string;
     RECIPIENT: string;
+}
+
+export interface CommentsCount {
+    COMMENTS_COUNT: number;
 }
 
 export interface LastComments extends Omit<CommentItems, 'PARENT_ID'> {

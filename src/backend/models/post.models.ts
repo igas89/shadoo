@@ -1,6 +1,6 @@
 import { RunResult } from 'sqlite3';
 import { NewsDataResponse, PostDataResponse } from 'types/handlers';
-import { PostItems } from 'types/db';
+import { PostItems, PostCount, PageCount } from 'types/db';
 import Db from '../database';
 
 export type GetNews = Omit<PostItems, 'PAGE_ID' | 'CONTENT' | 'IMAGE_URL'>;
@@ -26,13 +26,13 @@ export interface SavePostProps {
 
 export default class PostModels {
     static async getPagesCount(): Promise<number> {
-        const { pages } = await Db.get<{ pages: number }>('SELECT MAX(PAGE_ID) pages FROM posts');
-        return pages;
+        const { PAGE_COUNT } = await Db.get<PageCount>('SELECT MAX(P.PAGE_ID) PAGE_COUNT FROM posts P');
+        return PAGE_COUNT;
     }
 
     static async getPostsCount(): Promise<number> {
-        const { counts } = await Db.get<{ counts: number }>('SELECT COUNT(ID) counts FROM posts');
-        return counts;
+        const { POST_COUNT } = await Db.get<PostCount>('SELECT COUNT(ID) POST_COUNT FROM posts');
+        return POST_COUNT;
     }
 
     static async getNews(start: string, end: string): Promise<GetNewsReturn[]> {

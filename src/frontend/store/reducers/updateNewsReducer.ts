@@ -1,9 +1,9 @@
 import { UPDATE_NEWS_REQUEST, UPDATE_NEWS_SUCCESS, UPDATE_NEWS_FAILURE } from 'actions/updateNewsActions';
+import { StorageResponseUpdateNews } from 'types/storage';
 import { ActionTypes, InitialState } from './types';
 
 export interface UpdateNewsData {
-    status: string;
-    message: string;
+    data: StorageResponseUpdateNews;
 }
 
 export type UpdateNewsState = InitialState<null, Partial<UpdateNewsData>>;
