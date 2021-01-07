@@ -5,7 +5,13 @@ import useFabricHandlers from 'hooks/useFabricHandlers';
 import { actionDispatch, RootState, UseActionHandlers } from 'store';
 import { NewsState } from 'reducers/newsReducer';
 
-import { NEWS_REQUEST, NEWS_SUCCESS, NEWS_FAILURE, getNewsType, NewsRequestProps } from './index';
+import {
+    NEWS_REQUEST,
+    NEWS_SUCCESS,
+    NEWS_FAILURE,
+    getNewsType,
+    NewsRequestProps,
+} from './index';
 
 export interface UseNews {
     fetchNews: (props: NewsRequestProps) => void;

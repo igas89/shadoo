@@ -1,9 +1,6 @@
 @import '~styles/mixins.scss';
 
 .update {
-    position: absolute;
-    right: 20px;
-
     &__btn {
         display: flex;
         align-items: center;

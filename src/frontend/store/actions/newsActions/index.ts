@@ -10,11 +10,12 @@ export const NEWS_SUCCESS = 'NEWS_SUCCESS';
 export const NEWS_FAILURE = 'NEWS_FAILURE';
 
 export interface NewsRequestProps {
-    start: number;
-    end: number;
+    page: number;
 }
 
-export const fetchNewsSaga = function* (action: ActionSaga<NewsRequestProps>) {
+export type ActionNews = ActionSaga<NewsRequestProps>;
+
+export const fetchNewsSaga = function* (action: ActionNews) {
     try {
         const token: string = yield getToken();
         const result: NewsData = yield call(Api, {
@@ -34,7 +35,7 @@ export const watchFetchNewsSaga = function* () {
     yield takeEvery(NEWS_REQUEST, fetchNewsSaga);
 };
 
-export const getNewsType = (payload: NewsRequestProps) => ({
+export const getNewsType = (payload: NewsRequestProps): ActionNews => ({
     type: NEWS_REQUEST,
     payload,
 });

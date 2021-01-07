@@ -15,7 +15,9 @@ const Header: FC = memo(() => (
                 <span>React TypeScript</span>
             </div>
 
-            <ButtonUpdate />
+            <div className='header__update'>
+                <ButtonUpdate />
+            </div>
         </div>
     </div>
 ));

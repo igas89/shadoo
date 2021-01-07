@@ -1,34 +1,48 @@
-import { Statement } from 'sqlite3';
+/* eslint-disable class-methods-use-this */
 import BaseHandler from '../../BaseHandler';
 // import storage from '../../../storage';
 import parser from '../../../parser';
 import { PARSER_CONFIG } from '../../../config/application';
 
 import Db from '../../../database';
-import PostModels from '../../../models/post.models';
-import CommentsModels from '../../../models/comments.models';
+import PostModels, { SavePostProps } from '../../../models/post.models';
+import CommentsModels, { SaveCommentsProps } from '../../../models/comments.models';
 
+interface ResultSaving {
+    post?: number;
+    comment?: number;
+}
 export default class UpdateNewsHandler extends BaseHandler {
+    private savePost(post: SavePostProps): Promise<Pick<ResultSaving, 'post'>> {
+        return PostModels.savePost(post).then(result => Promise.resolve({
+            post: result.changes,
+        }));
+    }
+
+    private saveComments(props: SaveCommentsProps): Promise<Pick<ResultSaving, 'comment'>> {
+        return CommentsModels.saveComments(props).then(result => Promise.resolve({
+            comment: result.changes,
+        }));
+    }
+
     done(): void {
         const start = new Date().getTime();
-        const request: Promise<Statement>[] = [];
+        const result: Promise<ResultSaving>[] = [];
 
         parser(PARSER_CONFIG).then((response) => {
             Db.instance.serialize(() => {
                 Db.instance.run('BEGIN TRANSACTION');
 
-                response.forEach((post, index) => {
-                    const id = index + 1;
-
+                response.reverse().forEach((post) => {
                     // Сохраняем список новостей
-                    request.push(PostModels.savePost(id, post));
+                    result.push(this.savePost(post));
 
                     if (post.comments.length) {
                         post.comments.forEach((comment) => {
                             const parentIdid = comment.id;
 
                             // Сохраняем коментарии
-                            request.push(CommentsModels.saveComments({
+                            result.push(this.saveComments({
                                 postId: post.id,
                                 ...comment,
                             }));
@@ -36,7 +50,7 @@ export default class UpdateNewsHandler extends BaseHandler {
                             if (comment.children && comment.children.length) {
                                 comment.children.forEach((comment) => {
                                     // Сохраняем дочерние коментарии
-                                    request.push(CommentsModels.saveComments({
+                                    result.push(this.saveComments({
                                         postId: post.id,
                                         parentId: parentIdid,
                                         ...comment,
@@ -50,13 +64,12 @@ export default class UpdateNewsHandler extends BaseHandler {
                 Db.instance.run('COMMIT');
             });
 
-            Promise.all(request)
+            Promise.all(result)
                 .then(async (result) => {
                     const end = new Date().getTime();
                     const time = Math.floor((end - start) / 1000);
-                    const commentsCount = await CommentsModels.getCommentsCount();
-                    const pagesCount = await PostModels.getPagesCount();
-                    const postCount = await PostModels.getPostsCount();
+                    const commentsCount = result.filter(item => !!item.comment).length;
+                    const postCount = result.filter(item => !!item.post).length;
                     const message = `Записано в базу данных ${postCount} постов, за ${time} секунд`;
 
                     // eslint-disable-next-line no-console
@@ -67,8 +80,8 @@ export default class UpdateNewsHandler extends BaseHandler {
                             status: 'ok',
                             commentsCount,
                             postCount,
-                            pagesCount,
                             time,
+                            result,
                         },
                     });
                 })

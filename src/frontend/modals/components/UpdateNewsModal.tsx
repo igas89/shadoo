@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components/macro';
 import Modal from 'components/Modal';
 import { StorageResponseUpdateNews } from 'types/storage';
+import { pluralize } from 'utils/String';
 
 const Title = styled.div`
     font-size: 17px;
@@ -49,11 +50,10 @@ const UpdateNewsModal: FC<UpdateNewsModalProps> = ({ data }) => (
     <Modal title='Новости успешно обновлены'>
         <Title>Записано в базу данных:</Title>
         <List>
-            <Item title='Постов'>{data.postCount}</Item>
-            <Item title='Страниц'>{data.pagesCount}</Item>
-            <Item title='Коментариев'>{data.commentsCount}</Item>
+            <Item title='Новых постов'>{data.postCount}</Item>
+            <Item title='Новых коментариев'>{data.commentsCount}</Item>
         </List>
-        <Time>Обновлено за <span>{data.time}</span> секунд</Time>
+        <Time>Обновлено за <span>{data.time}</span> {pluralize(data.time, 'секунд', ['', 'ы', ''])}</Time>
     </Modal>
 );
 

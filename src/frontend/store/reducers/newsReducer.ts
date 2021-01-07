@@ -21,7 +21,10 @@ const NEWS_INITIAL_STATE: NewsState = {
     response_data: {},
 };
 
-export const newsReducer = (state = NEWS_INITIAL_STATE, action: ActionTypes<NewsRequestProps, NewsData>): NewsState => {
+export const newsReducer = (
+    state = NEWS_INITIAL_STATE,
+    action: ActionTypes<NewsRequestProps, NewsData>,
+): NewsState => {
     switch (action.type) {
         case NEWS_REQUEST: {
             return {

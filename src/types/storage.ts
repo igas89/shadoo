@@ -19,7 +19,6 @@ export interface StorageResponseLastComments extends StorageResponseCommentsChil
 
 export interface StorageResponseUpdateNews {
     commentsCount: number;
-    pagesCount: number;
     postCount: number;
     time: number;
     status: string;
@@ -32,7 +31,6 @@ export interface StorageResponseTags {
 
 export interface StorageResponse {
     id: number;
-    page: number;
     date: number;
     author: string;
     title: string;

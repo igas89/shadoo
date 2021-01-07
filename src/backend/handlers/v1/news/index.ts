@@ -5,12 +5,13 @@ import BaseHandler from '../../BaseHandler';
 import PostModels from '../../../models/post.models';
 
 interface NewsHandlerDone {
-    start: string;
-    end: string;
+    page: string;
 }
 
 export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
-    private _requiredParams = ['start', 'end'];
+    private offsetLimit = 20;
+
+    private _requiredParams = ['page'];
 
     private _createErrorMessage = (param: Partial<NewsHandlerDone>[]): string =>
         `Не передан обязательный параметр ${param.join(', ')}`;
@@ -33,9 +34,11 @@ export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
             return;
         }
 
-        PostModels.getNews(params.start, params.end)
+        const limit = Number(params.page) * this.offsetLimit;
+
+        PostModels.getNews(limit)
             .then(async (data) => {
-                const pages = await PostModels.getPagesCount();
+                const pages = await PostModels.getPagesCount(this.offsetLimit);
                 const counts = await PostModels.getPostsCount();
 
                 this.sendJson({ counts, data, pages });

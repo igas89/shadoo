@@ -5,7 +5,6 @@ export type DbCallback = (this: RunResult, err: Error | null) => void;
 
 export interface PostItems {
     POST_ID: number;
-    PAGE_ID: number;
     DATE: number;
     AUTHOR: string;
     AVATAR_URL: string;
@@ -13,7 +12,6 @@ export interface PostItems {
     CONTENT: string;
     DESCRIPTION: string;
     DESCRIPTION_IMAGE: string;
-    COMMENTS_COUNT: number;
     URL: string;
     IMAGE_URL: string;
 }

@@ -1,37 +1,40 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 
-import { humanizeDate } from 'utils/Dates';
-import { NewsData } from 'reducers/newsReducer';
 import { useNews } from 'actions/newsActions/hooks';
 import useTitle from 'hooks/useTitle';
+
+import NewsLists, { NewsListsProps } from './components/NewsLists';
+import NewsEmpty from './components/NewsEmpty';
 import './News.scss';
 
 interface NewsState {
-    start: number;
-    end: number;
+    page: number;
     counts: number;
     isLoading: boolean | null;
     isError: boolean | null;
     erroMessage: string | null;
     isLazyLoading: boolean;
-    lists: NewsData['data'];
+    lists: NewsListsProps['data'] | null;
 }
 
 const News = memo(() => {
     const { setTitle } = useTitle();
     const [newsState, setState] = useState<NewsState>({
-        start: 1,
-        end: 20,
+        page: 1,
         counts: 0,
         isLoading: null,
         erroMessage: null,
         isError: null,
         isLazyLoading: false,
-        lists: [],
+        lists: null,
     });
 
-    const { fetchNews } = useNews({
+    const {
+        fetchNews, newsState: {
+            request_data: newsRequestData,
+            response_data: newsResponseData,
+        },
+    } = useNews({
         onRequest(state) {
             if (newsState.isLoading === null || !newsState.isLoading) {
                 setState((prevState) => ({
@@ -46,9 +49,7 @@ const News = memo(() => {
                     ...prevState,
                     isLoading: false,
                     counts: state.response_data.counts || 0,
-                    lists: newsState.isLazyLoading
-                        ? prevState.lists.concat(state.response_data.data || [])
-                        : state.response_data.data || [],
+                    lists: state.response_data.data || [],
                 }));
             }
         },
@@ -67,19 +68,17 @@ const News = memo(() => {
     const getPosts = useCallback(
         (isLazy = false) => {
             fetchNews({
-                start: newsState.start,
-                end: newsState.end,
+                page: newsState.page,
             });
 
             setState((prevState) => ({
                 ...prevState,
-                start: prevState.end + 1,
-                end: prevState.end + 20,
+                page: prevState.page + 1,
                 isLoading: true,
                 isLazyLoading: isLazy,
             }));
         },
-        [fetchNews, newsState.start, newsState.end],
+        [fetchNews, newsState.page],
     );
 
     const lazyLoadPosts = useCallback(
@@ -94,44 +93,34 @@ const News = memo(() => {
             return;
         }
 
-        getPosts();
-    }, [getPosts, newsState.isLoading]);
+        if (newsResponseData?.data && newsResponseData.data.length) {
+            const page = newsRequestData?.page || 1;
+            setState((prevState) => ({
+                ...prevState,
+                isLoading: false,
+                counts: newsResponseData.counts || 0,
+                lists: newsResponseData.data || [],
+                page: page + 1,
+            }));
+        } else {
+            getPosts();
+        }
+    }, [getPosts, newsState.isLoading, newsResponseData, newsRequestData]);
 
     useEffect(() => {
         setTitle('Все новости - Shadoo');
     }, [setTitle]);
 
+    if (!newsState.lists) {
+        return null;
+    }
+
     return (
         <div className='news'>
-            {newsState.lists.map((item) => {
-                const url = `/post/${item.id}/${item.url}`;
-
-                return (
-                    <div key={item.id} className='news__item'>
-                        <div className='news__by'>
-                            <span className='news-author'>
-                                <img className='news-author__image' src={item.avatar} alt={item.author} />
-                                {item.author}
-                            </span>
-                            <span className='news__date'>{humanizeDate(item.date)}</span>
-                            <span className='news__chat'>
-                                {item.commentsCount}
-                                {item.commentsCount > 0 ? <span className='news__chat_red'>++</span> : null}
-                            </span>
-                        </div>
-                        <h2 className='news__title'>
-                            <Link to={url}>{item.title}</Link>
-                        </h2>
-                        <div className='news__description'>{item.description}</div>
-
-                        <div className='news-image'>
-                            <Link to={url}>
-                                <img className='news-image__item' src={item.descriptionImage} alt={item.title} />
-                            </Link>
-                        </div>
-                    </div>
-                );
-            })}
+            {newsState.lists.length > 0
+                ? <NewsLists data={newsState.lists} />
+                : <NewsEmpty />
+            }
 
             {newsState.counts > 0 && newsState.lists.length < newsState.counts && (
                 <div className='news-loaded'>

@@ -63,8 +63,8 @@ export default class CommentsModels {
             FROM \
                 comments C \
             INNER JOIN \
-                posts \
-            P ON C.POST_ID = P.POST_ID \
+                posts P \
+            ON C.POST_ID = P.POST_ID \
             ORDER BY \
                 C.DATE \
             DESC LIMIT ?', [limit]);
@@ -82,26 +82,26 @@ export default class CommentsModels {
         }));
     }
 
-    static async getCommentsCount(): Promise<number> {
-        const { COMMENTS_COUNT } = await Db.get<CommentsCount>('SELECT COUNT(*) COMMENTS_COUNT FROM comments');
+    static async getCommentsCount(postId: number): Promise<number> {
+        const { COMMENTS_COUNT } = await Db.get<CommentsCount>('SELECT COUNT(ID) as COMMENTS_COUNT FROM comments WHERE POST_ID=?', [postId]);
         return COMMENTS_COUNT;
     }
 
     static createCommentsTable(): Promise<RunResult> {
         return Db.run("CREATE TABLE IF NOT EXISTS `comments` (\
-            `ID` INTEGER PRIMARY KEY NOT NULL, \
+            `ID` INTEGER NOT NULL UNIQUE, \
             `PARENT_ID` INTEGER DEFAULT NULL, \
             `POST_ID` INTEGER NOT NULL, \
             `AUTHOR` TEXT NOT NULL, \
             `AVATAR_URL` TEXT DEFAULT NULL, \
-            `DATE` INTEGER UNIQUE NOT NULL, \
+            `DATE` INTEGER NOT NULL, \
             `CONTENT` TEXT NOT NULL DEFAULT '', \
             `RECIPIENT` TEXT DEFAULT NULL \
         )");
     }
 
     static saveComments(comment: SaveCommentsProps): Promise<RunResult> {
-        return Db.run('REPLACE INTO comments (\
+        return Db.run('INSERT OR IGNORE INTO comments (\
                 ID, \
                 PARENT_ID, \
                 POST_ID, \

@@ -185,12 +185,10 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                                     .replace(/(\r)/gm, '')
                                     .replace(/ {1,}/g, ' ');
                                 const image = $(elem).find('.entryImage img').attr('src') as string;
-                                const commentsCount = Number($(elem).find('.entryComments').text());
                                 const id = Number(url.replace(/.*\/\d{4}\/\d{2}\/\d{2}\/(\d+)\/.*/, '$1'));
 
                                 const result: Partial<StorageResponse> = {
                                     id,
-                                    page,
                                     date: dateISOtoTime(date),
                                     author: author
                                         .text()
@@ -201,7 +199,6 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                                     description,
                                     descriptionImage: image,
                                     avatar,
-                                    commentsCount,
                                     url: url.replace(/(^https?:\/\/.+\/\d{4}\/\d{2})\/\d{2}\/\d+\//, ''),
                                     // image: `uploads/${parseImageName(image)}`,
                                 };
