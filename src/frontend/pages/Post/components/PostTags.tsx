@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, memo } from 'react';
+import { Link } from 'react-router-dom';
 import { StorageResponseTags } from 'types/storage';
 
 export interface PostTagsProps {
@@ -12,9 +13,9 @@ const PostTags: FC<PostTagsProps> = memo(({ data }) => (
                 {data &&
                     data
                         .map<ReactNode>((item, key) => (
-                            <a key={key} href={item.url} className='post-tags__item'>
+                            <Link key={key} to={`/tags/${item.id}/${item.description}`} className='post-tags__item'>
                                 {item.title}
-                            </a>
+                            </Link>
                         ))
                         .reduce((prev, curr) => [prev, ', ', curr])}
             </span>

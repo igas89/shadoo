@@ -88,16 +88,16 @@ export default class CommentsModels {
     }
 
     static createCommentsTable(): Promise<RunResult> {
-        return Db.run("CREATE TABLE IF NOT EXISTS `comments` (\
+        return Db.createTable('comments', '\
             `ID` INTEGER NOT NULL UNIQUE, \
             `PARENT_ID` INTEGER DEFAULT NULL, \
             `POST_ID` INTEGER NOT NULL, \
             `AUTHOR` TEXT NOT NULL, \
             `AVATAR_URL` TEXT DEFAULT NULL, \
             `DATE` INTEGER NOT NULL, \
-            `CONTENT` TEXT NOT NULL DEFAULT '', \
+            `CONTENT` TEXT NOT NULL DEFAULT "", \
             `RECIPIENT` TEXT DEFAULT NULL \
-        )");
+        ');
     }
 
     static saveComments(comment: SaveCommentsProps): Promise<RunResult> {

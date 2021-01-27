@@ -97,6 +97,18 @@ class Db {
             });
         });
     }
+
+    public createTable(table: string, sql: string): Promise<RunResult> {
+        return this.run(`CREATE TABLE IF NOT EXISTS '${table}' (${sql})`)
+            .then(result => {
+                console.log(`${color.green}# ${color.white}CREATE TABLE ${color.yellow}${table}${color.white}`);
+                return Promise.resolve(result);
+            })
+            .catch(err => {
+                console.error(`${color.red}# ${color.white}CREATE TABLE ${color.yellow}${table}${color.white}: error`, err.message);
+                return Promise.reject(err);
+            });
+    }
 }
 
 export default new Db();

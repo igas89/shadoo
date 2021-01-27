@@ -16,7 +16,7 @@ const Content = memo(() => (
             <WithRoute
                 routes={[
                     {
-                        path: '/',
+                        path: ['/', '/tags/:id/:description'],
                         exact: true,
                         children: <News />,
                     },
@@ -34,7 +34,7 @@ const Content = memo(() => (
         <WithRoute
             routes={[
                 {
-                    path: '/',
+                    path: ['/', '/tags/:id/:description'],
                     exact: true,
                     children: (
                         <div className='content__aside'>

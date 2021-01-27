@@ -1,4 +1,5 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState, useRef } from 'react';
+import { useLocation } from 'react-router';
 
 import { useNews } from 'actions/newsActions/hooks';
 import useTitle from 'hooks/useTitle';
@@ -17,7 +18,14 @@ interface NewsState {
     lists: NewsListsProps['data'] | null;
 }
 
+interface GetPosts {
+    isLazy: boolean;
+    pathname?: string;
+}
+
 const News = memo(() => {
+    const location = useLocation();
+    const prevPathName = useRef(location.pathname);
     const { setTitle } = useTitle();
     const [newsState, setState] = useState<NewsState>({
         page: 1,
@@ -66,27 +74,46 @@ const News = memo(() => {
     });
 
     const getPosts = useCallback(
-        (isLazy = false) => {
+        ({ pathname, isLazy }: GetPosts) => {
+            const tag = pathname?.replace(/.+\/(\d+)\/.+/, '$1');
+            const isChangeLocation = prevPathName.current !== location.pathname;
+            prevPathName.current = location.pathname;
+
             fetchNews({
-                page: newsState.page,
+                page: isChangeLocation ? 1 : newsState.page,
+                ...(tag !== '/' ? { tag } : {}),
             });
 
             setState((prevState) => ({
                 ...prevState,
-                page: prevState.page + 1,
+                page: isChangeLocation ? 2 : prevState.page + 1,
                 isLoading: true,
                 isLazyLoading: isLazy,
             }));
         },
-        [fetchNews, newsState.page],
+        [fetchNews, newsState.page, location],
     );
 
     const lazyLoadPosts = useCallback(
         (event: React.MouseEvent<HTMLButtonElement>) => {
-            getPosts(true);
+            getPosts({
+                isLazy: true,
+                pathname: location.pathname,
+            });
         },
-        [getPosts],
+        [getPosts, location.pathname],
     );
+
+    useEffect(() => {
+        if (newsState.isLoading !== null && location.pathname === prevPathName.current) {
+            return;
+        }
+
+        getPosts({
+            pathname: location.pathname,
+            isLazy: false,
+        });
+    }, [getPosts, prevPathName, location, newsState.isLoading]);
 
     useEffect(() => {
         if (newsState.isLoading !== null) {
@@ -102,10 +129,8 @@ const News = memo(() => {
                 lists: newsResponseData.data || [],
                 page: page + 1,
             }));
-        } else {
-            getPosts();
         }
-    }, [getPosts, newsState.isLoading, newsResponseData, newsRequestData]);
+    }, [newsState.isLoading, newsResponseData, newsRequestData]);
 
     useEffect(() => {
         setTitle('Все новости - Shadoo');

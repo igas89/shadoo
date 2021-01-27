@@ -5,13 +5,17 @@ import parser from '../../../parser';
 import { PARSER_CONFIG } from '../../../config/application';
 
 import Db from '../../../database';
-import PostModels, { SavePostProps } from '../../../models/post.models';
+import PostModels, { SavePostProps  } from '../../../models/post.models';
 import CommentsModels, { SaveCommentsProps } from '../../../models/comments.models';
+import TagsModels, { SaveTagsProps, SavePostTagsProps } from '../../../models/tags.models';
 
 interface ResultSaving {
     post?: number;
     comment?: number;
+    tag?: number;
+    post_tag?: number;
 }
+
 export default class UpdateNewsHandler extends BaseHandler {
     private savePost(post: SavePostProps): Promise<Pick<ResultSaving, 'post'>> {
         return PostModels.savePost(post).then(result => Promise.resolve({
@@ -22,6 +26,25 @@ export default class UpdateNewsHandler extends BaseHandler {
     private saveComments(props: SaveCommentsProps): Promise<Pick<ResultSaving, 'comment'>> {
         return CommentsModels.saveComments(props).then(result => Promise.resolve({
             comment: result.changes,
+        }));
+    }
+
+    private saveTags(tag: SaveTagsProps): Promise<Pick<ResultSaving, 'tag'>> {
+        return TagsModels.saveTags({
+            id: tag.id,
+            title: tag.title,
+            description: tag.description,
+        }).then(result => Promise.resolve({
+            tag: result.changes,
+        }));
+    }
+
+    private savePostTags(props: SavePostTagsProps): Promise<Pick<ResultSaving, 'post_tag'>> {
+        return TagsModels.savePostTags({
+            postId: props.postId,
+            tagsId: props.tagsId,
+        }).then(result => Promise.resolve({
+            post_tag: result.changes,
         }));
     }
 
@@ -59,6 +82,23 @@ export default class UpdateNewsHandler extends BaseHandler {
                             }
                         });
                     }
+
+                    if (post.tags.length) {
+                        post.tags.forEach((tag) => {
+                            // Сохраняем список тэгов
+                            result.push(this.saveTags({
+                                id: tag.id,
+                                title: tag.title,
+                                description: tag.description,
+                            }));
+
+                            // Сохраняем теги поста
+                            result.push(this.savePostTags({
+                                postId: post.id,
+                                tagsId: tag.id,
+                            }));
+                        });
+                    }
                 });
 
                 Db.instance.run('COMMIT');
@@ -70,6 +110,7 @@ export default class UpdateNewsHandler extends BaseHandler {
                     const time = Math.floor((end - start) / 1000);
                     const commentsCount = result.filter(item => !!item.comment).length;
                     const postCount = result.filter(item => !!item.post).length;
+                    const tagsCount = result.filter(item => !!item.tag).length;
                     const message = `Записано в базу данных ${postCount} постов, за ${time} секунд`;
 
                     // eslint-disable-next-line no-console
@@ -80,6 +121,7 @@ export default class UpdateNewsHandler extends BaseHandler {
                             status: 'ok',
                             commentsCount,
                             postCount,
+                            tagsCount,
                             time,
                             result,
                         },

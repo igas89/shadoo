@@ -8,6 +8,7 @@ import { SERVER_PORT, OUTPUT_DIR } from './config/application';
 
 import PostModels from './models/post.models';
 import CommentsModels from './models/comments.models';
+import TagsModels from './models/tags.models';
 
 const dist = path.resolve(process.cwd(), `${OUTPUT_DIR}`);
 
@@ -16,17 +17,10 @@ Application.setStatic(dist)
     .startServer(SERVER_PORT, (port) => {
         console.log(`\n${color.green}# ${color.white}Server started on port ${color.yellow}http://localhost:${port}/${color.white}`);
 
-        PostModels.createPostTable().then(res => {
-            console.log(`${color.green}# ${color.white}CREATE TABLE ${color.yellow}posts${color.white}`);
-        }).catch(err => {
-            console.error(`${color.red}# ${color.white}CREATE TABLE ${color.yellow}posts${color.white}: error`, err.message);
-        });
-
-        CommentsModels.createCommentsTable().then(res => {
-            console.log(`${color.green}# ${color.white}CREATE TABLE ${color.yellow}comments${color.white}`);
-        }).catch(err => {
-            console.error(`${color.red}# ${color.white}CREATE TABLE ${color.yellow}comments${color.white}: error`, err.message);
-        });
+        PostModels.createPostTable();
+        CommentsModels.createCommentsTable();
+        TagsModels.createTagsTable();
+        TagsModels.createPostTagsTable();
     });
 
 process.on('uncaughtException', (err) => {

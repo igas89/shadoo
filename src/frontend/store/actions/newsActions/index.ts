@@ -11,6 +11,7 @@ export const NEWS_FAILURE = 'NEWS_FAILURE';
 
 export interface NewsRequestProps {
     page: number;
+    tags?: number;
 }
 
 export type ActionNews = ActionSaga<NewsRequestProps>;

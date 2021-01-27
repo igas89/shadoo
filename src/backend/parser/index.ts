@@ -107,8 +107,12 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
 
                                     if ($tagElements.length) {
                                         $tagElements.each((_idx, item) => {
+                                            const url = ($(item).attr('href') as string).replace(/(.+)\/(\d+\/.+)$/, '$2');
+                                            const [id, description] = url.split('/');
+
                                             tags.push({
-                                                url: $(item).attr('href') as string,
+                                                id,
+                                                description,
                                                 title: $(item).text(),
                                             });
                                         });

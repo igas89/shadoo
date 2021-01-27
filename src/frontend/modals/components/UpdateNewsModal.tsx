@@ -52,6 +52,7 @@ const UpdateNewsModal: FC<UpdateNewsModalProps> = ({ data }) => (
         <List>
             <Item title='Новых постов'>{data.postCount}</Item>
             <Item title='Новых коментариев'>{data.commentsCount}</Item>
+            <Item title='Новые тэги'>{data.tagsCount}</Item>
         </List>
         <Time>Обновлено за <span>{data.time}</span> {pluralize(data.time, 'секунд', ['', 'ы', ''])}</Time>
     </Modal>

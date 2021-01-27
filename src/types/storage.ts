@@ -20,13 +20,15 @@ export interface StorageResponseLastComments extends StorageResponseCommentsChil
 export interface StorageResponseUpdateNews {
     commentsCount: number;
     postCount: number;
+    tagsCount: number;
     time: number;
     status: string;
 }
 
 export interface StorageResponseTags {
-    url: string;
+    id: number | string;
     title: string;
+    description: string;
 }
 
 export interface StorageResponse {

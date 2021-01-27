@@ -1,109 +1,92 @@
-/* eslint-disable no-console */
 import { RunResult } from 'sqlite3';
-import { StorageResponseComments, StorageResponseCommentsChildren } from 'types/storage';
-import { CommentItems } from 'types/db';
+import { TagsItem, TagsCount } from 'types/db';
 import Db from '../database';
 
-interface SaveCommentsProps {
-    id?: number;
-    parentId?: number | null;
-    childrenId?: number | null;
-    postId: number;
-    author: string;
-    avatar: string;
-    date: number;
-    content: string;
-    recipient?: string | null;
+export interface SaveTagsProps {
+    id: string | number;
+    title: string;
+    description: string;
+}
+
+export interface SavePostTagsProps {
+    postId: string | number;
+    tagsId: string | number;
 }
 
 export default class TagsModels {
-    static async getPostComments(postId: number | string): Promise<StorageResponseComments[]> {
-        const postComments = await Db.all<CommentItems[]>('SELECT \
-                C.ID, \
-                C.PARENT_ID, \
-                C.POST_ID, \
-                C.AUTHOR, \
-                C.AVATAR_URL, \
-                C.DATE, \
-                C.CONTENT, \
-                C.RECIPIENT \
-            FROM \
-                comments C \
-            WHERE \
-                C.POST_ID=?', [postId]);
+    static async getPostTags(postId: number | string): Promise<SaveTagsProps[]> {
+        const postTags = await Db.all<TagsItem[]>(`SELECT \
+            T.ID, \
+            T.TITLE, \
+            T.DESCRIPTION \
+        FROM 
+            tags T \
+        INNER JOIN 
+            posts_tags PT \
+        WHERE 
+            PT.POST_ID=? AND T.ID=PT.TAGS_ID`, [postId]);
 
-        return postComments.filter(item => !item.PARENT_ID)
-            .map<StorageResponseComments>(item => {
-                const filter = postComments.filter(i => item.ID === i.PARENT_ID);
-
-                const children = filter.length
-                    ? filter.map<StorageResponseCommentsChildren>(item => ({
-                        id: item.ID,
-                        avatar: item.AVATAR_URL,
-                        author: item.AUTHOR,
-                        date: item.DATE,
-                        content: item.CONTENT,
-                        recipient: item.RECIPIENT,
-                    }))
-                    : [];
-
-                return {
-                    id: item.ID,
-                    avatar: item.AVATAR_URL,
-                    author: item.AUTHOR,
-                    date: item.DATE,
-                    content: item.CONTENT,
-                    children,
-                };
-            });
+        return postTags.map<SaveTagsProps>(item => ({
+            id: item.ID,
+            title: item.TITLE,
+            description: item.DESCRIPTION,
+        }));
     }
 
-    static createCommentsTable(): Promise<RunResult> {
-        return Db.run("CREATE TABLE IF NOT EXISTS `comments` (\
+    static async getTagsCount(): Promise<number> {
+        const { TAGS_COUNT } = await Db.get<TagsCount>('SELECT COUNT(*) TAGS_COUNT FROM tags');
+        return TAGS_COUNT;
+    }
+
+    static createTagsTable(): Promise<RunResult> {
+        return Db.createTable('tags', '\
             `ID` INTEGER PRIMARY KEY NOT NULL, \
-            `PARENT_ID` INTEGER DEFAULT NULL, \
-            `POST_ID` INTEGER NOT NULL, \
-            `AUTHOR` TEXT NOT NULL, \
-            `AVATAR_URL` TEXT DEFAULT NULL, \
-            `DATE` INTEGER UNIQUE NOT NULL, \
-            `CONTENT` TEXT NOT NULL DEFAULT '', \
-            `RECIPIENT` TEXT DEFAULT NULL \
-        )");
+            `TITLE` TEXT NOT NULL, \
+            `DESCRIPTION` TEXT NOT NULL \
+        ');
     }
 
-    static saveComments(comment: SaveCommentsProps): void {
-        // CHILDREN_ID, \
-        Db.instance.run('REPLACE INTO comments (\
+    static createPostTagsTable(): Promise<RunResult> {
+        return Db.createTable('posts_tags', '\
+            `ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, \
+            `POST_ID` INTEGER NOT NULL, \
+            `TAGS_ID` INTEGER NOT NULL \
+        ');
+    }
+
+    static saveTags(tag: SaveTagsProps): Promise<RunResult> {
+        return Db.run('INSERT OR IGNORE INTO tags (\
                 ID, \
-                PARENT_ID, \
-                POST_ID, \
-                AUTHOR, \
-                AVATAR_URL, \
-                DATE, \
-                CONTENT, \
-                RECIPIENT) \
+                TITLE, \
+                DESCRIPTION) \
             VALUES ( \
                 $id, \
-                $parentId, \
+                $title, \
+                $description)', {
+            $id: tag.id,
+            $title: tag.title,
+            $description: tag.description,
+        });
+    }
+
+    static savePostTags(post: SavePostTagsProps): Promise<RunResult> {
+        return Db.run('INSERT OR REPLACE INTO posts_tags (\
+                ID, \
+                POST_ID,\
+                TAGS_ID) \
+            VALUES (\
+                (SELECT \
+                        ID \
+                    FROM \
+                        posts_tags \
+                    WHERE \
+                        POST_ID=$postId AND TAGS_ID=$tagsId \
+                ), \
                 $postId, \
-                $author, \
-                $avatar, \
-                $date, \
-                $content, \
-                $recipient)', {
-            $id: comment.id,
-            $parentId: comment.parentId || null,
-            // $childrenId: comment.childrenId || null,
-            $postId: comment.postId,
-            $author: comment.author,
-            $avatar: comment.avatar,
-            $date: comment.date,
-            $content: comment.content,
-            $recipient: comment.recipient || null,
-        }, (err) => {
-            if (err) {
-                console.error('REPLACE INTO comments:', err.message);
-            }
+                $tagsId \
+            )', {
+            $postId: post.postId,
+            $tagsId: post.tagsId,
         });
     }
 }

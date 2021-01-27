@@ -6,6 +6,7 @@ import PostModels from '../../../models/post.models';
 
 interface NewsHandlerDone {
     page: string;
+    tag?: string;
 }
 
 export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
@@ -36,10 +37,16 @@ export default class NewsHandler extends BaseHandler<NewsHandlerDone> {
 
         const limit = Number(params.page) * this.offsetLimit;
 
-        PostModels.getNews(limit)
+        PostModels.getNews({
+            limit,
+            tag: params.tag,
+        })
             .then(async (data) => {
-                const pages = await PostModels.getPagesCount(this.offsetLimit);
-                const counts = await PostModels.getPostsCount();
+                const pages = await PostModels.getPagesCount({
+                    offset: this.offsetLimit,
+                    tag: params.tag,
+                });
+                const counts = await PostModels.getPostsCount(params.tag);
 
                 this.sendJson({ counts, data, pages });
             }).catch(err => {
