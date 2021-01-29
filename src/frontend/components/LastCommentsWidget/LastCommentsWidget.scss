@@ -1,8 +1,7 @@
 @import '~styles/mixins.scss';
 
 .lastCommentsWidget {
-    $goldColor: #b49e72;
-    $backgroundColor: #212628;
+    $goldColor: #b49e72;    
     $boxShadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     @mixin borderBottom($size) {
         border-bottom: $size solid rgba(255, 255, 255, 0.08);
@@ -19,7 +18,7 @@
     &__title>a {
         display: flex;
         justify-content: center;
-        background: $backgroundColor;
+        background: $LastCommentsColor;
         box-shadow: $boxShadow;
         padding: 10px;
         font-size: 18px;
@@ -35,7 +34,7 @@
     }
 
     &-item {
-        background: $backgroundColor;
+        background: $LastCommentsColor;
         box-shadow: $boxShadow;
         padding: 10px;
 
