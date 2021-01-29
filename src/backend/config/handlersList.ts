@@ -28,6 +28,11 @@ export const handlersList: HandlersList = {
             method: 'get',
         },
         {
+            api: 'tags',
+            endpoint: '/tags',
+            method: 'get',
+        },
+        {
             api: 'updateNews',
             endpoint: '/update',
             method: 'post',

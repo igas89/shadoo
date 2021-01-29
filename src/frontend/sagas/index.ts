@@ -5,6 +5,7 @@ import { watchFetchNewsSaga } from 'actions/newsActions';
 import { watchFetchPostSaga } from 'actions/postActions';
 import { watchUpdateNewsSaga } from 'actions/updateNewsActions';
 import { watchFetchLastCommentsSaga } from 'actions/lastCommentsActions';
+import { watchFetchTagsSaga } from 'actions/tagsActions';
 
 export default function* rootSaga() {
     yield all([
@@ -13,5 +14,6 @@ export default function* rootSaga() {
         watchFetchPostSaga(),
         watchUpdateNewsSaga(),
         watchFetchLastCommentsSaga(),
+        watchFetchTagsSaga(),
     ]);
 }

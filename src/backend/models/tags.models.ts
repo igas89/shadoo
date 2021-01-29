@@ -33,6 +33,22 @@ export default class TagsModels {
         }));
     }
 
+    static async getAllTags(): Promise<SaveTagsProps[]> {
+        const postTags = await Db.all<TagsItem[]>(`SELECT \
+            T.ID, \
+            T.TITLE, \
+            T.DESCRIPTION \
+        FROM 
+            tags T \
+        `);
+
+        return postTags.map<SaveTagsProps>(item => ({
+            id: item.ID,
+            title: item.TITLE,
+            description: item.DESCRIPTION,
+        }));
+    }
+
     static async getTagsCount(): Promise<number> {
         const { TAGS_COUNT } = await Db.get<TagsCount>('SELECT COUNT(*) TAGS_COUNT FROM tags');
         return TAGS_COUNT;
