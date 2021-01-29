@@ -133,8 +133,12 @@ const News = memo(() => {
     }, [newsState.isLoading, newsResponseData, newsRequestData]);
 
     useEffect(() => {
-        setTitle('Все новости - Shadoo');
-    }, [setTitle]);
+        if (location.pathname !== '/') {
+            return;
+        }
+
+        setTitle({ title: 'Все новости - Shadoo' });
+    }, [setTitle, location.pathname]);
 
     if (!newsState.lists) {
         return null;

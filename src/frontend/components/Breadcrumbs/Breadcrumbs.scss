@@ -1,0 +1,69 @@
+@import '~styles/mixins.scss';
+
+.breadcrumbs {
+    position: fixed;
+    display: flex;
+    top: 65px;
+    width: 100%;
+    color: $fontColor;
+    font-size: 15px;
+    z-index: 9;
+
+    &__wrap {
+        color: $fontColorGray;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        background-color: $LastCommentsColor;
+        border-bottom: 1px solid #333;
+        margin: 0 auto;
+        width: 1080px;
+        padding: 5px 15px;
+    }
+
+    &__item {
+        font-family: $fontFamilyHeader;
+        padding: 0px 3px;
+        color: $fontColorGray;
+        transition: color $transition;
+
+        @mixin filter($invert) {
+            filter: invert($invert) sepia(0) brightness(1.5);
+        }
+
+        &_notLink {
+            cursor: default;
+        }
+
+        &:not(&_notLink):hover,
+        &:not(&_notLink):last-of-type {
+            color: $fontColorWhite;
+            
+            &::before {
+                @include filter(0.5);
+            }
+        }
+
+        &_first {
+            position: relative;
+            padding-left: 25px;
+
+            &:hover::before {
+                @include filter(0.5);
+            }
+
+            &::before {
+                content: "";
+                background: url(/icons/home.svg) no-repeat center/cover;
+                height: 20px;
+                width: 20px;
+                display: block;
+                @include filter(0.3);
+                position: absolute;
+                top: -2px;
+                left: 0px;
+                transition: filter $transition;
+            }
+        }
+    }
+}

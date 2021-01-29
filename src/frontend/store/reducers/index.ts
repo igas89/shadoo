@@ -4,6 +4,8 @@ import { postReducer } from './postReducer';
 import { updateNewsReducer } from './updateNewsReducer';
 import { lastCommentsReducer } from './lastCommentsReducer';
 import { modalReducer } from './modalReducer';
+import { breadcrumbsReducer } from './breadcrumbsReducer';
+import { tagsReducer } from './tagsReducer';
 
 export default {
     authState: authReducer,
@@ -12,4 +14,6 @@ export default {
     updateNewsState: updateNewsReducer,
     lastCommentsState: lastCommentsReducer,
     modalState: modalReducer,
+    breadcrumbsState: breadcrumbsReducer,
+    tagsState: tagsReducer,
 };

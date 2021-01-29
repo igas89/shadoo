@@ -43,7 +43,14 @@ const Post: FC = memo(() => {
             const data = state.response_data.data?.length ? state.response_data.data : null;
 
             if (data) {
-                setTitle(data[0].title);
+                setTitle({
+                    title: data[0].title,
+                    tags: data[0].tags.map(({ id, description, title }) => ({
+                        title,
+                        id: id as number,
+                        url: `/tags/${id}/${description}`,
+                    })),
+                });
                 setPostTags({ data: data[0].tags });
                 setPostComments({
                     count: data[0].commentsCount,
