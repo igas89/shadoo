@@ -50,6 +50,7 @@ const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
             setLoading(true);
             fetchNews({
                 page: newsState.request_data?.page || 1,
+                tag: newsState.request_data?.tag || undefined,
             });
             fetchLastComments({
                 limit: LAST_COMMENTS_WIDGET_LIMIT,

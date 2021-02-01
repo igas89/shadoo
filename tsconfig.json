@@ -23,6 +23,7 @@
             "types/*": ["types/*"],
             "utils/*": ["utils/*"],
             "config": ["frontend/config"],
+            "config/*": ["frontend/config/*"],
             "constants/*": ["frontend/constants/*"],
             "modals": ["frontend/modals"],
             "modals/*": ["frontend/modals/*"],

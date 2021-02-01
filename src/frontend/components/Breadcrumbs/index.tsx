@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useEffect, useState } from 'react';
+import React, { FC, Fragment, useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
@@ -6,10 +6,11 @@ import _ from 'lodash';
 import useTitle from 'hooks/useTitle';
 import { useTags } from 'actions/tagsActions/hooks';
 import { TagsData } from 'reducers/tagsReducer';
+import { TAGS_LIST } from 'config/breadcrumbs';
 import './Breadcrumbs.scss';
 
 interface BreadcrumbsState {
-    items: {
+    breadcrumbsItems: {
         title: string;
         url?: string;
     }[],
@@ -17,44 +18,11 @@ interface BreadcrumbsState {
     isTagsLoaded: boolean;
 }
 
-/* TODO: список приоритетных тэгов */
-const TAGS_LIST: Record<string, string> = {
-    '/tags/419/games': 'Игры',
-    '/tags/105/movies': 'Кино',
-    '/tags/3162/tv-series': 'Сериалы',
-    '/tags/590/anime': 'Аниме',
-    '/tags/157/guide': 'Гайды',
-    '/tags/2656/vr': 'VR',
-    '/tags/3738/arts': 'Дизайн и Арт',
-    '/tags/6/gadgets': 'Гаджеты',
-    '/tags/3507/hardware': 'Железо',
-    '/tags/710/science': 'Наука',
-    '/tags/1622/technology': 'IT и Технологии',
-    '/tags/8/other': 'Другое',
-    '/tags/3/pc': 'PC',
-    '/tags/396/ps4': 'PS4',
-    '/tags/3302/ps5': 'PS5',
-    '/tags/2975/xbox-one': 'Xbox One',
-    '/tags/13413/xbox-series-x': 'Xbox Series X',
-    '/tags/7576/nintendo-switch': 'Nintendo Switch',
-    '/tags/796/iOS': 'iOS',
-    '/tags/860/android': 'Android',
-    '/platforms/calendar': 'График релизов',
-    '/tags/217/review': 'Обзоры',
-    '/tags/3261/opinion': 'Мнения',
-    '/tags/2473/feature': 'Фичеры',
-    '/tags/2534/community-call': 'Community Call',
-    '/hubs': 'Хабы',
-    '/blogs': 'Блоги',
-    '/discounts': 'Скидки',
-};
-
 const Breadcrumbs: FC = () => {
-    const location = useLocation();
-
+    const { pathname } = useLocation();
     const { getTitle, breadcrumbsState } = useTitle();
     const [state, setState] = useState<BreadcrumbsState>({
-        items: [],
+        breadcrumbsItems: [],
         tags: [],
         isTagsLoaded: false,
     });
@@ -73,6 +41,11 @@ const Breadcrumbs: FC = () => {
         },
     });
 
+    const isUrl = useCallback((path: string): string | undefined => {
+        const matchPathname = pathname.match(new RegExp(path));
+        return matchPathname && matchPathname.length && matchPathname[0] || undefined;
+    }, [pathname]);
+
     useEffect(() => {
         setState(prevState => ({
             ...prevState,
@@ -83,41 +56,24 @@ const Breadcrumbs: FC = () => {
     }, [fetchTags]);
 
     useEffect(() => {
-        const { pathname } = location;
-
-        const getPath = (path: string): string | undefined => {
-            const matchPathname = pathname.match(new RegExp(path));
-            return matchPathname && matchPathname.length && matchPathname[0] || undefined;
-        };
-
-        let items: BreadcrumbsState['items'] = [];
+        let breadcrumbsItems: BreadcrumbsState['breadcrumbsItems'] = [];
 
         if (pathname === '/') {
-            items.push({ title: 'Все новости' });
-        } else if (getPath('comments')) {
-            items.push({
+            breadcrumbsItems.push({ title: 'Все новости' });
+        } else if (isUrl('comments')) {
+            breadcrumbsItems.push({
                 title: 'Комментарии',
                 url: pathname,
             });
-        } else if (getPath('post')) {
+        } else if (isUrl('post')) {
             const tags = breadcrumbsState.get(pathname)?.tags || [];
-            const tagItems = tags.reduce<BreadcrumbsState['items']>((acc, item) => {
-                Object.keys(TAGS_LIST).forEach(key => {
-                    const m = key.match(new RegExp(item.url));
+            const tagItems = Object.keys(TAGS_LIST).reduce<BreadcrumbsState['breadcrumbsItems']>((acc, url) => {
+                const filter = tags.filter(item => item.url === url);
+                return acc.concat(filter);
+            }, []).slice(0, 2);
 
-                    if (m && m[0]) {
-                        acc.push({
-                            title: TAGS_LIST[item.url],
-                            url: item.url,
-                        });
-                    }
-                });
-
-                return acc;
-            }, []);
-
-            items = items.concat([
-                ...tagItems.slice(0, 1),
+            breadcrumbsItems = breadcrumbsItems.concat([
+                ...tagItems,
                 {
                     title: _.truncate(getTitle(), {
                         length: 110,
@@ -125,11 +81,11 @@ const Breadcrumbs: FC = () => {
                     url: pathname,
                 },
             ]);
-        } else if (getPath('tags')) {
+        } else if (isUrl('tags')) {
             const tagId = Number(pathname.replace(/(.+)\/(\d+)\/(.+)/, '$2'));
             const title = TAGS_LIST[pathname] || state.tags.find(item => item.id === tagId)?.title;
 
-            items = items.concat([
+            breadcrumbsItems = breadcrumbsItems.concat([
                 {
                     title: 'Категория',
                 },
@@ -142,9 +98,9 @@ const Breadcrumbs: FC = () => {
 
         setState(prevState => ({
             ...prevState,
-            items,
+            breadcrumbsItems,
         }));
-    }, [getTitle, location, breadcrumbsState, state.tags]);
+    }, [getTitle, pathname, breadcrumbsState, state.tags, isUrl]);
 
     return (
         <div className='breadcrumbs'>
@@ -152,7 +108,7 @@ const Breadcrumbs: FC = () => {
                 <Link className='breadcrumbs__item breadcrumbs__item_first' to='/'>
                     Главная
                 </Link>
-                {state.items.map(({ title, url }, id) => (
+                {state.breadcrumbsItems.map(({ title, url }, id) => (
                     <Fragment key={id}>
                         /{url
                             ? <Link className='breadcrumbs__item' to={url}>{title}</Link>
