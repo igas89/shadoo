@@ -17,12 +17,15 @@ export interface ButtonUpdateProps {
     className?: string;
 }
 
+const INIT_TITLE = 'Обновить новости';
+
 const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
     className = '',
 }) => {
     const [isUpdate, setUpdate] = useState<boolean | null>(false);
     const [isLoading, setLoading] = useState<boolean | null>(null);
     const [percent, setPercent] = useState<number>(0);
+    const [title, setTitle] = useState<string>(INIT_TITLE);
 
     const { showModal } = useModal();
     const { ws } = useContext(WsContext);
@@ -82,6 +85,7 @@ const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
             }
 
             setUpdate(true);
+            setTitle('Обновление новостей');
             updateNews();
         },
         [isLoading, isUpdate, updateNews],
@@ -89,19 +93,33 @@ const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
 
     useEffect(() => {
         ws.on(WS_UPDATE_NEWS, (data: {
-            percent: number;
-        }) => {
-            setPercent(data.percent);
+            percent?: number;
+            status?: string;
+            done: boolean;
+        }) => { 
+            if (data.done) {
+                setTitle(INIT_TITLE);
+                setUpdate(false);
+                return;
+            }
+
+            if (data.percent) {
+                setPercent(data.percent);
+            }
+
+            if (data.status) {
+                setTitle(data.status);
+            }
         });
     }, [ws]);
 
     const containerClass = useMemo(() => `update ${className} ${isUpdate ? 'update_active' : ''}`, [className, isUpdate]);
-    const title = isUpdate ? 'Обновление новостей' : 'Обновить новости';
 
     return (
         <div className={containerClass}>
-            <img className='update__img' src='/icons/refresh.svg' alt={title} />
-            <div className='update__percent'>{percent}%</div>
+            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+            <img className='update__img' src='/icons/refresh.svg' title={title} alt={title} onClick={onUpdateData} />
+            {isUpdate && <div className='update__percent'>{percent}%</div>}
             <button type='button' className="update__btn " onClick={onUpdateData}>
                 {title}
             </button>

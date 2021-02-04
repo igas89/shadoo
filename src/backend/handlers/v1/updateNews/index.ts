@@ -52,21 +52,43 @@ export default class UpdateNewsHandler extends BaseHandler {
         }));
     }
 
+    private wsEmitEvent(
+        event: string,
+        props: {
+            done?: boolean;
+            status?: string;
+            percent?: number;
+        },
+    ): void {
+        const socket = App.wss.getClientSocket(getToken(this.request) as string);
+
+        if (!socket) {
+            return;
+        }
+
+        socket.emitEvent(event, {
+            done: false,
+            ...props,
+        });
+    }
+
+    private getPercent(index: number): number {
+        const { maxPage, requestLimit } = PARSER_CONFIG;
+        return Math.floor(index / (maxPage * requestLimit) * 100);
+    }
+
     done(): void {
         const start = new Date().getTime();
         const result: Promise<ResultSaving>[] = [];
-        const socket = App.wss.getClientSocket(getToken(this.request) as string);
-        const { maxPage, requestLimit } = PARSER_CONFIG;
 
         const postHandle = (index: number): void => {
-            if (!socket) {
-                return;
-            }
-
-            const percent = Math.floor(index / (maxPage * requestLimit) * 100);
-            socket.emitEvent(WS_UPDATE_NEWS, { percent });
+            this.wsEmitEvent(WS_UPDATE_NEWS, {
+                status: 'Парсинг новостей',
+                percent: this.getPercent(index),
+            });
         };
 
+        let counter = 1;
         parser({
             ...PARSER_CONFIG,
             postHandle,
@@ -117,6 +139,11 @@ export default class UpdateNewsHandler extends BaseHandler {
                             }));
                         });
                     }
+
+                    this.wsEmitEvent(WS_UPDATE_NEWS, {
+                        status: 'Записываем в БД',
+                        percent: this.getPercent(counter++),
+                    });
                 });
 
                 Db.instance.run('COMMIT');
@@ -134,6 +161,10 @@ export default class UpdateNewsHandler extends BaseHandler {
                     // eslint-disable-next-line no-console
                     console.log(` --->> ${message}\n`);
 
+                    this.wsEmitEvent(WS_UPDATE_NEWS, {
+                        done: true,
+                    });
+
                     this.sendJson({
                         data: {
                             status: 'ok',
@@ -141,7 +172,6 @@ export default class UpdateNewsHandler extends BaseHandler {
                             postCount,
                             tagsCount,
                             time,
-                            result,
                         },
                     });
                 })

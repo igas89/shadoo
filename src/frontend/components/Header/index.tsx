@@ -2,6 +2,7 @@ import React, { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import ButtonUpdate from 'components/ButtonUpdate';
+import ButtonUpdateInfo from 'components/ButtonUpdateInfo';
 import './Header.scss';
 
 const Header: FC = memo(() => (
@@ -16,6 +17,7 @@ const Header: FC = memo(() => (
             </div>
 
             <div className='header__update'>
+                <ButtonUpdateInfo />
                 <ButtonUpdate />
             </div>
         </div>

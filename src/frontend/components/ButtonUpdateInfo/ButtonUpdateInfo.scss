@@ -1,34 +1,23 @@
 @import '~styles/mixins.scss';
 
-.update {
+.update-info {
     $parent: &;
     display: flex;
     align-items: center;
     padding: 10px;
     background-color: $bodyColor;
-    z-index: 9;
-
-    &__percent {
-        width: 0;
-        margin-left: 0;
-        opacity: 0;
-        z-index: 1;
-        font-family: $fontFamily;
-        font-weight: bold;
-        transition: width $transition, opacity $transition, margin-left $transition;
-        
-        .update_active & {
-            padding: 0 10px;
-            width: 40px;
-            opacity: 1;
-        }
-    }
+    margin-right: 5px;
+    position: relative;
+    left: 55px;
+    opacity: 0;
+    z-index: 1;
+    transition: left $transition, opacity $transition;
 
     &_active {
-        cursor: default;
+        left: 0;
+        opacity: 1;
     }
 
-    &_active &__img,
     &:hover &__img {
         cursor: pointer;
         filter: invert(0.2) sepia(0) brightness(2) saturate(0);
@@ -45,7 +34,7 @@
         height: $size;
         width: $size;
         transition: filter $transition, transform $transition;
-        margin-right: 10px;
+        filter: invert(0) sepia(0) brightness(1.7) saturate(0);
 
         .update_active & {
             animation: update-logo-spin infinite 2s linear;

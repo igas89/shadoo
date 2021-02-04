@@ -43,11 +43,12 @@ const Item = styled(Li) <LiProps>`
 `;
 
 export interface UpdateNewsModalProps {
+    title?: string;
     data: StorageResponseUpdateNews;
 }
 
-const UpdateNewsModal: FC<UpdateNewsModalProps> = ({ data }) => (
-    <Modal title='Новости успешно обновлены'>
+const UpdateNewsModal: FC<UpdateNewsModalProps> = ({ data, title = 'Новости успешно обновлены' }) => (
+    <Modal title={title}>
         <Title>Записано в базу данных:</Title>
         <List>
             <Item title='Новых постов'>{data.postCount}</Item>
