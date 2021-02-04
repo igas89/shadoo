@@ -1,11 +1,17 @@
 /* eslint-disable no-console */
 import Emitter from 'component-emitter';
 
-interface WsClient extends Emitter {
+export interface WsClient extends Emitter {
     emitEvent(event: string, ...args: unknown[]): void;
     reconnect(): void;
     readonly isConnected: boolean;
     readonly socket: WebSocket;
+}
+
+export type WsCloseEvent = CloseEvent;
+export interface OnConnectProps {
+    event: Event,
+    socket: WebSocket,
 }
 
 export class WebSocketClient extends Emitter implements WsClient {
@@ -25,17 +31,13 @@ export class WebSocketClient extends Emitter implements WsClient {
     }
 
     private connect(url: string, token: string): WebSocket {
-        const socket = new WebSocket(`${url}?token=${token}`);
+        // eslint-disable-next-line no-multi-assign
+        const socket = this._socket = new WebSocket(`${url}?token=${token}`);
 
-        socket.onopen = () => {
-            console.log(`Соединение установлено: ${url}`);
-            this._isConnect = true;
-            this.emit('onConnect', socket);
-        };
-
-        this.onClose(socket);
-        this.onMessage(socket);
-        this.onError(socket);
+        this.onOpen(url)
+            .onClose()
+            .onMessage()
+            .onError();
 
         return socket;
     }
@@ -59,32 +61,51 @@ export class WebSocketClient extends Emitter implements WsClient {
         return this._socket;
     }
 
-    private onClose(socket: WebSocket): void {
-        socket.onclose = (event) => {
-            this.emit('onClose', event);
-            this._isConnect = false;
-
-            if (event.wasClean) {
-                console.log('Соединение закрыто чисто');
-            } else {
-                console.log('Обрыв соединения'); // например, "убит" процесс сервера
-            }
-            console.log(`Код: ${event.code} причина: ${event.reason}`);
+    private onOpen(url: string): this {
+        this._socket.onopen = (event: Event) => {
+            this._isConnect = true;
+            this.emit('onConnect', { event, socket: this._socket });
+            console.log(`WS: Соединение установлено: ${url}`);
         };
+
+        return this;
     }
 
-    private onMessage(socket: WebSocket): void {
-        socket.onmessage = (event) => {
+    private onClose(): this {
+        this._socket.onclose = (event) => {
+            this._isConnect = false;
+            this.emit('onClose', event);
+
+            const errorMessage = event.wasClean
+                ? 'Соединение закрыто чисто'
+                : 'Обрыв соединения'; // например, "убит" процесс сервера
+          
+            console.error(`WS: ${errorMessage}`, {
+                code: event.code,
+                reason: event.reason,
+            });
+        };
+
+        return this;
+    }
+
+    private onMessage(): this {
+        this._socket.onmessage = (event) => {
             const [handle, data] = JSON.parse(event.data);
             this.emit(handle, data);
         };
+
+        return this;
     }
 
-    private onError(socket: WebSocket): void {
-        socket.onerror = (event) => {
-            console.error('Ошибка', event);
+    private onError(): this {
+        this._socket.onerror = (event) => {
+            this._isConnect = false;
             this.emit('onError', event);
+            console.error('WS: Error', event);
         };
+
+        return this;
     }
 }
 
