@@ -5,9 +5,13 @@ import parser from '../../../parser';
 import { PARSER_CONFIG } from '../../../config/application';
 
 import Db from '../../../database';
-import PostModels, { SavePostProps  } from '../../../models/post.models';
+import PostModels, { SavePostProps } from '../../../models/post.models';
 import CommentsModels, { SaveCommentsProps } from '../../../models/comments.models';
 import TagsModels, { SaveTagsProps, SavePostTagsProps } from '../../../models/tags.models';
+
+import App from '../../../app';
+import { getToken } from '../../../helpers/validateToken';
+import { WS_UPDATE_NEWS } from '../../../../ws/constants';
 
 interface ResultSaving {
     post?: number;
@@ -51,8 +55,22 @@ export default class UpdateNewsHandler extends BaseHandler {
     done(): void {
         const start = new Date().getTime();
         const result: Promise<ResultSaving>[] = [];
+        const socket = App.wss.getClientSocket(getToken(this.request) as string);
+        const { maxPage, requestLimit } = PARSER_CONFIG;
 
-        parser(PARSER_CONFIG).then((response) => {
+        const postHandle = (index: number): void => {
+            if (!socket) {
+                return;
+            }
+
+            const percent = Math.floor(index / (maxPage * requestLimit) * 100);
+            socket.emitEvent(WS_UPDATE_NEWS, { percent });
+        };
+
+        parser({
+            ...PARSER_CONFIG,
+            postHandle,
+        }).then((response) => {
             Db.instance.serialize(() => {
                 Db.instance.run('BEGIN TRANSACTION');
 

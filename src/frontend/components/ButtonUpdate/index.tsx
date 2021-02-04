@@ -1,12 +1,16 @@
-import React, { FC, memo, useCallback, useState, useMemo } from 'react';
+import React, { FC, memo, useCallback, useContext, useState, useMemo, useEffect } from 'react';
 
 import { LAST_COMMENTS_WIDGET_LIMIT } from 'config';
 import useModal from 'hooks/useModal';
 import { useNews } from 'actions/newsActions/hooks';
 import { useLastComments } from 'actions/lastCommentsActions/hooks';
 import { useUpdateNews } from 'actions/updateNewsActions/hooks';
-
+import { WsContext } from 'context/wsContext';
 import { UpdateNewsModalProps } from 'modals/components/UpdateNewsModal';
+
+import { UPDATE_NEWS_MODAL } from 'constants/modals';
+import { WS_UPDATE_NEWS } from 'ws/constants';
+
 import './ButtonUpdate.scss';
 
 export interface ButtonUpdateProps {
@@ -16,10 +20,13 @@ export interface ButtonUpdateProps {
 const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
     className = '',
 }) => {
-    const [isUpdate, setUpdate] = useState<boolean | null>(null);
+    const [isUpdate, setUpdate] = useState<boolean | null>(false);
     const [isLoading, setLoading] = useState<boolean | null>(null);
+    const [percent, setPercent] = useState<number>(0);
+
     const { showModal } = useModal();
-    const { fetchLastComments } = useLastComments();
+    const { ws } = useContext(WsContext);
+    const { fetchLastComments, lastCommentsState } = useLastComments();
     const { fetchNews, newsState } = useNews({
         onDone() {
             if (!isUpdate || (isUpdate && !isLoading)) {
@@ -28,11 +35,12 @@ const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
 
             setLoading(false);
             setUpdate(false);
+            setPercent(0);
         },
     });
 
     const { updateNews } = useUpdateNews({
-        onRequest(state) {
+        onRequest() {
             setUpdate(true);
         },
         onDone(state) {
@@ -42,7 +50,7 @@ const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
 
             if (state.response_data.data) {
                 showModal<UpdateNewsModalProps>(
-                    'UPDATE_NEWS_MODAL',
+                    UPDATE_NEWS_MODAL,
                     { data: state.response_data.data },
                 );
             }
@@ -53,7 +61,7 @@ const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
                 tag: newsState.request_data?.tag || undefined,
             });
             fetchLastComments({
-                limit: LAST_COMMENTS_WIDGET_LIMIT,
+                limit: lastCommentsState.request_data?.limit || LAST_COMMENTS_WIDGET_LIMIT,
             });
         },
         onError() {
@@ -63,6 +71,7 @@ const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
 
             setLoading(false);
             setUpdate(false);
+            setPercent(0);
         },
     });
 
@@ -78,12 +87,23 @@ const ButtonUpdate: FC<ButtonUpdateProps> = memo(({
         [isLoading, isUpdate, updateNews],
     );
 
-    const containerClass = useMemo(() => `update ${className}`, [className]);
-    
+    useEffect(() => {
+        ws.on(WS_UPDATE_NEWS, (data: {
+            percent: number;
+        }) => {
+            setPercent(data.percent);
+        });
+    }, [ws]);
+
+    const containerClass = useMemo(() => `update ${className} ${isUpdate ? 'update_active' : ''}`, [className, isUpdate]);
+    const title = isUpdate ? 'Обновление новостей' : 'Обновить новости';
+
     return (
         <div className={containerClass}>
-            <button type='button' className={`update__btn ${isUpdate ? 'update__btn_disabled' : ''}`} onClick={onUpdateData}>
-                {isUpdate ? 'Обновление новостей' : 'Обновить новости'}
+            <img className='update__img' src='/icons/refresh.svg' alt={title} />
+            <div className='update__percent'>{percent}%</div>
+            <button type='button' className="update__btn " onClick={onUpdateData}>
+                {title}
             </button>
         </div>
     );

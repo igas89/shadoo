@@ -18,6 +18,7 @@ const parseImageName = (urlImage: string): string | undefined => {
     return m.length ? m[0] : undefined;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function downloadImage(urlImage: string): Promise<unknown> {
     const dirUpload = path.resolve(__dirname, '../../../upload');
     const fileName = parseImageName(urlImage);
@@ -51,13 +52,14 @@ async function downloadImage(urlImage: string): Promise<unknown> {
 }
 
 type PartialStorageResponse = Partial<StorageResponse>;
-interface ParserProps {
+export interface ParserProps {
     url: string;
     maxPage: number;
     requestLimit: number;
+    postHandle?: (index: number, result: PartialStorageResponse) => void;
 }
 
-const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageResponse[]> =>
+const parser = ({ url, maxPage, requestLimit, postHandle }: ParserProps): Promise<StorageResponse[]> =>
     new Promise<StorageResponse[]>((res) => {
         const requests: Promise<StorageResponse[]>[] = [];
 
@@ -70,6 +72,8 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                 });
             },
         });
+
+        let index = 1;
 
         for (let page = 1; page <= maxPage; page++) {
             taskManager.enqueue((taskId) => {
@@ -208,7 +212,15 @@ const parser = ({ url, maxPage, requestLimit }: ParserProps): Promise<StorageRes
                                 };
 
                                 // downloadImage(image);
-                                requestsPost.push(getPost(url, result));
+                                requestsPost.push(getPost(url, result)
+                                    .then((result) => {
+                                        if (postHandle) {
+                                            postHandle(index++, result);
+                                        }
+
+                                        return Promise.resolve(result);
+                                    }),
+                                );
                             });
 
                             Promise.all(requestsPost).then((posts) => {

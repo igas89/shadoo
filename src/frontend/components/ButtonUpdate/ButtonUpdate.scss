@@ -1,14 +1,65 @@
 @import '~styles/mixins.scss';
 
 .update {
+    $parent: &;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: $bodyColor;
+
+    &__percent {
+        
+        width: 0;
+        margin-left: 0;
+        opacity: 0;
+        z-index: 1;
+        font-family: $fontFamily;
+        font-weight: bold;
+        transition: width $transition, opacity $transition, margin-left $transition;
+        
+        .update_active & {
+            padding: 0 10px;
+            width: 40px;
+            // margin-left: 5px;
+            opacity: 1;
+        }
+    }
+
+    &_active {
+        cursor: default;
+    }
+
+    &_active &__img,
+    &:hover &__img {
+        filter: invert(0.2) sepia(0) brightness(2) saturate(0);
+    }
+
+    &__img {
+        $size: 24px;
+        display: block;
+        content: '';
+        height: $size;
+        width: $size;
+        transition: filter $transition, transform $transition;
+        margin-right: 10px;
+
+        .update_active & {
+            animation: update-logo-spin infinite 2s linear;
+            margin-right: 0;
+        }
+    }
+
     &__btn {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
         color: $fontColorGray;
+        // background-color: transparent;
         background-color: $bodyColor;
-        padding: 10px;
+        // padding: 0 5px 0 5px;
+        padding: 0;
+        // margin-left: 5px;
         outline: none;
         border: none;
         border-radius: 2px;
@@ -17,34 +68,15 @@
         font-family: $fontFamily;
         transition: color $transition, background-color $transition, opacity $transition;
         cursor: pointer;
+        z-index: 9;
 
-        &.update__btn_disabled {
+        .update_active & {
             color: $fontColorWhite;
             cursor: default;
         }
 
-        &.update__btn_disabled::before {
-            animation: update-logo-spin infinite 2s linear;
-        }
-
-        &:not(.update__btn_disabled):hover {
+        &:not(.update_active &):hover {
             color: $fontColorWhite;
-        }
-
-        &::before {
-            display: block;
-            content: '';
-            background: url('/icons/refresh.svg') no-repeat center/cover;
-            $size: 24px;
-            height: $size;
-            width: $size;
-            transition: filter $transition, transform $transition;
-            margin-right: 10px;
-        }
-
-        &.update__btn_disabled::before,
-        &:not(.update__btn_disabled):hover::before {
-            filter: invert(0.2) sepia(0) brightness(2) saturate(0);
         }
     }
 }
