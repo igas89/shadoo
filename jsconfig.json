@@ -6,8 +6,10 @@
       "paths": {
         "types": ["./src/types"],
         "utils": ["./src/utils"],
+        "ws": ["./src/ws"],
         "config": ["./src/frontend/config"],
         "constants": ["./src/frontend/constants"],
+        "context": ["./src/frontend/context"],
         "modals": ["./src/frontend/modals"],
         "api": ["./src/frontend/api"],
         "store": ["./src/frontend/store"],

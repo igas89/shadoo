@@ -6,6 +6,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const pathResolve = (pathSegments) => path.resolve(__dirname, pathSegments);
 
 module.exports = (env, { mode = 'development' }) => {
@@ -27,6 +28,7 @@ module.exports = (env, { mode = 'development' }) => {
             alias: {
                 config: path.resolve(__dirname, 'src/frontend/config/'),
                 constants: path.resolve(__dirname, 'src/frontend/constants/'),
+                context: path.resolve(__dirname, 'src/frontend/context/'),
                 modals: path.resolve(__dirname, 'src/frontend/modals/'),
                 img: path.resolve(__dirname, 'src/frontend/assets/images/'),
                 icons: path.resolve(__dirname, 'src/frontend/assets/icons/'),
@@ -34,6 +36,7 @@ module.exports = (env, { mode = 'development' }) => {
                 files: path.resolve(__dirname, 'src/frontend/files/'),
                 types: path.resolve(__dirname, 'src/types/'),
                 utils: path.resolve(__dirname, 'src/utils/'),
+                ws: path.resolve(__dirname, 'src/ws'),
                 api: path.resolve(__dirname, 'src/frontend/api/'),
                 store: path.resolve(__dirname, 'src/frontend/store/'),
                 actions: path.resolve(__dirname, 'src/frontend/store/actions/'),

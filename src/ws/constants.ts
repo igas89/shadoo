@@ -1,0 +1,2 @@
+export const WS_CONNECT_ERROR = 'WS_CONNECT_ERROR';
+export const WS_UPDATE_NEWS = 'WS_UPDATE_NEWS';

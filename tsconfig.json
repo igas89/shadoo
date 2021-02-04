@@ -22,9 +22,11 @@
         "paths": {
             "types/*": ["types/*"],
             "utils/*": ["utils/*"],
+            "ws/*": ["ws/*"],
             "config": ["frontend/config"],
             "config/*": ["frontend/config/*"],
             "constants/*": ["frontend/constants/*"],
+            "context/*": ["frontend/context/*"],
             "modals": ["frontend/modals"],
             "modals/*": ["frontend/modals/*"],
             "api": ["frontend/api"],
