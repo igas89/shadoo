@@ -35,11 +35,6 @@
         width: $size;
         transition: filter $transition, transform $transition;
         filter: invert(0) sepia(0) brightness(1.7) saturate(0);
-
-        .update_active & {
-            animation: update-logo-spin infinite 2s linear;
-            margin-right: 0;
-        }
     }
 
     &__btn {
@@ -48,11 +43,8 @@
         justify-content: center;
         width: 100%;
         color: $fontColorGray;
-        // background-color: transparent;
         background-color: $bodyColor;
-        // padding: 0 5px 0 5px;
         padding: 0;
-        // margin-left: 5px;
         outline: none;
         border: none;
         border-radius: 2px;
@@ -62,20 +54,5 @@
         transition: color $transition, background-color $transition, opacity $transition;
         cursor: pointer;
         z-index: 9;
-
-        .update_active & {
-            color: $fontColorWhite;
-            cursor: default;
-        }
-    }
-}
-
-@keyframes update-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
     }
 }
