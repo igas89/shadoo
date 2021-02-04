@@ -40,6 +40,10 @@ export interface CommentsCount {
     COMMENTS_COUNT: number;
 }
 
+export interface LastCommentsCount {
+    LAST_COMMENTS_COUNT: number;
+}
+
 export interface TagsCount {
     TAGS_COUNT: number;
 }

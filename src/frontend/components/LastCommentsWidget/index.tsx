@@ -24,9 +24,7 @@ const LastCommentsWidget: FC = () => {
         items: [],
     });
 
-    const { fetchLastComments, lastCommentsState: {
-        response_data: lastCommentsData,
-    } } = useLastComments({
+    const { fetchLastComments } = useLastComments({
         onRequest(state) {
             if (lastCommentsState.isLoading === null || !lastCommentsState.isLoading) {
                 setLastComments((prevState) => ({
@@ -62,18 +60,10 @@ const LastCommentsWidget: FC = () => {
             return;
         }
 
-        if (lastCommentsData.data && lastCommentsData.data.length) {
-            setLastComments((prevState) => ({
-                ...prevState,
-                isLoading: false,
-                items: lastCommentsData.data || [],
-            }));
-        } else {
-            fetchLastComments({
-                limit: LAST_COMMENTS_WIDGET_LIMIT,
-            });
-        }
-    }, [fetchLastComments, lastCommentsState.isLoading, lastCommentsData]);
+        fetchLastComments({
+            limit: LAST_COMMENTS_WIDGET_LIMIT,
+        });
+    }, [fetchLastComments, lastCommentsState.isLoading]);
 
     const getRecipient = useCallback((recipient?: string): string => recipient ? `${recipient}, ` : '', []);
 

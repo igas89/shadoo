@@ -8,6 +8,7 @@ import { StorageResponseLastComments } from 'types/storage';
 import { ActionTypes, InitialState } from './types';
 
 export interface LastCommentsData {
+    counts: number;
     data: StorageResponseLastComments[];
 }
 
@@ -40,7 +41,6 @@ export const lastCommentsReducer = (
             return {
                 ...state,
                 action: action.type,
-                request_data: null,
                 response_data: action.response || {},
             };
         }

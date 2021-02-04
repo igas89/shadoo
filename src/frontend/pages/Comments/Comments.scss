@@ -1,0 +1,52 @@
+@import '~styles/mixins.scss';
+
+.comments {
+    &__title {
+        font-family: $fontFamilyHeader;
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    &__item {
+        background: $LastCommentsWhiteColor;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+    }
+
+    &__header {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        margin: 5px 0;
+        line-height: 1.6rem;
+        font-size: 15px;
+    }
+
+    &__by {
+        display: flex;
+        flex-flow: column nowrap;
+        margin-left: 10px;
+    }
+
+    &__avatar {
+        height: 50px;
+        width: 50px;
+        border-radius: 25%;
+    }
+
+    &__author,
+    &__recipient,
+    &__post {
+        color: $linkColor;
+
+        & span {
+            color: $fontColor;
+        }
+    }
+
+    &__content {
+        padding: 10px 5px 5px;
+    }
+}

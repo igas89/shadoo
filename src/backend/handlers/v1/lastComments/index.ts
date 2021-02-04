@@ -18,7 +18,8 @@ export default class LastCommentsHandler extends BaseHandler<LastCommentsHandler
 
         CommentsModels.getLastComments(params.limit)
             .then(async (data) => {
-                this.sendJson({ data });
+                const counts = await CommentsModels.getLastCommentsCount();
+                this.sendJson({ counts, data });
             }).catch(err => {
                 this.sendError({
                     status: 503,
