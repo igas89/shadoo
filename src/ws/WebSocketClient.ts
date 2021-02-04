@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import Emitter from 'component-emitter';
-// import { SERVER_API_URL } from '../config';
 
 interface WsClient extends Emitter {
     emitEvent(event: string, ...args: unknown[]): void;
@@ -26,13 +25,11 @@ export class WebSocketClient extends Emitter implements WsClient {
     }
 
     private connect(url: string, token: string): WebSocket {
-        // const socket = new WebSocket(`${url}?token=${this.generateGUID()}`);
         const socket = new WebSocket(`${url}?token=${token}`);
 
         socket.onopen = () => {
             console.log(`Соединение установлено: ${url}`);
             this._isConnect = true;
-            // this.token = this.generateGUID();
             this.emit('onConnect', socket);
         };
 
@@ -41,20 +38,6 @@ export class WebSocketClient extends Emitter implements WsClient {
         this.onError(socket);
 
         return socket;
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-    private generateGUID(): string {
-        const guid = 'xxxxxxxxxxx4'.replace(/[x]/g, (c) => {
-            // eslint-disable-next-line no-bitwise
-            const r = Math.random() * 16 | 0;
-            // eslint-disable-next-line no-bitwise
-            const v = c === 'x' ? r : r & 0x3 | 0x8;
-
-            return v.toString(16).toUpperCase();
-        });
-
-        return guid;
     }
 
     public emitEvent(event: string, ...args: unknown[]): void {
@@ -93,8 +76,6 @@ export class WebSocketClient extends Emitter implements WsClient {
     private onMessage(socket: WebSocket): void {
         socket.onmessage = (event) => {
             const [handle, data] = JSON.parse(event.data);
-            // console.log("Получены данные ", handle, data);
-
             this.emit(handle, data);
         };
     }
@@ -107,6 +88,4 @@ export class WebSocketClient extends Emitter implements WsClient {
     }
 }
 
-// 'ws://localhost:8080'
 export default (url: string, token: string): WsClient => new WebSocketClient(url, token);
-// export default (url: string, token: string): WsClient => new WebSocketClient(`${url}?token=${token}`);
